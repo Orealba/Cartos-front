@@ -23,7 +23,7 @@ export const Landing = () => {
             alt=""
             className="w-[8rem] h-[12rem] sm:w-[10rem] sm:h-[14rem] md:w-[12rem] md:h-[16rem] lg:w-[50rem] lg:h-[36rem]"
           />
-          <h2 className="font-['NexaLight'] font-semibold text-3xl text-myYellow  mt-55 ">
+          <h2 className="font-['NexaBold'] font-semibold text-3xl text-myYellow  mt-55 ">
             {`Ahorra y organiza tu dinero sin complicaciones.
             Descubre a dónde va cada céntimo
             y toma el control de tus finanzas.`}
