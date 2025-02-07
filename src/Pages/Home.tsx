@@ -1,8 +1,11 @@
-import { Navbar } from '../Components/Navbar';
+import { Landing } from '../Components/Landing';
+
 export const Home = () => {
   return (
     <>
-      <Navbar />
+      <div>
+        <Landing></Landing>
+      </div>
     </>
   );
 };

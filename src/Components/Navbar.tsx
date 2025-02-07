@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import logoporahora from '../assets/Images/logoporahora.jpg';
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,18 +9,6 @@ export const Navbar = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 w-full z-50">
-      <div className="flex justify-center py-4 bg-myGray">
-        <a
-          href="#"
-          className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-            src={logoporahora}
-            className="h-8"
-            alt="Flowbite Logo"
-          />
-        </a>
-      </div>
-
       <nav className="bg-myGray">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <button
