@@ -1,0 +1,83 @@
+:root {
+  --my-yellow: #ffc107;
+}
+
+.calendar-container {
+  width: 100%;
+  max-width: 75rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  
+}
+
+.rbc-calendar {
+  border-radius: 1rem;
+  color: white;
+  background-color: transparent;
+  height: 50% !important;
+  min-height: 37.5rem;
+}
+
+.rbc-month-view {
+  border: 1px solid var(--my-yellow) !important;
+}
+
+/* .rbc-day-bg {
+  border-right: 1px solid var(--my-yellow) !important;
+} */
+
+/* .rbc-month-row {
+  border-bottom: 1px solid var(--my-yellow) !important;
+} */
+
+.rbc-off-range-bg {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.rbc-today {
+  background-color: var(--my-yellow) !important;
+}
+
+/* Nuevos estilos para el texto */
+.rbc-button-link,
+.rbc-show-more,
+.rbc-row-segment .rbc-event-content,
+.rbc-event-label {
+  color: white !important;
+}
+
+.rbc-toolbar button {
+  color: white !important;
+}
+
+.rbc-toolbar-label {
+  color: white !important;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .calendar-container {
+    height: 31.25rem;
+    margin: 1rem auto;
+  }
+
+  .rbc-calendar {
+    min-height: 25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-container {
+    height: 25rem;
+  }
+
+  .rbc-calendar {
+    min-height: 18.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .calendar-container {
+    padding: 0 2rem;
+  }
+}
