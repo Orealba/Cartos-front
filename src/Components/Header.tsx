@@ -5,8 +5,10 @@ export const Header = () => {
   return (
     <>
       <div>
-        <div>
-          <BotonesHeader></BotonesHeader>
+        <div className="w-full flex justify-center mt-30 sm:mt-28 md:mt-0 lg:mt-0 xl:mt-0 ">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8  ">
+            <BotonesHeader />
+          </div>
         </div>
         <div>
           <div className="flex justify-center mt-15">
