@@ -8,8 +8,8 @@ export const MyCalendar = () => {
 
   const messages = {
     today: 'Hoy',
-    previous: 'Anterior',
-    next: 'Siguiente',
+    previous: '< Anterior',
+    next: 'Siguiente >',
   };
 
   const components = {
