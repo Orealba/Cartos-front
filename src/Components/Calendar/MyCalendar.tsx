@@ -1,4 +1,4 @@
-import { Calendar, dayjsLocalizer } from 'react-big-calendar';
+import { Calendar, dayjsLocalizer, ToolbarProps } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './MyCalendar.css';
 import dayjs from 'dayjs';
@@ -13,7 +13,7 @@ export const MyCalendar = () => {
   };
 
   const components = {
-    toolbar: (props) => (
+    toolbar: (props: ToolbarProps) => (
       <div className="rbc-toolbar">
         <span className="rbc-btn-group">
           <button

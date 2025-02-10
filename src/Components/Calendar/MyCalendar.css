@@ -1,22 +1,22 @@
 :root {
-  --my-yellow: #ffc107;
+  --my-yellow: #eaa31e;
 }
 
-.calendar-container {
+/* .calendar-container {
   width: 100%;
   max-width: 75rem;
   margin: 2rem auto;
   padding: 0 1rem;
   
-}
+} */
 
-.rbc-calendar {
+/* .rbc-calendar {
   border-radius: 1rem;
   color: white;
   background-color: transparent;
   height: 50% !important;
   min-height: 37.5rem;
-}
+} */
 
 .rbc-month-view {
   border: 1px solid var(--my-yellow) !important;
@@ -55,7 +55,7 @@
 }
 
 /* Ajustes responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .calendar-container {
     height: 31.25rem;
     margin: 1rem auto;
@@ -64,7 +64,7 @@
   .rbc-calendar {
     min-height: 25rem;
   }
-}
+} */
 
 @media (max-width: 480px) {
   .calendar-container {
@@ -76,8 +76,8 @@
   }
 }
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .calendar-container {
     padding: 0 2rem;
-  }
+  } 
 }
