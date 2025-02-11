@@ -2,10 +2,13 @@ import { Calendar, dayjsLocalizer, ToolbarProps } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './MyCalendar.css';
 import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+
+dayjs.locale('es');
 
 interface EventoCalendario {
   id: number;
-  title: string; // Este será el monto en euros
+  title: string;
   start: Date;
   end: Date;
 }
@@ -17,8 +20,8 @@ export const MyCalendar = () => {
     {
       id: 1,
       title: '35€',
-      start: new Date(), // Fecha actual
-      end: new Date(), // Fecha actual
+      start: new Date(),
+      end: new Date(),
     },
     {
       id: 2,
@@ -38,6 +41,16 @@ export const MyCalendar = () => {
     today: 'Hoy',
     previous: 'Anterior',
     next: 'Siguiente',
+    month: 'Mes',
+    week: 'Semana',
+    day: 'Día',
+    agenda: 'Agenda',
+    date: 'Fecha',
+    time: 'Hora',
+    event: 'Evento',
+    allDay: 'Todo el día',
+    noEventsInRange: 'No hay eventos en este rango.',
+    showMore: (total: number) => `+ Ver más (${total})`,
   };
 
   const components = {

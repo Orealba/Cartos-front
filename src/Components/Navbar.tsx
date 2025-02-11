@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import logo from '../assets/Images/Logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activePage, setActivePage] = useState('home');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -21,11 +25,11 @@ export const Navbar = () => {
         </a>
       </div>
       <nav>
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="max-w-screen-sm grid grid-cols-3 items-center mx-auto py-3">
           <button
             onClick={toggleMenu}
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400  "
+            className="col-start-1 inline-flex items-center p-2 m-1 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
             aria-controls="navbar-solid-bg"
             aria-expanded={isMenuOpen}>
             <span className="sr-only">Open main menu</span>
@@ -47,36 +51,44 @@ export const Navbar = () => {
           <div
             className={`${
               isMenuOpen ? 'block' : 'hidden'
-            } w-full md:block md:w-auto mx-auto`}
+            } col-start-2 w-full md:block md:w-auto mx-auto`}
             id="navbar-solid-bg">
             <ul className="flex flex-col font-medium mt-4 font-['NexaBold'] rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-transparent md:dark:bg-transparent dark:border-gray-700 justify-center">
-              <li>
+              <li className="relative">
                 <a
                   href="#"
-                  className="block py-2 px-3 md:p-0 text-white rounded-sm md:text-white"
+                  onClick={() => setActivePage('home')}
+                  className={`block text-white relative pb-2 ${
+                    activePage === 'home'
+                      ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
+                      : ''
+                  }`}
                   aria-current="page">
                   HOME
                 </a>
               </li>
-              <li>
+              <li className="relative">
                 <a
                   href="#"
-                  className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent">
+                  onClick={() => setActivePage('pagos')}
+                  className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
+                    activePage === 'pagos'
+                      ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
+                      : ''
+                  }`}>
                   PAGOS
                 </a>
               </li>
-              <li>
+              <li className="relative">
                 <a
                   href="#"
-                  className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                  onClick={() => setActivePage('resumen')}
+                  className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
+                    activePage === 'resumen'
+                      ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
+                      : ''
+                  }`}>
                   RESUMEN
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                  OPCIONES
                 </a>
               </li>
             </ul>
@@ -84,14 +96,17 @@ export const Navbar = () => {
           <div
             className={`${
               isMenuOpen ? 'block' : 'hidden'
-            } w-full md:block md:w-auto`}>
-            <ul className="flex flex-col font-medium mt-4 font-['NexaBold'] rounded-lg bg-gray-50 md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-transparent md:dark:bg-transparent dark:border-gray-700">
+            } col-start-3 w-full md:block md:w-auto justify-self-end`}>
+            <ul className=" ">
               <li>
                 <a
                   href="#"
-                  className="block py-2 px-3 md:p-0 text-myYellow rounded-sm md:text-myYellow "
+                  className="block py-2 px-3 md:p-0 text-myYellow rounded-sm md:text-myYellow flex items-center"
                   aria-current="page">
-                  USUARIO
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="w-6 h-6"
+                  />
                 </a>
               </li>
             </ul>
