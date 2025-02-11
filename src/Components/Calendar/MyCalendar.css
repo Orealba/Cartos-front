@@ -41,7 +41,6 @@
 /* Nuevos estilos para el texto */
 .rbc-button-link,
 .rbc-show-more,
-.rbc-row-segment .rbc-event-content,
 .rbc-event-label {
   color: white !important;
 }
@@ -80,4 +79,29 @@
   .calendar-container {
     padding: 0 2rem;
   } 
+}
+
+/* Estilos para los eventos del calendario */
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.rbc-event-content {
+  color: var(--my-yellow) !important;
+  font-weight: bold !important;
+  font-size: 0.75rem !important;
+}
+
+.rbc-event.rbc-selected {
+  background-color: transparent !important;
+}
+
+/* Para asegurar que los eventos sean visibles */
+.rbc-calendar {
+  color: white;
+}
+
+.rbc-event-label {
+  display: none !important;
 }
