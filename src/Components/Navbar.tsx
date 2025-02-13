@@ -2,27 +2,34 @@ import { useState } from 'react';
 import logo from '../assets/Images/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [session, setSession] = useState(true);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 w-full z-50 bg-myGray">
       <div className="flex justify-center mt-5">
-        <a
-          href="#"
+        <Link
+          to="/home"
           className="flex items-center">
           <img
             src={logo}
             className="h-12  md:h-15 lg:h-15 transition-all duration-300"
             alt="Logo"
           />
-        </a>
+        </Link>
       </div>
       <nav>
         <div className="max-w-screen-sm grid grid-cols-3 items-center mx-auto py-3">
@@ -55,8 +62,8 @@ export const Navbar = () => {
             id="navbar-solid-bg">
             <ul className="flex flex-col font-medium mt-4 font-['NexaBold'] rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-transparent md:dark:bg-transparent dark:border-gray-700 justify-center">
               <li className="relative">
-                <a
-                  href="#"
+                <Link
+                  to="/home"
                   onClick={() => setActivePage('home')}
                   className={`block text-white relative pb-2 ${
                     activePage === 'home'
@@ -65,7 +72,7 @@ export const Navbar = () => {
                   }`}
                   aria-current="page">
                   HOME
-                </a>
+                </Link>
               </li>
               <li className="relative">
                 <a
@@ -97,19 +104,29 @@ export const Navbar = () => {
             className={`${
               isMenuOpen ? 'block' : 'hidden'
             } col-start-3 w-full md:block md:w-auto justify-self-end`}>
-            <ul className=" ">
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 md:p-0 text-myYellow rounded-sm md:text-myYellow flex items-center"
-                  aria-current="page">
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    className="w-6 h-6"
-                  />
-                </a>
-              </li>
-            </ul>
+            <div className="relative">
+              <button
+                onClick={() => session && toggleDropdown()}
+                className={`block py-2 px-3 md:p-0 text-myYellow rounded-sm md:text-myYellow flex items-center ${
+                  session ? 'cursor-pointer' : 'cursor-not-allowed'
+                }`}>
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="w-6 h-6"
+                />
+              </button>
+              {session && isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1">
+                  <button
+                    onClick={() => {
+                      /* aquí tu lógica de logout */
+                    }}
+                    className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer">
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>

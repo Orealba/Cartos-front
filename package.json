@@ -20,7 +20,7 @@
     "@supabase/supabase-js": "^2.48.1",
     "@tailwindcss/vite": "^4.0.4",
     "dayjs": "^1.11.13",
-    "flowbite": "^3.1.1",
+    "flowbite": "^3.1.2",
     "react": "^18.2.0",
     "react-big-calendar": "^1.17.1",
     "react-dom": "^18.2.0",

@@ -37,7 +37,7 @@ export const Landing = () => {
           />
         </div> */}
         <div className="flex items-center justify-center"></div>
-        <BotonAmarillo />
+        <BotonAmarillo to="/login" />
       </div>
     </div>
   );

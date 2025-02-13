@@ -1,23 +1,23 @@
-import { Outlet } from 'react-router-dom';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Session } from '@supabase/supabase-js';
-import { Login } from '../../Pages/Login';
+import { Navigate, Outlet } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   canActivate: boolean;
-  supabase: SupabaseClient;
-  session: Session | null;
+  isLoading: boolean;
 }
+
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   canActivate,
-  supabase,
-  session,
+  isLoading,
 }) => {
-  if (canActivate) {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!canActivate) {
     return (
-      <Login
-        supabase={supabase}
-        session={session}
+      <Navigate
+        to="/login"
+        replace
       />
     );
   }
