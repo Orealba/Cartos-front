@@ -1,14 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../assets/Images/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
+import { supabase } from '../SupabaseClient';
+import { Session } from '@supabase/supabase-js';
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [session, setSession] = useState(true);
+  const { logout, isAuthenticated } = useAuth();
+  const [session, setSession] = useState<Session | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    setIsDropdownOpen(false);
+  }, [session]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -16,6 +39,11 @@ export const Navbar = () => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -90,7 +118,7 @@ export const Navbar = () => {
                 <a
                   href="#"
                   onClick={() => setActivePage('resumen')}
-                  className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
+                  className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
                     activePage === 'resumen'
                       ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
                       : ''
@@ -98,35 +126,28 @@ export const Navbar = () => {
                   RESUMEN
                 </a>
               </li>
+              <li className="relative">
+                <button
+                  onClick={() => session && toggleDropdown()}
+                  className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent ${
+                    session ? 'cursor-pointer' : 'cursor-not-allowed'
+                  }`}>
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="w-6 h-6"
+                  />
+                </button>
+                {session && isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1">
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer">
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
+              </li>
             </ul>
-          </div>
-          <div
-            className={`${
-              isMenuOpen ? 'block' : 'hidden'
-            } col-start-3 w-full md:block md:w-auto justify-self-end`}>
-            <div className="relative">
-              <button
-                onClick={() => session && toggleDropdown()}
-                className={`block py-2 px-3 md:p-0 text-myYellow rounded-sm md:text-myYellow flex items-center ${
-                  session ? 'cursor-pointer' : 'cursor-not-allowed'
-                }`}>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="w-6 h-6"
-                />
-              </button>
-              {session && isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1">
-                  <button
-                    onClick={() => {
-                      /* aquí tu lógica de logout */
-                    }}
-                    className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer">
-                    Cerrar Sesión
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </nav>

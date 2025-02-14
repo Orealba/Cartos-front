@@ -10,6 +10,7 @@ import { supabase } from './SupabaseClient';
 import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { ProtectedRoute } from './Components/utils/ProtectedRoute';
+import { AuthProvider } from './Context/AuthContext';
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -32,41 +33,43 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<Bienvenida />}
-        />
-
-        {/* Rutas con Navbar */}
-
-        <Route element={<Layout />}>
+    <AuthProvider>
+      <Router>
+        <Routes>
           <Route
-            path="/login"
-            element={
-              <Login
-                supabase={supabase}
-                session={session}
-              />
-            }
+            path="/"
+            element={<Bienvenida />}
           />
 
-          <Route
-            element={
-              <ProtectedRoute
-                canActivate={!!session}
-                isLoading={isLoading}
-              />
-            }>
+          {/* Rutas con Navbar */}
+
+          <Route element={<Layout />}>
             <Route
-              path="/home"
-              element={<Home />}
+              path="/login"
+              element={
+                <Login
+                  supabase={supabase}
+                  session={session}
+                />
+              }
             />
+
+            <Route
+              element={
+                <ProtectedRoute
+                  canActivate={!!session}
+                  isLoading={isLoading}
+                />
+              }>
+              <Route
+                path="/home"
+                element={<Home />}
+              />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
