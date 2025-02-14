@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { ProtectedRoute } from './Components/utils/ProtectedRoute';
 import { AuthProvider } from './Context/AuthContext';
+import { Transacciones } from './Pages/Transacciones';
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -41,19 +42,18 @@ function App() {
             element={<Bienvenida />}
           />
 
+          <Route
+            path="/login"
+            element={
+              <Login
+                supabase={supabase}
+                session={session}
+              />
+            }
+          />
+
           {/* Rutas con Navbar */}
-
           <Route element={<Layout />}>
-            <Route
-              path="/login"
-              element={
-                <Login
-                  supabase={supabase}
-                  session={session}
-                />
-              }
-            />
-
             <Route
               element={
                 <ProtectedRoute
@@ -66,6 +66,10 @@ function App() {
                 element={<Home />}
               />
             </Route>
+            <Route
+              path="/transacciones"
+              element={<Transacciones />}
+            />
           </Route>
         </Routes>
       </Router>

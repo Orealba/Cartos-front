@@ -103,16 +103,16 @@ export const Navbar = () => {
                 </Link>
               </li>
               <li className="relative">
-                <a
-                  href="#"
+                <Link
+                  to="/transacciones"
                   onClick={() => setActivePage('pagos')}
                   className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
                     activePage === 'pagos'
                       ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
                       : ''
                   }`}>
-                  PAGOS
-                </a>
+                  TRANSACCIONES
+                </Link>
               </li>
               <li className="relative">
                 <a

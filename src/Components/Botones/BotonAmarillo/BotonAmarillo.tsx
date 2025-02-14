@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
+import './BotonAmarillo.css';
 interface BotonAmarilloProps {
   to: string;
 }
@@ -13,7 +13,7 @@ export const BotonAmarillo = ({ to }: BotonAmarilloProps) => {
         <button
           onClick={() => navigate(to)}
           type="button"
-          className="py-2.5 px-5 me-2 mb-2 text-sm font-bold text-white bg-myYellow rounded-full border border-myYellow hover:bg-myGreen hover:text-myYellow transition-colors duration-300 cursor-pointer">
+          className="botonAmarillo-neumorphism">
           COMENZAR
         </button>
       </div>
