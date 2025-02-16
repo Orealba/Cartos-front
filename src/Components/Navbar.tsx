@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import logo from '../assets/Images/Logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const { logout, isAuthenticated } = useAuth();
   const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -32,6 +33,22 @@ export const Navbar = () => {
   useEffect(() => {
     setIsDropdownOpen(false);
   }, [session]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -138,10 +155,12 @@ export const Navbar = () => {
                   />
                 </button>
                 {session && isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1">
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1 cursor-pointer">
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer">
+                      className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer border rounded-lg border-myYellow">
                       Cerrar Sesión
                     </button>
                   </div>
