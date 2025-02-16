@@ -1,0 +1,13 @@
+.botones-header-neumorphism-total {
+  border-radius: 1.1rem;
+  background: var(--color-myYellow);
+  box-shadow: 1px 1px 8px #c78b1a, -1px -1px 3px #ffbb23;
+  padding: 0.25rem 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.botones-header-neumorphism-total:hover {
+  background-color: var(--color-myGreen);
+  border-color: var(--color-myGreen);
+}

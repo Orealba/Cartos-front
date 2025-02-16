@@ -1,0 +1,16 @@
+.botonAgregar-sin-neumorphism {
+  padding: 0.625rem 1.25rem;
+  margin-left: 6.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  background-color: var(--color-myYellow);
+  border-radius: 1.4rem;
+
+  cursor: pointer;
+  transition: all 300ms;
+}
+.botonAgregar-sin-neumorphism:hover {
+  background-color: var(--color-myGreen);
+  border-color: var(--color-myGreen);
+}

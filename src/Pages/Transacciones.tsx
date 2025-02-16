@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 
+import { BotonAgregarsinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarsinNeu';
 interface Transaccion {
   icono: string;
   titulo: string;
@@ -154,6 +155,9 @@ export const Transacciones = () => {
                 className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer hover:border-myYellow hover:border-2 border-2 border-transparent">
                 Siguiente
               </button>
+            </div>
+            <div className="w-full flex justify-end pr-2 ml-5 md:ml-12">
+              <BotonAgregarsinNeu />
             </div>
           </div>
         </div>

@@ -1,0 +1,35 @@
+.botonProxGastos-neumorphism {
+  padding: 0.375rem 0.75rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.75rem;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+
+  background-color: var(--my-yellow);
+  border: var(--my-yellow);
+  border-radius: 1.1rem;
+
+  box-shadow: 1px 1px 8px #c78b1a, -1px -1px 3px #ffbb23;
+  cursor: pointer;
+  transition: colors 300ms;
+}
+
+.botonProxGastos-neumorphism:hover {
+  background-color: var(--my-green);
+  color: var(--my-yellow);
+}
+@media (min-width: 640px) {
+  .botonProxGastos-neumorphism {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .botonProxGastos-neumorphism {
+    padding: 0.375rem 1rem;
+    font-size: 1rem;
+  }
+}

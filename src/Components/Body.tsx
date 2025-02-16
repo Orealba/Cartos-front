@@ -1,4 +1,4 @@
-import { BotonProxGastos } from './Botones/BotonProxGastos';
+import { BotonProxGastos } from './Botones/BotonProxGastos/BotonProxGastos';
 
 interface Gasto {
   icono: string;

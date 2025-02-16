@@ -7,7 +7,7 @@ export const BotonAgregar: React.FC = () => {
         <div>
           <button
             type="button"
-            className="botonAgregar-neumorphism text-4xl">
+            className="botonAgregar-neumorphism text-4xl rounded-full">
             +
           </button>
         </div>

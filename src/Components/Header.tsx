@@ -1,4 +1,4 @@
-import { BotonesHeader } from './Botones/BotonesHeader';
+import { BotonesHeader } from './Botones/BotonesHeader/BotonesHeader';
 import { MyCalendar } from './Calendar/MyCalendar';
 import { BotonAgregar } from './Botones/BotonAgregar/BotonAgregar';
 
