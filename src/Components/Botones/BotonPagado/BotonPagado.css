@@ -1,6 +1,6 @@
-.botonGuardarTrans-neumorphism {
+.botonPagadoTrans-neumorphism {
   padding: 0.625rem 1.25rem;
-  
+  margin-right: 0.5rem;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
@@ -11,7 +11,7 @@
   cursor: pointer;
   transition: all 300ms;
 }
-.botonGuardarTrans-neumorphism:hover {
+.botonPagadoTrans-neumorphism:hover {
   background-color: rgb(106, 171, 9);
   border-color: var(--color-myGreen);
 }
