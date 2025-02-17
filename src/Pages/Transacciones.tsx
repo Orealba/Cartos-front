@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 
 import { BotonAgregarsinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarsinNeu';
@@ -12,6 +13,7 @@ interface Transaccion {
 export const Transacciones = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const transaccionesPorPagina = 10;
+  const navigate = useNavigate();
 
   const transacciones: Transaccion[] = [
     {
@@ -110,7 +112,8 @@ export const Transacciones = () => {
               {transaccionesActuales.map((transaccion, index) => (
                 <div
                   key={index}
-                  className="bg-myGray rounded-4xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2">
+                  onClick={() => navigate('/agregar-editar-transaccion')}
+                  className="bg-myGray rounded-4xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
                   <div className="flex items-center justify-between px-8 sm:px-10 md:px-12 lg:px-16 h-full">
                     <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
                       <span className="text-white font-bold text-base sm:text-lg md:text-xl">

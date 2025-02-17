@@ -12,7 +12,7 @@ import { Session } from '@supabase/supabase-js';
 import { ProtectedRoute } from './Components/utils/ProtectedRoute';
 import { AuthProvider } from './Context/AuthContext';
 import { Transacciones } from './Pages/Transacciones';
-
+import { AgregarEditarTransaccion } from './Pages/AgregarEditarTransaccion';
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +69,10 @@ function App() {
             <Route
               path="/transacciones"
               element={<Transacciones />}
+            />
+            <Route
+              path="/agregar-editar-transaccion"
+              element={<AgregarEditarTransaccion />}
             />
           </Route>
         </Routes>
