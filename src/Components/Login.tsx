@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../services/api';
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -13,6 +14,7 @@ const Login: React.FC = () => {
       localStorage.setItem('isAuthenticated', 'true');
       login();
       console.log('Login exitoso, isAuthenticated establecido');
+      console.log(apiClient.get('/greeting/whoami'));
       navigate('/home');
     } catch (error) {
       console.error('Error en login:', error);

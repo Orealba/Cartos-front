@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 
-import { BotonAgregarsinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarsinNeu';
+import { BotonAgregarSinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarsinNeu';
 interface Transaccion {
   icono: string;
   titulo: string;
@@ -160,7 +160,7 @@ export const Transacciones = () => {
               </button>
             </div>
             <div className="w-full flex justify-end pr-2 ml-5 md:ml-12">
-              <BotonAgregarsinNeu />
+              <BotonAgregarSinNeu />
             </div>
           </div>
         </div>
