@@ -14,7 +14,7 @@ export const apiClient = () => {
       ...options,
       headers,
     });
-    debugger;
+
     if (!response.ok) {
       throw new Error('Error en la llamada a la API');
     }

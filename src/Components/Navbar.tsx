@@ -36,11 +36,18 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const menu = document.getElementById('navbar-solid-bg');
+      const hamburgerButton = document.querySelector(
+        '[aria-controls="navbar-solid-bg"]',
+      );
+
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        menu &&
+        hamburgerButton &&
+        !menu.contains(event.target as Node) &&
+        !hamburgerButton.contains(event.target as Node)
       ) {
-        setIsDropdownOpen(false);
+        setIsMenuOpen(false);
       }
     };
 
@@ -77,11 +84,11 @@ export const Navbar = () => {
         </Link>
       </div>
       <nav>
-        <div className="max-w-screen-sm grid grid-cols-3 items-center mx-auto py-3">
+        <div className="max-w-screen-sm flex justify-center items-center mx-auto py-3 relative">
           <button
             onClick={toggleMenu}
             type="button"
-            className="col-start-1 inline-flex items-center p-2 m-1 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
+            className="absolute left-4 md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none dark:text-gray-400"
             aria-controls="navbar-solid-bg"
             aria-expanded={isMenuOpen}>
             <span className="sr-only">Open main menu</span>
@@ -101,11 +108,11 @@ export const Navbar = () => {
             </svg>
           </button>
           <div
+            id="navbar-solid-bg"
             className={`${
               isMenuOpen ? 'block' : 'hidden'
-            } col-start-2 w-full md:block md:w-auto mx-auto`}
-            id="navbar-solid-bg">
-            <ul className="flex flex-col font-medium mt-4 font-['NexaBold'] rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:bg-transparent md:dark:bg-transparent dark:border-gray-700 justify-center">
+            } absolute left-0 top-full w-full md:relative md:block md:w-auto mx-auto bg-myGray md:bg-transparent z-50`}>
+            <ul className="flex flex-col font-medium mt-4 font-['NexaBold'] md:flex-row md:space-x-8 md:mt-0">
               <li className="relative">
                 <Link
                   to="/home"
@@ -157,7 +164,7 @@ export const Navbar = () => {
                 {session && isDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1 cursor-pointer">
+                    className="absolute left-0 mt-2 w-48 bg-myGreen rounded-md shadow-lg py-1 cursor-pointer z-50">
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-myYellow hover:bg-opacity-90 cursor-pointer border rounded-lg border-myYellow">

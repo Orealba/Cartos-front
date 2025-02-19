@@ -9,6 +9,7 @@ import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTran
 import { CategoríaTransacciones } from '../Components/TransacionesComponents/CategoríaTransacciones';
 import { BotonPagado } from '../Components/Botones/BotonPagado/BotonPagado';
 import { BotonBorraTrans } from '../Components/Botones/BotonBorraTrans/BotonBorraTrans';
+
 export const AgregarEditarTransaccion = () => {
   return (
     <>
