@@ -10,6 +10,8 @@ import { CategoríaTransacciones } from '../Components/TransacionesComponents/Ca
 import { BotonPagado } from '../Components/Botones/BotonPagado/BotonPagado';
 import { BotonBorraTrans } from '../Components/Botones/BotonBorraTrans/BotonBorraTrans';
 
+//Voy a llamar a los botones con props para que me pasen la funcion que quiero ejecutar y renderizado condicional 
+//debo hacer los textfield con props o con tipos y pasarlos como props
 export const AgregarEditarTransaccion = () => {
   return (
     <>

@@ -19,6 +19,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  //debo sacar lo de supabase de aquí y meterlo en el context
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

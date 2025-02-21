@@ -5,7 +5,7 @@ export const BotonAgregar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/agregar-editar-transaccion'); // Corregido el nombre de la ruta
+    navigate('/agregar-editar-transaccion');
   };
 
   return (
