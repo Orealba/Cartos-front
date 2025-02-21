@@ -1,14 +1,34 @@
-import { BotonesHeader } from './Botones/BotonesHeader/BotonesHeader';
 import { MyCalendar } from './Calendar/MyCalendar';
 import { BotonAgregar } from './Botones/BotonAgregar/BotonAgregar';
+import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
+import './Botones/BotonesHeader/BotonesHeader.css';
 
 export const Header = () => {
+  const handleTotalClick = () => {
+    console.log('Mi Total clickeado');
+  };
+
+  const handleLimiteClick = () => {
+    console.log('Límite diario clickeado');
+  };
+
   return (
     <>
       <div>
         <div className="w-full flex justify-center mt-30 ">
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8  ">
-            <BotonesHeader />
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8">
+            <BotonGeneral
+              onClick={handleTotalClick}
+              tipo="edit"
+              textoFijo="Mi Total:"
+              valorInicial="1000"
+            />
+            <BotonGeneral
+              onClick={handleLimiteClick}
+              tipo="edit"
+              textoFijo="Límite diario:"
+              valorInicial="30"
+            />
           </div>
         </div>
         <div>

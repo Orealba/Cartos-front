@@ -46,3 +46,57 @@
   background-color: rgb(106, 171, 9);
   border-color: var(--color-myYellow);
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-myGreen);
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 250px; /* Tamaño compacto */
+  max-width: 90%;
+  text-align: center;
+}
+
+.save-button {
+  margin-top: 5px;
+  background-color: var(--color-myGreen);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: var(--color-myYellow);
+}
+
+.close-button {
+  
+   /* Ajusta la posición vertical */
+  margin-right: 15rem; /* Ajusta la posición horizontal */
+  background: none;
+  border: none;
+  font-size: 2rem; /* Aumenta el tamaño de la fuente */
+  cursor: pointer;
+  color: #ffffff;
+  transition: color 0.3s;
+}
+
+.close-button:hover {
+  color: #000;
+}
