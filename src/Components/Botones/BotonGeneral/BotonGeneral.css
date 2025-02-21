@@ -1,0 +1,48 @@
+.botonBasico {
+  background-color: var(--color-myYellow);
+  border-radius: 1rem;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 5px #efa61f;
+  width: 8rem;
+  height: 2.8rem;
+  transition: all 300ms;
+}
+
+.botonBasico:hover {
+  background-color: var(--color-myGreen);
+  border-color: var(--color-myYellow);
+}
+
+.botonAgregar {
+  background-color: var(--color-myYellow);
+  border-radius: 50%;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 5px #efa61f;
+  transition: all 300ms;
+}
+
+.botonAgregar:hover {
+  background-color: var(--color-myGreen);
+  border-color: var(--color-myYellow);
+}
+
+.botonDanger {
+  background-color: var(--color-myYellow);
+  border-radius: 1rem;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 5px #efa61f;
+  transition: all 300ms;
+}
+
+.botonDanger:hover {
+  background-color: rgb(186, 16, 16);
+}
+
+.botonGreen {
+  background-color: var(--color-myYellow);
+  border-radius: 1rem;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 5px #efa61f;
+  transition: all 300ms;
+}
+
+.botonGreen:hover {
+  background-color: rgb(106, 171, 9);
+  border-color: var(--color-myYellow);
+}

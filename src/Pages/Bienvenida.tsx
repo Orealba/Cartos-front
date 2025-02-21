@@ -1,9 +1,17 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/Images/Logo.svg';
 
 import phone from '../assets/Images/phone.png';
-import { BotonAmarillo } from '../Components/Botones/BotonAmarillo/BotonAmarillo';
+import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
 export const Bienvenida = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
   return (
     <>
       <div>
@@ -32,8 +40,14 @@ export const Bienvenida = () => {
             </h2>
           </div>
 
-          <div className="flex items-center justify-center"></div>
-          <BotonAmarillo to="/login" />
+          <div className="flex items-center justify-center">
+            <BotonGeneral
+              onClick={handleLoginClick}
+              className="botonAmarillo-neumorphism"
+              tipo="basico"
+              texto="COMENZAR"
+            />
+          </div>
         </div>
       </div>
     </>
