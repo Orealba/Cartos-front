@@ -1,11 +1,9 @@
-import { Landing } from '../Components/Landing';
+import { Navbar } from '../Components/Navbar';
 
 export const Home = () => {
   return (
     <>
-      <div>
-        <Landing></Landing>
-      </div>
+      <div></div>
     </>
   );
 };
