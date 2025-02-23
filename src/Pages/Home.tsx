@@ -1,9 +1,12 @@
-import { Navbar } from '../Components/Navbar';
-
+import { Header } from '../Components/Header';
+import { Body } from '../Components/Body';
 export const Home = () => {
   return (
     <>
-      <div></div>
+      <div>
+        <Header></Header>
+        <Body></Body>
+      </div>
     </>
   );
 };

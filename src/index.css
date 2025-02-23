@@ -9,13 +9,11 @@
   --color-myBeige: #ccc9bd;
 }
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'NexaBold';
   line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #15464e;
+  background-color: var(--color-myGreen);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -36,11 +34,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 @font-face {
