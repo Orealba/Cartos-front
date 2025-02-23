@@ -1,6 +1,6 @@
 import './App.css';
 
-import 'flowbite';
+import 'flowbite/dist/flowbite.min.js';
 import { Bienvenida } from './Pages/Bienvenida';
 import { Home } from './Pages/Home';
 import { Layout } from './Components/Layout';
@@ -9,32 +9,39 @@ import { Login } from './Pages/Login';
 import { supabase } from './SupabaseClient';
 import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
+import { ProtectedRoute } from './Components/utils/ProtectedRoute';
+import { AuthProvider } from './Context/AuthContext';
+import { Transacciones } from './Pages/Transacciones';
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsLoading(false);
     });
+
+    // Añado listener para cambios en la autenticación si pasa
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<Bienvenida />}
-        />
-
-        {/* Rutas con Navbar */}
-        <Route element={<Layout />}>
+    <AuthProvider>
+      <Router>
+        <Routes>
           <Route
-            path="/home"
-            element={<Home />}
+            path="/"
+            element={<Bienvenida />}
           />
-        </Route>
-        <Route element={<Layout />}>
+
           <Route
             path="/login"
             element={
@@ -44,9 +51,29 @@ function App() {
               />
             }
           />
-        </Route>
-      </Routes>
-    </Router>
+
+          {/* Rutas con Navbar */}
+          <Route element={<Layout />}>
+            <Route
+              element={
+                <ProtectedRoute
+                  canActivate={!!session}
+                  isLoading={isLoading}
+                />
+              }>
+              <Route
+                path="/home"
+                element={<Home />}
+              />
+            </Route>
+            <Route
+              path="/transacciones"
+              element={<Transacciones />}
+            />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

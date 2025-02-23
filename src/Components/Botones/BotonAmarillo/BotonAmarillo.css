@@ -1,0 +1,17 @@
+.botonAmarillo-neumorphism {
+  padding: 0.625rem 1.25rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background-color: var(--color-myYellow);
+  border-radius: 1.1rem;
+  box-shadow: -6px -6px 90px #e5a01d, 6px 6px 90px #efa61f;
+  cursor: pointer;
+  transition: all 300ms;
+}
+.botonAmarillo-neumorphism:hover {
+  background-color: var(--color-myGreen);
+  border-color: var(--color-myYellow);
+}

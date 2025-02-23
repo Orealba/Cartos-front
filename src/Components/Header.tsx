@@ -1,6 +1,6 @@
 import { BotonesHeader } from './Botones/BotonesHeader';
 import { MyCalendar } from './Calendar/MyCalendar';
-import { BotonAgregar } from './Botones/BotonAgregar';
+import { BotonAgregar } from './Botones/BotonAgregar/BotonAgregar';
 
 export const Header = () => {
   return (

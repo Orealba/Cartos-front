@@ -1,7 +1,7 @@
 import logo from '../assets/Images/Logo.svg';
 
 import phone from '../assets/Images/phone.png';
-import { BotonAmarillo } from './Botones/BotonAmarillo';
+import { BotonAmarillo } from './Botones/BotonAmarillo/BotonAmarillo';
 export const Landing = () => {
   return (
     <div>
@@ -37,7 +37,7 @@ export const Landing = () => {
           />
         </div> */}
         <div className="flex items-center justify-center"></div>
-        <BotonAmarillo />
+        <BotonAmarillo to="/login" />
       </div>
     </div>
   );
