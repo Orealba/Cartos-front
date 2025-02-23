@@ -1,4 +1,6 @@
-import { BotonProxGastos } from './Botones/BotonProxGastos';
+import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
+import { useNavigate } from 'react-router-dom';
+import './Botones/BotonProxGastos/BotonProxGastos.css';
 
 interface Gasto {
   icono: string;
@@ -8,6 +10,8 @@ interface Gasto {
 }
 
 export const Body = () => {
+  const navigate = useNavigate();
+
   const gastos: Gasto[] = [
     {
       icono: 'X',
@@ -35,11 +39,20 @@ export const Body = () => {
     },
   ];
 
+  const handleProxGastosClick = () => {
+    navigate('/transacciones');
+  };
+
   return (
     <>
       <div className="bg-myGray/50 rounded-2xl px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
         <div>
-          <BotonProxGastos></BotonProxGastos>
+          <BotonGeneral
+            onClick={handleProxGastosClick}
+            tipo="basico"
+            className="botonProxGastos-neumorphism"
+            textoFijo="Próximos Gastos"
+          />
         </div>
         <div className="max-h-[200px] overflow-y-auto">
           {gastos.map((gasto, index) => (
@@ -47,22 +60,16 @@ export const Body = () => {
               key={index}
               className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2">
               <div className="flex items-center justify-between px-4 h-full">
-                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                  <span className="text-white font-bold text-base sm:text-lg md:text-xl">
+                <div className="flex items-center gap-4">
+                  <span className="text-white font-bold text-xl">
                     {gasto.icono}
                   </span>
-                  <span className="text-white font-medium text-sm sm:text-base md:text-lg">
-                    {gasto.titulo}
-                  </span>
+                  <span className="text-white font-medium">{gasto.titulo}</span>
                 </div>
-                <span className="text-white text-xs sm:text-sm md:text-base">
-                  {gasto.fecha}
-                </span>
-                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                  <span className="text-white font-bold text-sm sm:text-base md:text-lg">
-                    {gasto.monto}
-                  </span>
-                  <span className="text-white font-bold text-base sm:text-lg md:text-xl">
+                <span className="text-white">{gasto.fecha}</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-white font-bold">{gasto.monto}</span>
+                  <span className="text-white font-bold text-xl">
                     {gasto.icono}
                   </span>
                 </div>
