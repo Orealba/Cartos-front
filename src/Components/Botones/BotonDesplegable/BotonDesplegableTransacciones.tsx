@@ -1,5 +1,12 @@
+import { useEffect } from 'react';
+import { initFlowbite } from 'flowbite';
 import './BotonDesplegableTransacciones.css';
+
 export const BotonDesplegableTransacciones = () => {
+  useEffect(() => {
+    initFlowbite();
+  }, []);
+
   return (
     <>
       <div>

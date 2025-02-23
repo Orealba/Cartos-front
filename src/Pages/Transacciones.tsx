@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css';
 
-import { BotonAgregarSinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarSinNeu';
+import '../Components/Botones/BotonAgregar/BotonAgregar.css';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
+import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
 interface Transaccion {
   icono: string;
@@ -17,6 +18,10 @@ export const Transacciones = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const transaccionesPorPagina = 10;
   const navigate = useNavigate();
+
+  const handleAgregarClick = () => {
+    navigate('/agregar-editar-transaccion');
+  };
 
   const transacciones: Transaccion[] = [
     {
@@ -164,7 +169,12 @@ export const Transacciones = () => {
             </button>
           </div>
           <div className="w-full flex justify-end pr-2 ml-5 md:ml-12">
-            <BotonAgregarSinNeu />
+            <BotonGeneral
+              onClick={handleAgregarClick}
+              tipo="agregar"
+              className="botonAgregar-neumorphism"
+              textoFijo="+"
+            />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@
   justify-content: center;
   color: white;
   background-color: var(--color-myYellow);
-  border-radius: 50%;
+  border-radius: 1.4rem;
   box-shadow: 1px 1px 8px #c78b1a, -1px -1px 8px #ffbb23;
   cursor: pointer;
   transition: all 300ms;
