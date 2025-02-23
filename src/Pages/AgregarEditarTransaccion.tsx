@@ -1,24 +1,25 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import { TituloTransacciones } from '../Components/TransacionesComponents/TituloTransacciones';
 import { MontoTransacciones } from '../Components/TransacionesComponents/MontoTransacciones';
 import { FechaTransacciones } from '../Components/TransacionesComponents/FechaTransacciones';
-import { RecurrenteTransacciones } from '../Components/TransacionesComponents/RecurrenteTransacciones';
+
 import { TipoTransacciones } from '../Components/TransacionesComponents/TipoTransacciones';
 import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTransacciones';
-import { CategoríaTransacciones } from '../Components/TransacionesComponents/CategoríaTransacciones';
+import { CategoriaTransacciones } from '../Components/TransacionesComponents/CategoriaTransacciones';
 import '../Components/Botones/EstilosBotones/BotonCancelarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
-//debo hacer los textfield con props o con tipos y pasarlos como props
 //tipo debe estar primero y por defecto debe ser egreso
 //hay que hacer un fetch para recuperar las categorías y que se muestren en un desplegable en la parte de categoria
 //categoría debe estar de segundo
 ///Recurrente debo quitarlo
 export const AgregarEditarTransaccion = () => {
   const navigate = useNavigate();
+  const [tipoSeleccionado, setTipoSeleccionado] = useState('Egresos');
 
   return (
     <>
@@ -39,8 +40,8 @@ export const AgregarEditarTransaccion = () => {
         </div>
         <div className="bg-myGray/50 rounded-2xl px-12 sm:px-12 md:px-24 lg:px-35 py-6 sm:py-8 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
-            <TipoTransacciones />
-            <CategoríaTransacciones />
+            <TipoTransacciones onTipoChange={setTipoSeleccionado} />
+            <CategoriaTransacciones tipoSeleccionado={tipoSeleccionado} />
             <TituloTransacciones />
             <MontoTransacciones />
             <FechaTransacciones />

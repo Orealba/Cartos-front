@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 
-export const TipoTransacciones = () => {
-  const [tipo, setTipo] = useState<string>('');
+export interface TipoTransaccionesProps {
+  onTipoChange: (tipo: string) => void;
+}
+
+export const TipoTransacciones = ({ onTipoChange }: TipoTransaccionesProps) => {
+  const [tipo, setTipo] = useState<string>('Egresos');
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +23,7 @@ export const TipoTransacciones = () => {
   }, []);
 
   return (
-    <div className="bg-myGray/50 rounded-3xl w-[98%] mx-auto h-12 flex items-center px-8">
+    <div className="bg-myGray rounded-xl w-[98%] mx-auto h-12 flex items-center px-8">
       <div className="flex items-center gap-4 w-full">
         <span className="text-white whitespace-nowrap">Tipo:</span>
         <div
@@ -28,8 +32,8 @@ export const TipoTransacciones = () => {
           <div
             className="bg-transparent text-white cursor-pointer flex items-center gap-4"
             onClick={() => setIsOpen(!isOpen)}>
-            <span className="text-white/60">{tipo || 'Seleccionar'}</span>
-            <span className="text-white/60 text-sm">▼</span>
+            <span className="text-white/60">{tipo}</span>
+            <span className="text-white/60 text-sm">⌄</span>
           </div>
           {isOpen && (
             <div className="absolute top-full left-0 w-full mt-1 bg-myGreen border border-myYellow rounded-md overflow-hidden z-50">
@@ -38,6 +42,7 @@ export const TipoTransacciones = () => {
                 onClick={() => {
                   setTipo('Egresos');
                   setIsOpen(false);
+                  onTipoChange('Egresos');
                 }}>
                 Egresos
               </div>
@@ -46,6 +51,7 @@ export const TipoTransacciones = () => {
                 onClick={() => {
                   setTipo('Ingresos');
                   setIsOpen(false);
+                  onTipoChange('Ingresos');
                 }}>
                 Ingresos
               </div>
