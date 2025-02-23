@@ -7,7 +7,9 @@ import { RecurrenteTransacciones } from '../Components/TransacionesComponents/Re
 import { TipoTransacciones } from '../Components/TransacionesComponents/TipoTransacciones';
 import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTransacciones';
 import { CategoríaTransacciones } from '../Components/TransacionesComponents/CategoríaTransacciones';
-
+import '../Components/Botones/BotonCancelarTrans/BotonCancelarTrans.css';
+import '../Components/Botones/BotonGuardarTrans/BotonGuardarTrans.css';
+import '../Components/Botones/BotonBorraTrans/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
 //Voy a llamar a los botones con props para que me pasen la funcion que quiero ejecutar y renderizado condicional

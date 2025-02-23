@@ -22,8 +22,8 @@ export const Header = () => {
   return (
     <>
       <div>
-        <div className="w-full flex justify-center mt-30 ">
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8">
+        <div className="w-full flex justify-center mt-30">
+          <div className="flex flex-row gap-4 sm:gap-56">
             <BotonGeneral
               onClick={handleTotalClick}
               tipo="edit"
