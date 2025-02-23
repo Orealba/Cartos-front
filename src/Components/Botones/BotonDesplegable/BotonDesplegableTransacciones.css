@@ -10,7 +10,7 @@
   align-items: center;
   cursor: pointer;
   transition: all 300ms;
-  box-shadow: -1px -1px 10px #e5a01d, 1px 1px 50px #efa61f;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 10px #efa61f;
 }
 
 .botonDesplegableTransacciones-neumorphism:hover {

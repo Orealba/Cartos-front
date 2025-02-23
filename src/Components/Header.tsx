@@ -1,15 +1,22 @@
 import { MyCalendar } from './Calendar/MyCalendar';
-import { BotonAgregar } from './Botones/BotonAgregar/BotonAgregar';
 import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
+import './Botones/BotonAgregar/BotonAgregar.css';
 import './Botones/BotonesHeader/BotonesHeader.css';
+import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
+  const navigate = useNavigate();
+
   const handleTotalClick = () => {
     console.log('Mi Total clickeado');
   };
 
   const handleLimiteClick = () => {
     console.log('Límite diario clickeado');
+  };
+
+  const handleAgregarClick = () => {
+    navigate('/agregar-editar-transaccion');
   };
 
   return (
@@ -36,7 +43,12 @@ export const Header = () => {
             <MyCalendar></MyCalendar>
             <div className="w-full flex justify-end pr-2 ml-5 md:ml-15">
               <div className="transform scale-75 sm:scale-85 md:scale-90 lg:scale-100 origin-right">
-                <BotonAgregar />
+                <BotonGeneral
+                  onClick={handleAgregarClick}
+                  tipo="agregar"
+                  className="botonAgregar-neumorphism"
+                  textoFijo="+"
+                />
               </div>
             </div>
           </div>

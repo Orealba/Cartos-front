@@ -5,8 +5,8 @@ interface BotonGeneralProps {
   onClick?: () => void;
   className?: string;
   tipo?: 'basico' | 'agregar' | 'danger' | 'green' | 'edit';
-  textoFijo: string;
-  valorInicial: string;
+  textoFijo?: React.ReactNode;
+  valorInicial?: string;
 }
 
 export const BotonGeneral: React.FC<BotonGeneralProps> = ({
@@ -17,7 +17,7 @@ export const BotonGeneral: React.FC<BotonGeneralProps> = ({
   valorInicial,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(valorInicial);
+  const [inputValue, setInputValue] = useState(valorInicial || '');
 
   const handleButtonClick = () => {
     if (tipo === 'edit') {
@@ -68,9 +68,13 @@ export const BotonGeneral: React.FC<BotonGeneralProps> = ({
         className={combinedClassName}
         style={baseStyle}>
         <div style={{ textAlign: 'center' }}>
-          <span>{textoFijo}</span>
-          <br />
-          <span>{inputValue} €</span>
+          {textoFijo && <span>{textoFijo}</span>}
+          {tipo === 'edit' && (
+            <>
+              <br />
+              <span>{inputValue} €</span>
+            </>
+          )}
         </div>
       </button>
 

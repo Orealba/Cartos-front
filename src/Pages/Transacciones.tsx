@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css';
+
+import { BotonAgregarSinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarSinNeu';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 
-import { BotonAgregarSinNeu } from '../Components/Botones/BotonAgregar/BotonAgregarSinNeu/BotonAgregarsinNeu';
 interface Transaccion {
   icono: string;
   titulo: string;
@@ -100,71 +103,71 @@ export const Transacciones = () => {
   );
   const totalPaginas = Math.ceil(transacciones.length / transaccionesPorPagina);
 
+  const opcionesTransacciones = ['Egresos', 'Ingresos']; // Opciones del desplegable
+
   return (
-    <>
-      <div className="w-full flex justify-center">
-        <div>
-          <div className="mt-30">
-            <BotonDesplegableTransacciones />
-          </div>
-          <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-15 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
-            <div>
-              {transaccionesActuales.map((transaccion, index) => (
-                <div
-                  key={index}
-                  onClick={() => navigate('/agregar-editar-transaccion')}
-                  className="bg-myGray rounded-4xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                  <div className="flex items-center justify-between px-8 sm:px-10 md:px-12 lg:px-16 h-full">
-                    <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                      <span className="text-white font-bold text-base sm:text-lg md:text-xl">
-                        {transaccion.icono}
-                      </span>
-                      <span className="text-white font-medium text-sm sm:text-base md:text-lg">
-                        {transaccion.titulo}
-                      </span>
-                    </div>
-                    <span className="text-white text-xs sm:text-sm md:text-base">
-                      {transaccion.fecha}
+    <div className="w-full flex justify-center">
+      <div>
+        <div className="mt-30">
+          <BotonDesplegableTransacciones />
+        </div>
+        <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-15 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+          <div>
+            {transaccionesActuales.map((transaccion, index) => (
+              <div
+                key={index}
+                onClick={() => navigate('/agregar-editar-transaccion')}
+                className="bg-myGray rounded-4xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
+                <div className="flex items-center justify-between px-8 sm:px-10 md:px-12 lg:px-16 h-full">
+                  <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+                    <span className="text-white font-bold text-base sm:text-lg md:text-xl">
+                      {transaccion.icono}
                     </span>
-                    <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                      <span className="text-white font-bold text-sm sm:text-base md:text-lg">
-                        {transaccion.monto}
-                      </span>
-                      <span className="text-white font-bold text-base sm:text-lg md:text-xl">
-                        {transaccion.icono}
-                      </span>
-                    </div>
+                    <span className="text-white font-medium text-sm sm:text-base md:text-lg">
+                      {transaccion.titulo}
+                    </span>
+                  </div>
+                  <span className="text-white text-xs sm:text-sm md:text-base">
+                    {transaccion.fecha}
+                  </span>
+                  <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+                    <span className="text-white font-bold text-sm sm:text-base md:text-lg">
+                      {transaccion.monto}
+                    </span>
+                    <span className="text-white font-bold text-base sm:text-lg md:text-xl">
+                      {transaccion.icono}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Controles de paginación */}
-            <div className="flex justify-center mt-4 gap-2">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer hover:border-myYellow hover:border-2 border-2 border-transparent">
-                Anterior
-              </button>
-              <span className="flex items-center text-white">
-                Página {currentPage} de {totalPaginas}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPaginas))
-                }
-                disabled={currentPage === totalPaginas}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer hover:border-myYellow hover:border-2 border-2 border-transparent">
-                Siguiente
-              </button>
-            </div>
-            <div className="w-full flex justify-end pr-2 ml-5 md:ml-12">
-              <BotonAgregarSinNeu />
-            </div>
+          {/* Controles de paginación */}
+          <div className="flex justify-center mt-4 gap-2">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer hover:border-myYellow hover:border-2 border-2 border-transparent">
+              Anterior
+            </button>
+            <span className="flex items-center text-white">
+              Página {currentPage} de {totalPaginas}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPaginas))
+              }
+              disabled={currentPage === totalPaginas}
+              className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer hover:border-myYellow hover:border-2 border-2 border-transparent">
+              Siguiente
+            </button>
+          </div>
+          <div className="w-full flex justify-end pr-2 ml-5 md:ml-12">
+            <BotonAgregarSinNeu />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -6,7 +6,7 @@ export const BotonDesplegableTransacciones = () => {
         <button
           id="dropdownOffsetButton"
           data-dropdown-toggle="dropdownDistance"
-          data-dropdown-offset-distance="35"
+          data-dropdown-offset-distance="10"
           data-dropdown-offset-skidding="0"
           className="botonDesplegableTransacciones-neumorphism"
           type="button">
@@ -31,19 +31,19 @@ export const BotonDesplegableTransacciones = () => {
           id="dropdownDistance"
           className="z-10 hidden bg-white divide-y border border-myYellow divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-myGreen">
           <ul
-            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+            className="py-1 text-sm text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownDefault">
             <li>
               <a
                 href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                 Egresos
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                 Ingresos
               </a>
             </li>

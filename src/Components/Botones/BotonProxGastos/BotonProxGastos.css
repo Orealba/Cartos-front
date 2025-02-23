@@ -14,6 +14,11 @@
   box-shadow: 1px 1px 8px #c78b1a, -1px -1px 3px #ffbb23;
   cursor: pointer;
   transition: colors 300ms;
+
+  width: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .botonProxGastos-neumorphism:hover {

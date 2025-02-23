@@ -45,7 +45,8 @@ export const Bienvenida = () => {
               onClick={handleLoginClick}
               className="botonAmarillo-neumorphism"
               tipo="basico"
-              texto="COMENZAR"
+              textoFijo="COMENZAR"
+              valorInicial=""
             />
           </div>
         </div>

@@ -1,4 +1,6 @@
-import { BotonProxGastos } from './Botones/BotonProxGastos/BotonProxGastos';
+import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
+import { useNavigate } from 'react-router-dom';
+import './Botones/BotonProxGastos/BotonProxGastos.css';
 
 interface Gasto {
   icono: string;
@@ -8,6 +10,8 @@ interface Gasto {
 }
 
 export const Body = () => {
+  const navigate = useNavigate();
+
   const gastos: Gasto[] = [
     {
       icono: 'X',
@@ -35,11 +39,20 @@ export const Body = () => {
     },
   ];
 
+  const handleProxGastosClick = () => {
+    navigate('/transacciones');
+  };
+
   return (
     <>
       <div className="bg-myGray/50 rounded-2xl px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
         <div>
-          <BotonProxGastos></BotonProxGastos>
+          <BotonGeneral
+            onClick={handleProxGastosClick}
+            tipo="basico"
+            className="botonProxGastos-neumorphism"
+            textoFijo="Próximos Gastos"
+          />
         </div>
         <div className="max-h-[200px] overflow-y-auto">
           {gastos.map((gasto, index) => (
