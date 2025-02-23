@@ -1,6 +1,6 @@
 import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
 import { useNavigate } from 'react-router-dom';
-import './Botones/BotonProxGastos/BotonProxGastos.css';
+import './Botones/EstilosBotones/BotonProxGastos.css';
 
 interface Gasto {
   icono: string;

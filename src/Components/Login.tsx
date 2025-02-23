@@ -14,7 +14,7 @@ const Login: React.FC = () => {
       localStorage.setItem('isAuthenticated', 'true');
       login();
       console.log('Login exitoso, isAuthenticated establecido');
-      console.log(apiClient.get('/greeting/whoami'));
+      console.log(apiClient().get('/greeting/whoami'));
       navigate('/home');
     } catch (error) {
       console.error('Error en login:', error);

@@ -7,13 +7,16 @@ import { RecurrenteTransacciones } from '../Components/TransacionesComponents/Re
 import { TipoTransacciones } from '../Components/TransacionesComponents/TipoTransacciones';
 import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTransacciones';
 import { CategoríaTransacciones } from '../Components/TransacionesComponents/CategoríaTransacciones';
-import '../Components/Botones/BotonCancelarTrans/BotonCancelarTrans.css';
-import '../Components/Botones/BotonGuardarTrans/BotonGuardarTrans.css';
-import '../Components/Botones/BotonBorraTrans/BotonBorraTrans.css';
+import '../Components/Botones/EstilosBotones/BotonCancelarTrans.css';
+import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
+import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
-//Voy a llamar a los botones con props para que me pasen la funcion que quiero ejecutar y renderizado condicional
 //debo hacer los textfield con props o con tipos y pasarlos como props
+//tipo debe estar primero y por defecto debe ser egreso
+//hay que hacer un fetch para recuperar las categorías y que se muestren en un desplegable en la parte de categoria
+//categoría debe estar de segundo
+///Recurrente debo quitarlo
 export const AgregarEditarTransaccion = () => {
   const navigate = useNavigate();
 
@@ -36,12 +39,12 @@ export const AgregarEditarTransaccion = () => {
         </div>
         <div className="bg-myGray/50 rounded-2xl px-12 sm:px-12 md:px-24 lg:px-35 py-6 sm:py-8 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
+            <TipoTransacciones />
+            <CategoríaTransacciones />
             <TituloTransacciones />
             <MontoTransacciones />
             <FechaTransacciones />
-            <RecurrenteTransacciones />
-            <TipoTransacciones />
-            <CategoríaTransacciones />
+
             <NotaTransacciones />
           </div>
           {/* NECESITAS PONER EL BOTON DE BORRAR CUANDO UNA TRASACCION SE VAYA A EDITA, O SEA QUE HAYA SIDO GUARDADA ANTES */}

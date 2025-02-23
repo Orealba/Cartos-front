@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css';
 
-import '../Components/Botones/BotonAgregar/BotonAgregar.css';
+import '../Components/Botones/EstilosBotones/BotonAgregar.css';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 

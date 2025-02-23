@@ -43,3 +43,33 @@ body {
 
 @media (prefers-color-scheme: light) {
 }
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fbbf24'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.5em;
+}
+
+select option {
+  background-color: #2d3748;
+  color: white;
+  padding: 8px;
+}
+
+select option:hover {
+  background-color: #4a5568;
+}
+
+/* Esto fuerza a que el dropdown aparezca debajo */
+select:not([multiple]) {
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
