@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../services/api';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../SupabaseClient';
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           } else {
             console.log('No se encontraron cuentas'); // Debug
           }
-        } else {
+        } else if (location.pathname !== '/') {
           console.log('No hay sesión activa'); // Debug
           setToken(null);
           setAccountId(null);
@@ -75,11 +76,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       } catch (error) {
         console.error('Error de autenticación:', error);
-        setToken(null);
-        setAccountId(null);
-        setSession(null);
-        setIsAuthenticated(false);
-        navigate('/login');
+        if (location.pathname !== '/') {
+          setToken(null);
+          setAccountId(null);
+          setSession(null);
+          setIsAuthenticated(false);
+          navigate('/login');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -116,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const logout = async () => {
     try {
