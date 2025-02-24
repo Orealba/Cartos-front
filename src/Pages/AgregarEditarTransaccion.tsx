@@ -36,37 +36,26 @@ export const AgregarEditarTransaccion = () => {
   }>({});
 
   useEffect(() => {
-    let isMounted = true;
-
     const cargarTransaccion = async () => {
-      if (id && !isDeleting) {
+      if (id) {
         try {
           const transaccion = await api.get(`/api/transactions/${id}`);
-          if (isMounted) {
-            setTipoSeleccionado(
-              transaccion.type === 'EXPENSE' ? 'Egresos' : 'Ingresos',
-            );
-            setTitulo(transaccion.name);
-            setMonto(transaccion.amount.toString());
-            setFecha(transaccion.date.split('T')[0]);
-            setNota(transaccion.description || '');
-            setCategoriaId(transaccion.categoryId.toString());
-          }
+          setTipoSeleccionado(
+            transaccion.type === 'EXPENSE' ? 'Egresos' : 'Ingresos',
+          );
+          setTitulo(transaccion.name);
+          setMonto(transaccion.amount.toString());
+          setFecha(transaccion.date.split('T')[0]);
+          setNota(transaccion.description || '');
+          setCategoriaId(transaccion.categoryId.toString());
         } catch (error) {
-          if (isMounted && !isDeleting) {
-            console.error('Error al cargar la transacción:', error);
-            navigate('/transacciones');
-          }
+          console.error('Error al cargar:', error);
         }
       }
     };
 
     cargarTransaccion();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [id, api, navigate, isDeleting]);
+  }, [id]);
 
   const handleTipoChange = (nuevoTipo: string) => {
     setTipoSeleccionado(nuevoTipo);
@@ -74,6 +63,14 @@ export const AgregarEditarTransaccion = () => {
     setMonto('');
     setFecha(new Date().toISOString().split('T')[0]);
     setNota('');
+  };
+
+  const handleTituloChange = (nuevoTitulo: string) => {
+    setTitulo(nuevoTitulo);
+  };
+
+  const handleMontoChange = (nuevoMonto: string) => {
+    setMonto(nuevoMonto);
   };
 
   const validarFormulario = (): boolean => {
@@ -185,7 +182,7 @@ export const AgregarEditarTransaccion = () => {
             )}
             <TituloTransacciones
               value={titulo}
-              onChange={setTitulo}
+              onChange={handleTituloChange}
             />
             {errors.titulo && (
               <span className="text-red-500 text-sm ml-2 sm:ml-8">
@@ -194,7 +191,7 @@ export const AgregarEditarTransaccion = () => {
             )}
             <MontoTransacciones
               value={monto}
-              onChange={setMonto}
+              onChange={handleMontoChange}
             />
             {errors.monto && (
               <span className="text-red-500 text-sm ml-2 sm:ml-8">

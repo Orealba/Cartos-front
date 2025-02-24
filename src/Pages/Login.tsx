@@ -3,6 +3,7 @@ import { SupabaseClient, Session } from '@supabase/supabase-js';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { apiClient } from '../services/api';
+import { useEffect } from 'react';
 
 interface LoginProps {
   supabase: SupabaseClient;
@@ -11,8 +12,23 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
   const api = apiClient();
+
   if (session) {
-    console.log(api.get('/greeting/whoami'));
+    const token = session.access_token;
+    const api = apiClient(token);
+
+    useEffect(() => {
+      const checkAuth = async () => {
+        try {
+          await api.get('/greeting/whoami');
+        } catch (error) {
+          console.error('Error checking auth:', error);
+        }
+      };
+
+      checkAuth();
+    }, []);
+
     return (
       <Navigate
         to="/home"
