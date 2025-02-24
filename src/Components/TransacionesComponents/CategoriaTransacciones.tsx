@@ -12,9 +12,13 @@ interface CategoriaResponse {
 
 interface Props {
   tipoSeleccionado: string;
+  setCategoriaId: (id: string) => void;
 }
 
-export const CategoriaTransacciones = ({ tipoSeleccionado }: Props) => {
+export const CategoriaTransacciones = ({
+  tipoSeleccionado,
+  setCategoriaId,
+}: Props) => {
   const [categorias, setCategorias] = useState<CategoriaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -95,6 +99,7 @@ export const CategoriaTransacciones = ({ tipoSeleccionado }: Props) => {
                         `${categoria.picture} ${categoria.name}`,
                       );
                       setIsOpen(false);
+                      setCategoriaId(categoria.id.toString());
                     }}>
                     {categoria.picture} {categoria.name}
                   </div>

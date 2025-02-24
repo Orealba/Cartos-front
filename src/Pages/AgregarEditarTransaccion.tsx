@@ -15,14 +15,10 @@ import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 
-//tipo debe estar primero y por defecto debe ser egreso
-//hay que hacer un fetch para recuperar las categorías y que se muestren en un desplegable en la parte de categoria
-//categoría debe estar de segundo
-///Recurrente debo quitarlo
 export const AgregarEditarTransaccion = () => {
   const navigate = useNavigate();
-  const { accountId } = useAuth();
-  const api = apiClient();
+  const { accountId, token } = useAuth();
+  const api = apiClient(token || undefined);
   const [tipoSeleccionado, setTipoSeleccionado] = useState('Egresos');
   const [titulo, setTitulo] = useState('');
   const [monto, setMonto] = useState('');
@@ -41,23 +37,46 @@ export const AgregarEditarTransaccion = () => {
 
   const handleSubmit = async () => {
     try {
+      console.log('Iniciando submit con valores:', {
+        tipoSeleccionado,
+        titulo,
+        categoriaId,
+        accountId,
+        nota,
+        monto,
+        fecha,
+      });
+
+      if (!titulo || !categoriaId || !accountId || !monto || !fecha) {
+        console.error('Faltan campos requeridos:', {
+          titulo: !!titulo,
+          categoriaId: !!categoriaId,
+          accountId: !!accountId,
+          monto: !!monto,
+          fecha: !!fecha,
+        });
+        return;
+      }
+
       const transaccion = {
         type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
         name: titulo,
-        categoryId: categoriaId,
+        categoryId: parseInt(categoriaId),
         accountId: accountId,
-        description: nota,
+        description: nota || '',
         amount: parseFloat(monto),
         date: `${fecha}T00:00:00.000Z`,
         status: 'COMPLETED',
         createdAt: new Date().toISOString(),
+        autoComplete: true,
       };
 
-      console.log('Enviando transacción:', transaccion);
-      await api.post('/api/transactions', transaccion);
+      console.log('Transacción a enviar:', transaccion);
+      const response = await api.post('/api/transactions', transaccion);
+      console.log('Respuesta exitosa:', response);
       navigate('/transacciones');
     } catch (error) {
-      console.error('Error al guardar la transacción:', error);
+      console.error('Error detallado:', error);
     }
   };
 

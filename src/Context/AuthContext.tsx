@@ -13,7 +13,7 @@ type AuthContextType = {
   login: () => void;
   logout: () => Promise<void>;
   token: string | null;
-  accountId: string | null;
+  accountId: number | null;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(

@@ -2,31 +2,52 @@ const BASE_URL = 'https://backend.cartos-app.com';
 
 export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
-    };
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      };
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-      ...options,
-      headers,
-    });
+      console.log('Request:', {
+        url: `${BASE_URL}${endpoint}`,
+        method: options.method || 'GET',
+        headers,
+        body: options.body,
+      });
 
-    if (!response.ok) {
-      throw new Error('Error en la llamada a la API');
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Error respuesta API:', {
+          status: response.status,
+          statusText: response.statusText,
+          data,
+        });
+        throw new Error(JSON.stringify(data));
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error detallado:', error);
+      throw error;
     }
-
-    return response.json();
   };
 
   return {
     get: (endpoint: string) => callApi(endpoint),
-    post: (endpoint: string, data: any) =>
-      callApi(endpoint, {
+    post: (endpoint: string, data: any) => {
+      console.log('Datos a enviar:', data);
+      return callApi(endpoint, {
         method: 'POST',
         body: JSON.stringify(data),
-      }),
+      });
+    },
     put: (endpoint: string, data: any) =>
       callApi(endpoint, {
         method: 'PUT',
