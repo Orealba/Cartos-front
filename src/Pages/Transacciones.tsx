@@ -88,36 +88,26 @@ export const Transacciones = () => {
         <div className="mt-30">
           <BotonDesplegableTransacciones />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-15 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-30 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
-            {transaccionesActuales.map((transaccion, index) => (
+            {transacciones.map((transaccion, index) => (
               <div
                 key={transaccion.id}
                 onClick={() => navigate('/agregar-editar-transaccion')}
                 className="bg-myGray rounded-xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                <div className="flex items-center justify-between px-8 sm:px-10 md:px-12 lg:px-16 h-full">
-                  <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                    <span className="text-white  text-base sm:text-sm md:text-lg">
-                      {transaccion.name}
-                    </span>
-                    {/* <span className="text-white  text-base sm:text-sm md:text-sm">
-                      {transaccion.description}
-                    </span> */}
-                  </div>
-                  <span className="text-white text-xs sm:text-xs md:text-sm">
-                    {new Date(transaccion.date).toLocaleDateString('es-ES', {
-                      day: 'numeric',
-                      month: 'numeric',
-                    })}
+                <div className="flex justify-between items-center h-full px-8">
+                  <span className="text-white text-base">
+                    {transaccion.name}
                   </span>
-                  <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                    <span className="text-white font-bold text-sm sm:text-base md:text-sm">
-                      {transaccion.amount}€
-                    </span>
-                    <span className="text-white font-bold text-base sm:text-lg md:text-sm">
-                      {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
-                    </span>
-                  </div>
+                  <span className="text-white text-xs">
+                    {new Date(transaccion.date).toLocaleDateString('es-ES')}
+                  </span>
+                  <span className="text-white font-bold">
+                    {transaccion.amount}€
+                  </span>
+                  <span className="text-white font-bold">
+                    {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
+                  </span>
                 </div>
               </div>
             ))}
