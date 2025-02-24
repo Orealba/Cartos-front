@@ -13,11 +13,13 @@ interface CategoriaResponse {
 interface Props {
   tipoSeleccionado: string;
   setCategoriaId: (id: string) => void;
+  initialCategoryId?: string;
 }
 
 export const CategoriaTransacciones = ({
   tipoSeleccionado,
   setCategoriaId,
+  initialCategoryId,
 }: Props) => {
   const [categorias, setCategorias] = useState<CategoriaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +28,21 @@ export const CategoriaTransacciones = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, token } = useAuth();
   const api = apiClient(token || undefined);
+
+  useEffect(() => {
+    if (initialCategoryId && categorias.length > 0) {
+      const categoriaInicial = categorias.find(
+        (cat) => cat.id.toString() === initialCategoryId,
+      );
+
+      if (categoriaInicial) {
+        setCategoriaSeleccionada(
+          `${categoriaInicial.picture} ${categoriaInicial.name}`,
+        );
+        setCategoriaId(categoriaInicial.id.toString());
+      }
+    }
+  }, [initialCategoryId, categorias, setCategoriaId]);
 
   useEffect(() => {
     setCategoriaSeleccionada('');
@@ -53,10 +70,12 @@ export const CategoriaTransacciones = ({
 
       try {
         const data = await api.get('/api/categories?size=100');
+
         if (data && data.content) {
           setCategorias(data.content);
         }
       } catch (error) {
+        console.error('Error al cargar categorías:', error);
         setCategorias([]);
       } finally {
         setIsLoading(false);

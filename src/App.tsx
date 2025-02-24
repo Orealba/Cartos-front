@@ -43,7 +43,6 @@ function App() {
             path="/"
             element={<Bienvenida />}
           />
-
           <Route
             path="/login"
             element={
@@ -53,8 +52,6 @@ function App() {
               />
             }
           />
-
-          {/* Rutas con Navbar */}
           <Route element={<Layout />}>
             <Route
               element={
@@ -67,13 +64,16 @@ function App() {
                 path="/home"
                 element={<Home />}
               />
-
               <Route
                 path="/transacciones"
                 element={<Transacciones />}
               />
               <Route
                 path="/agregar-editar-transaccion"
+                element={<AgregarEditarTransaccion />}
+              />
+              <Route
+                path="/agregar-editar-transaccion/:id"
                 element={<AgregarEditarTransaccion />}
               />
             </Route>

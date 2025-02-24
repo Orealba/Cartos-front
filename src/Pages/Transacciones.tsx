@@ -81,7 +81,9 @@ export const Transacciones = () => {
             {transacciones.map((transaccion, index) => (
               <div
                 key={transaccion.id}
-                onClick={() => navigate('/agregar-editar-transaccion')}
+                onClick={() =>
+                  navigate(`/agregar-editar-transaccion/${transaccion.id}`)
+                }
                 className="bg-myGray rounded-xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
                 <div className="flex justify-between items-center h-full px-8">
                   <span className="text-white text-base">

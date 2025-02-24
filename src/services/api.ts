@@ -9,32 +9,27 @@ export const apiClient = (token?: string) => {
         ...options.headers,
       };
 
-      console.log('Request:', {
-        url: `${BASE_URL}${endpoint}`,
-        method: options.method || 'GET',
-        headers,
-        body: options.body,
-      });
-
       const response = await fetch(`${BASE_URL}${endpoint}`, {
         ...options,
         headers,
       });
 
-      const data = await response.json();
+      if (options.method === 'DELETE') {
+        if (response.ok) {
+          return null;
+        }
+        throw new Error('Error al eliminar');
+      }
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
 
       if (!response.ok) {
-        console.error('Error respuesta API:', {
-          status: response.status,
-          statusText: response.statusText,
-          data,
-        });
         throw new Error(JSON.stringify(data));
       }
 
       return data;
     } catch (error) {
-      console.error('Error detallado:', error);
       throw error;
     }
   };
@@ -42,7 +37,6 @@ export const apiClient = (token?: string) => {
   return {
     get: (endpoint: string) => callApi(endpoint),
     post: (endpoint: string, data: any) => {
-      console.log('Datos a enviar:', data);
       return callApi(endpoint, {
         method: 'POST',
         body: JSON.stringify(data),

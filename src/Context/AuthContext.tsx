@@ -30,21 +30,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      console.log('Sesión actual:', session);
 
       if (session) {
         setToken(session.access_token);
         try {
           const api = apiClient(session.access_token);
           const response = await api.get('/api/accounts');
-          console.log('Respuesta accounts:', response);
           if (response && response.content && response.content.length > 0) {
             setAccountId(response.content[0].id);
             setIsAuthenticated(true);
           }
-        } catch (error) {
-          console.error('Error al obtener account:', error);
-        }
+        } catch (error) {}
       }
     };
 
