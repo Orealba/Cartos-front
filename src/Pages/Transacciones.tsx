@@ -27,33 +27,24 @@ export const Transacciones = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
   const [totalPaginas, setTotalPaginas] = useState(1);
-  const { token, accountId } = useAuth(); // Obtenemos accountId del context
+  const { token, accountId } = useAuth();
   const navigate = useNavigate();
   const api = apiClient(token || undefined);
 
   useEffect(() => {
     const fetchTransacciones = async () => {
       if (!accountId) {
-        console.log('No hay accountId disponible');
         return;
       }
 
       try {
-        console.log('Obteniendo transacciones para cuenta:', accountId);
         const response = await api.get(
           `/api/transactions?accountId=${accountId}&page=${
             currentPage - 1
           }&size=10`,
         );
-        console.log('Respuesta completa:', response);
-        console.log('Contenido de transacciones:', response.content);
-        console.log('Total páginas:', response.totalPages);
 
         if (response && response.content) {
-          console.log(
-            'Actualizando estado con transacciones:',
-            response.content,
-          );
           setTransacciones(response.content);
           setTotalPaginas(response.totalPages);
         }
@@ -78,9 +69,6 @@ export const Transacciones = () => {
   );
 
   const opcionesTransacciones = ['Egresos', 'Ingresos']; // Opciones del desplegable
-
-  // También agreguemos un log en el render para ver qué hay en el estado
-  console.log('Estado actual de transacciones:', transacciones);
 
   return (
     <div className="w-full flex justify-center">
