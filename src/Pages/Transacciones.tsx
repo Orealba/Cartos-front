@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css';
@@ -6,109 +6,81 @@ import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css
 import '../Components/Botones/EstilosBotones/BotonAgregar.css';
 import { BotonDesplegableTransacciones } from '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
+import { useAuth } from '../Context/AuthContext';
+import { apiClient } from '../services/api';
 
 interface Transaccion {
-  icono: string;
-  titulo: string;
-  fecha: string;
-  monto: string;
+  id: number;
+  type: 'EXPENSE' | 'INCOME';
+  name: string;
+  description: string;
+  amount: number;
+  date: string;
+  status: string;
+  categoryId: number;
+  accountId: number;
+  createdAt: string;
+  autoComplete: boolean;
 }
 
 export const Transacciones = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const transaccionesPorPagina = 10;
+  const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const { token, accountId } = useAuth(); // Obtenemos accountId del context
   const navigate = useNavigate();
+  const api = apiClient(token || undefined);
+
+  useEffect(() => {
+    const fetchTransacciones = async () => {
+      if (!accountId) {
+        console.log('No hay accountId disponible');
+        return;
+      }
+
+      try {
+        console.log('Obteniendo transacciones para cuenta:', accountId);
+        const response = await api.get(
+          `/api/transactions?accountId=${accountId}&page=${
+            currentPage - 1
+          }&size=10`,
+        );
+        console.log('Respuesta completa:', response);
+        console.log('Contenido de transacciones:', response.content);
+        console.log('Total páginas:', response.totalPages);
+
+        if (response && response.content) {
+          console.log(
+            'Actualizando estado con transacciones:',
+            response.content,
+          );
+          setTransacciones(response.content);
+          setTotalPaginas(response.totalPages);
+        }
+      } catch (error) {
+        console.error('Error al obtener transacciones:', error);
+      }
+    };
+
+    fetchTransacciones();
+  }, [currentPage, accountId, token]);
 
   const handleAgregarClick = () => {
     navigate('/agregar-editar-transaccion');
   };
 
-  const transacciones: Transaccion[] = [
-    {
-      icono: 'X',
-      titulo: 'Supermercado',
-      fecha: '15/03/2024',
-      monto: '120€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Netflix',
-      fecha: '14/03/2024',
-      monto: '12.99€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Luz',
-      fecha: '13/03/2024',
-      monto: '85€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Agua',
-      fecha: '12/03/2024',
-      monto: '45€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Internet',
-      fecha: '11/03/2024',
-      monto: '39.99€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Transporte',
-      fecha: '10/03/2024',
-      monto: '30€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Restaurante',
-      fecha: '09/03/2024',
-      monto: '55€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Farmacia',
-      fecha: '08/03/2024',
-      monto: '22.50€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Ropa',
-      fecha: '07/03/2024',
-      monto: '89.99€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Cine',
-      fecha: '06/03/2024',
-      monto: '15€',
-    },
-    // Segunda página
-    {
-      icono: 'X',
-      titulo: 'Spotify',
-      fecha: '05/03/2024',
-      monto: '9.99€',
-    },
-    {
-      icono: 'X',
-      titulo: 'Peluquería',
-      fecha: '04/03/2024',
-      monto: '35€',
-    },
-    // ... más transacciones ...
-  ];
-
+  const transaccionesPorPagina = 10;
   const indexOfLastItem = currentPage * transaccionesPorPagina;
   const indexOfFirstItem = indexOfLastItem - transaccionesPorPagina;
   const transaccionesActuales = transacciones.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
-  const totalPaginas = Math.ceil(transacciones.length / transaccionesPorPagina);
 
   const opcionesTransacciones = ['Egresos', 'Ingresos']; // Opciones del desplegable
+
+  // También agreguemos un log en el render para ver qué hay en el estado
+  console.log('Estado actual de transacciones:', transacciones);
 
   return (
     <div className="w-full flex justify-center">
@@ -120,27 +92,30 @@ export const Transacciones = () => {
           <div>
             {transaccionesActuales.map((transaccion, index) => (
               <div
-                key={index}
+                key={transaccion.id}
                 onClick={() => navigate('/agregar-editar-transaccion')}
-                className="bg-myGray rounded-4xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
+                className="bg-myGray rounded-xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
                 <div className="flex items-center justify-between px-8 sm:px-10 md:px-12 lg:px-16 h-full">
                   <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                    <span className="text-white font-bold text-base sm:text-lg md:text-xl">
-                      {transaccion.icono}
+                    <span className="text-white  text-base sm:text-sm md:text-lg">
+                      {transaccion.name}
                     </span>
-                    <span className="text-white font-medium text-sm sm:text-base md:text-lg">
-                      {transaccion.titulo}
-                    </span>
+                    {/* <span className="text-white  text-base sm:text-sm md:text-sm">
+                      {transaccion.description}
+                    </span> */}
                   </div>
-                  <span className="text-white text-xs sm:text-sm md:text-base">
-                    {transaccion.fecha}
+                  <span className="text-white text-xs sm:text-xs md:text-sm">
+                    {new Date(transaccion.date).toLocaleDateString('es-ES', {
+                      day: 'numeric',
+                      month: 'numeric',
+                    })}
                   </span>
                   <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                    <span className="text-white font-bold text-sm sm:text-base md:text-lg">
-                      {transaccion.monto}
+                    <span className="text-white font-bold text-sm sm:text-base md:text-sm">
+                      {transaccion.amount}€
                     </span>
-                    <span className="text-white font-bold text-base sm:text-lg md:text-xl">
-                      {transaccion.icono}
+                    <span className="text-white font-bold text-base sm:text-lg md:text-sm">
+                      {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
                     </span>
                   </div>
                 </div>
