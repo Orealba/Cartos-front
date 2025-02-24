@@ -100,7 +100,7 @@ export const MyCalendar = () => {
   };
 
   const handleSelectEvent = (event: any) => {
-    navigate(`/transactions/edit/${event.id}`);
+    navigate(`/agregar-editar-transaccion/${event.id}`);
   };
 
   return (
@@ -125,7 +125,7 @@ export const MyCalendar = () => {
             cursor: 'pointer',
           },
         })}
-        tooltipAccessor={(event) => event.name}
+        tooltipAccessor={(event) => event.name || 'Sin título'}
       />
     </div>
   );
