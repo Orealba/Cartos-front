@@ -102,7 +102,7 @@ export const CategoriaTransacciones = ({
             className="bg-transparent text-white cursor-pointer flex items-center gap-4"
             onClick={() => setIsOpen(!isOpen)}>
             <span className="text-white/60 whitespace-nowrap">
-              {categoriaSeleccionada || 'Seleccionar categoria'}
+              {categoriaSeleccionada || 'Seleccionar '}
             </span>
             <span className="text-white/60 text-sm">⌄</span>
           </div>

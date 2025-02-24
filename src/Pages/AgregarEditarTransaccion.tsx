@@ -156,7 +156,7 @@ export const AgregarEditarTransaccion = () => {
   return (
     <>
       <div className="">
-        <div className="flex justify-center gap-56 mt-35 sm:mt-35 md:mt-4 lg:mt-25">
+        <div className="flex justify-center gap-2 sm:gap-56 mt-35 sm:mt-35 md:mt-4 lg:mt-20">
           <BotonGeneral
             onClick={() => navigate('/transacciones')}
             tipo="danger"
@@ -170,7 +170,7 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Guardar"
           />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-12 sm:px-12 md:px-24 lg:px-35 py-6 sm:py-8 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-1  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
             <TipoTransacciones onTipoChange={handleTipoChange} />
             <CategoriaTransacciones
@@ -179,7 +179,7 @@ export const AgregarEditarTransaccion = () => {
               initialCategoryId={categoriaId}
             />
             {errors.categoria && (
-              <span className="text-red-500 text-sm ml-8">
+              <span className="text-red-500 text-sm ml-2 sm:ml-8">
                 {errors.categoria}
               </span>
             )}
@@ -188,14 +188,18 @@ export const AgregarEditarTransaccion = () => {
               onChange={setTitulo}
             />
             {errors.titulo && (
-              <span className="text-red-500 text-sm ml-8">{errors.titulo}</span>
+              <span className="text-red-500 text-sm ml-2 sm:ml-8">
+                {errors.titulo}
+              </span>
             )}
             <MontoTransacciones
               value={monto}
               onChange={setMonto}
             />
             {errors.monto && (
-              <span className="text-red-500 text-sm ml-8">{errors.monto}</span>
+              <span className="text-red-500 text-sm ml-2 sm:ml-8">
+                {errors.monto}
+              </span>
             )}
             <FechaTransacciones
               value={fecha}
