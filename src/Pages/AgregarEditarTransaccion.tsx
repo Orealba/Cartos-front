@@ -19,8 +19,8 @@ import { ModalConfirmacion } from '../Components/ModalConfirmacion';
 export const AgregarEditarTransaccion = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { accountId, token } = useAuth();
-  const api = apiClient(token || undefined);
+  const { session, accountId } = useAuth();
+  const api = apiClient(session?.access_token);
   const [isDeleting, setIsDeleting] = useState(false);
   const [tipoSeleccionado, setTipoSeleccionado] = useState('Egresos');
   const [titulo, setTitulo] = useState('');
@@ -101,11 +101,12 @@ export const AgregarEditarTransaccion = () => {
       return;
     }
 
-    try {
-      if (!accountId) {
-        return;
-      }
+    if (!accountId) {
+      console.error('No hay accountId disponible');
+      return;
+    }
 
+    try {
       const transaccion = {
         type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
         name: titulo,
@@ -118,6 +119,8 @@ export const AgregarEditarTransaccion = () => {
         createdAt: new Date().toISOString(),
         autoComplete: true,
       };
+
+      console.log('Enviando transacción:', transaccion);
 
       if (id) {
         await api.put(`/api/transactions/${id}`, transaccion);
@@ -161,7 +164,7 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Cancelar"
           />
           <BotonGeneral
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
             tipo="green"
             className="botonGuardarTrans-neumorphism"
             textoFijo="Guardar"

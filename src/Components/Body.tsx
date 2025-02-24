@@ -15,15 +15,15 @@ interface Gasto {
 
 export const Body = () => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { session } = useAuth();
   const [gastos, setGastos] = useState<Gasto[]>([]);
 
   useEffect(() => {
     const cargarProximosGastos = async () => {
-      if (!token) return;
+      if (!session?.access_token) return;
 
       try {
-        const api = apiClient(token);
+        const api = apiClient(session.access_token);
         const startDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
         const endDate = dayjs()
           .add(1, 'year')
@@ -33,9 +33,13 @@ export const Body = () => {
           `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=true&includeCompleted=true`,
         );
 
-        // Filtrar solo egresos futuros y tomar los primeros 4
+        // Filtrar solo egresos futuros, ordenar por fecha más cercana y tomar los primeros 4
         const proximosGastos = response
           .filter((trans: any) => trans.type === 'EXPENSE')
+          .sort(
+            (a: any, b: any) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime(),
+          )
           .slice(0, 4)
           .map((gasto: any) => ({
             id: gasto.transactionId,
@@ -51,7 +55,7 @@ export const Body = () => {
     };
 
     cargarProximosGastos();
-  }, [token]);
+  }, [session]);
 
   const handleProxGastosClick = () => {
     navigate('/transacciones');
@@ -72,7 +76,10 @@ export const Body = () => {
           {gastos.map((gasto) => (
             <div
               key={gasto.id}
-              className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12">
+              onClick={() =>
+                navigate(`/agregar-editar-transaccion/${gasto.id}`)
+              }
+              className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
               <div className="flex items-center justify-between px-6 h-full">
                 <div className="flex items-center gap-2 w-1/3">
                   <span className="text-xl">💸</span>

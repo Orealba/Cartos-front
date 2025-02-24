@@ -4,6 +4,7 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { apiClient } from '../services/api';
 import { useEffect } from 'react';
+import { useAuth } from '../Context/AuthContext';
 
 interface LoginProps {
   supabase: SupabaseClient;
@@ -11,11 +12,13 @@ interface LoginProps {
 }
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
+  const { setSession } = useAuth();
   const api = apiClient();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (session) {
+      setSession(session);
       const token = session.access_token;
       const api = apiClient(token);
 
@@ -30,7 +33,7 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
 
       checkAuth();
     }
-  }, [session]);
+  }, [session, setSession]);
 
   if (session) {
     return null;

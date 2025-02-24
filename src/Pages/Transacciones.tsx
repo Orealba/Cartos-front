@@ -24,29 +24,27 @@ interface Transaccion {
 }
 
 export const Transacciones = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
-  const [totalPaginas, setTotalPaginas] = useState(1);
-  const { token, accountId } = useAuth();
-  const navigate = useNavigate();
-  const api = apiClient(token || undefined);
+  const { session } = useAuth();
+  const api = apiClient(session?.access_token);
 
   useEffect(() => {
     const fetchTransacciones = async () => {
-      if (!accountId) {
+      if (!session?.access_token) {
+        console.log('No hay sesión activa');
         return;
       }
 
       try {
-        const response = await api.get(
-          `/api/transactions?accountId=${accountId}&page=${
-            currentPage - 1
-          }&size=10`,
-        );
+        const response = await api.get('/api/transactions?page=0&size=100');
 
         if (response && response.content) {
-          setTransacciones(response.content);
-          setTotalPaginas(response.totalPages);
+          // Ordenar transacciones por fecha, del principio al final del mes
+          const sortedTransactions = response.content.sort(
+            (a: Transaccion, b: Transaccion) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime(),
+          );
+          setTransacciones(sortedTransactions);
         }
       } catch (error) {
         console.error('Error al obtener transacciones:', error);
@@ -54,19 +52,24 @@ export const Transacciones = () => {
     };
 
     fetchTransacciones();
-  }, [currentPage, accountId, token]);
-
-  const handleAgregarClick = () => {
-    navigate('/agregar-editar-transaccion');
-  };
+  }, [session]);
 
   const transaccionesPorPagina = 10;
-  const indexOfLastItem = currentPage * transaccionesPorPagina;
+  const totalPaginas = Math.ceil(transacciones.length / transaccionesPorPagina);
+  const [paginaActual, setPaginaActual] = useState(1);
+
+  const indexOfLastItem = paginaActual * transaccionesPorPagina;
   const indexOfFirstItem = indexOfLastItem - transaccionesPorPagina;
   const transaccionesActuales = transacciones.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
+
+  const navigate = useNavigate();
+
+  const handleAgregarClick = () => {
+    navigate('/agregar-editar-transaccion');
+  };
 
   const opcionesTransacciones = ['Egresos', 'Ingresos'];
 
@@ -87,7 +90,7 @@ export const Transacciones = () => {
             </div>
 
             {/* Lista de transacciones */}
-            {transacciones.map((transaccion, index) => (
+            {transaccionesActuales.map((transaccion, index) => (
               <div
                 key={transaccion.id}
                 onClick={() =>
@@ -133,19 +136,19 @@ export const Transacciones = () => {
             {/* Controles de paginación */}
             <div className="flex justify-center mt-4 gap-2">
               <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
+                onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
+                disabled={paginaActual === 1}
                 className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
                 Anterior
               </button>
               <span className="flex items-center text-white">
-                Página {currentPage} de {totalPaginas}
+                Página {paginaActual} de {totalPaginas}
               </span>
               <button
                 onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPaginas))
+                  setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
                 }
-                disabled={currentPage === totalPaginas}
+                disabled={paginaActual === totalPaginas}
                 className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
                 Siguiente
               </button>

@@ -26,8 +26,8 @@ export const CategoriaTransacciones = ({
   const [isOpen, setIsOpen] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated, token } = useAuth();
-  const api = apiClient(token || undefined);
+  const { session } = useAuth();
+  const api = apiClient(session?.access_token);
 
   useEffect(() => {
     if (initialCategoryId && categorias.length > 0) {
@@ -63,7 +63,7 @@ export const CategoriaTransacciones = ({
 
   useEffect(() => {
     const fetchCategorias = async () => {
-      if (!isAuthenticated || !token) {
+      if (!session?.access_token) {
         setIsLoading(false);
         return;
       }
@@ -83,7 +83,7 @@ export const CategoriaTransacciones = ({
     };
 
     fetchCategorias();
-  }, [isAuthenticated, token]);
+  }, [session]);
 
   const categoriasFiltradas = categorias.filter((categoria) =>
     tipoSeleccionado === 'Egresos'
