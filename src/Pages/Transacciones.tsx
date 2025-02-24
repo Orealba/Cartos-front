@@ -68,7 +68,7 @@ export const Transacciones = () => {
     indexOfLastItem,
   );
 
-  const opcionesTransacciones = ['Egresos', 'Ingresos']; // Opciones del desplegable
+  const opcionesTransacciones = ['Egresos', 'Ingresos'];
 
   return (
     <div className="w-full flex justify-center">
@@ -76,8 +76,17 @@ export const Transacciones = () => {
         <div className="mt-30">
           <BotonDesplegableTransacciones />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-30 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-26 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
+            {/* Encabezados de columnas */}
+            <div className="flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
+              <span className="w-[30%] px-4">Concepto</span>
+              <span className="w-[25%] px-4 text-center">Fecha</span>
+              <span className="w-[25%] px-4 text-center">Monto</span>
+              <span className="w-[20%] px-4 text-right">Tipo</span>
+            </div>
+
+            {/* Lista de transacciones */}
             {transacciones.map((transaccion, index) => (
               <div
                 key={transaccion.id}
@@ -85,17 +94,17 @@ export const Transacciones = () => {
                   navigate(`/agregar-editar-transaccion/${transaccion.id}`)
                 }
                 className="bg-myGray rounded-xl w-full mx-auto h-10 sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                <div className="flex justify-between items-center h-full px-8">
-                  <span className="text-white text-base">
+                <div className="flex justify-between items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12">
+                  <span className="w-[30%] px-4 text-white text-base truncate">
                     {transaccion.name}
                   </span>
-                  <span className="text-white text-xs">
+                  <span className="w-[25%] px-4 text-white text-xs text-center">
                     {new Date(transaccion.date).toLocaleDateString('es-ES')}
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="w-[25%] px-4 text-white font-bold text-center">
                     {transaccion.amount}€
                   </span>
-                  <span className="text-white font-bold">
+                  <span className="w-[20%] px-4 text-white font-bold text-right">
                     {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
                   </span>
                 </div>
