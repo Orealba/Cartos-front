@@ -21,7 +21,7 @@ export const CategoriaTransacciones = ({ tipoSeleccionado }: Props) => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, token } = useAuth();
-  const api = apiClient();
+  const api = apiClient(token || undefined);
 
   useEffect(() => {
     setCategoriaSeleccionada('');

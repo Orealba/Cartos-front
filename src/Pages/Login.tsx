@@ -3,6 +3,7 @@ import { SupabaseClient, Session } from '@supabase/supabase-js';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { apiClient } from '../services/api';
+
 interface LoginProps {
   supabase: SupabaseClient;
   session: Session | null;
@@ -19,6 +20,23 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
       />
     );
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.get('email'),
+        password: formData.get('password'),
+      });
+
+      console.log('Respuesta de login:', data);
+      console.log('Token:', data.session?.access_token);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error de login:', error);
+    }
+  };
 
   return (
     <div>

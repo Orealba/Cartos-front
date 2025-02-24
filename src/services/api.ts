@@ -1,16 +1,14 @@
-import { useAuth } from '../Context/AuthContext';
+const BASE_URL = 'https://backend.cartos-app.com';
 
-export const apiClient = () => {
-  const { token } = useAuth();
-
+export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {
     const headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     };
 
-    const response = await fetch(`https://backend.cartos-app.com${endpoint}`, {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers,
     });

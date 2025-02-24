@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../Context/AuthContext';
+import { apiClient } from '../services/api';
 
 import { TituloTransacciones } from '../Components/TransacionesComponents/TituloTransacciones';
 import { MontoTransacciones } from '../Components/TransacionesComponents/MontoTransacciones';
@@ -19,11 +21,14 @@ import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 ///Recurrente debo quitarlo
 export const AgregarEditarTransaccion = () => {
   const navigate = useNavigate();
+  const { accountId } = useAuth();
+  const api = apiClient();
   const [tipoSeleccionado, setTipoSeleccionado] = useState('Egresos');
   const [titulo, setTitulo] = useState('');
   const [monto, setMonto] = useState('');
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
   const [nota, setNota] = useState('');
+  const [categoriaId, setCategoriaId] = useState('');
 
   // Limpiar todos los campos cuando cambia el tipo
   const handleTipoChange = (nuevoTipo: string) => {
@@ -32,6 +37,28 @@ export const AgregarEditarTransaccion = () => {
     setMonto('');
     setFecha(new Date().toISOString().split('T')[0]);
     setNota('');
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const transaccion = {
+        type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
+        name: titulo,
+        categoryId: categoriaId,
+        accountId: accountId,
+        description: nota,
+        amount: parseFloat(monto),
+        date: `${fecha}T00:00:00.000Z`,
+        status: 'COMPLETED',
+        createdAt: new Date().toISOString(),
+      };
+
+      console.log('Enviando transacción:', transaccion);
+      await api.post('/api/transactions', transaccion);
+      navigate('/transacciones');
+    } catch (error) {
+      console.error('Error al guardar la transacción:', error);
+    }
   };
 
   return (
@@ -45,7 +72,7 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Cancelar"
           />
           <BotonGeneral
-            onClick={() => console.log('Guardar')}
+            onClick={handleSubmit}
             tipo="green"
             className="botonGuardarTrans-neumorphism"
             textoFijo="Guardar"
@@ -54,7 +81,10 @@ export const AgregarEditarTransaccion = () => {
         <div className="bg-myGray/50 rounded-2xl px-12 sm:px-12 md:px-24 lg:px-35 py-6 sm:py-8 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
             <TipoTransacciones onTipoChange={handleTipoChange} />
-            <CategoriaTransacciones tipoSeleccionado={tipoSeleccionado} />
+            <CategoriaTransacciones
+              tipoSeleccionado={tipoSeleccionado}
+              setCategoriaId={setCategoriaId}
+            />
             <TituloTransacciones
               value={titulo}
               onChange={setTitulo}

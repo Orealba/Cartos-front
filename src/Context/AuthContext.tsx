@@ -1,34 +1,54 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { supabase } from '../SupabaseClient';
+import { apiClient } from '../services/api';
 
 type AuthContextType = {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => Promise<void>;
   token: string | null;
+  accountId: string | null;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [accountId, setAccountId] = useState<number | null>(null);
 
   useEffect(() => {
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setToken(session?.access_token || null);
-      setIsAuthenticated(!!session);
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      console.log('Sesión actual:', session);
+
+      if (session) {
+        setToken(session.access_token);
+        try {
+          const api = apiClient(session.access_token);
+          const response = await api.get('/api/accounts');
+          console.log('Respuesta accounts:', response);
+          if (response && response.content && response.content.length > 0) {
+            setAccountId(response.content[0].id);
+            setIsAuthenticated(true);
+          }
+        } catch (error) {
+          console.error('Error al obtener account:', error);
+        }
+      }
     };
 
-    getInitialSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setToken(session?.access_token || null);
-      setIsAuthenticated(!!session);
-    });
-
-    return () => subscription.unsubscribe();
+    checkSession();
   }, []);
 
   const login = () => {
@@ -42,16 +62,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      isAuthenticated, 
-      login, 
-      logout,
-      token 
-    }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        token,
+        accountId,
+      }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export function useAuth() {
   const context = useContext(AuthContext);

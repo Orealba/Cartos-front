@@ -67,15 +67,16 @@ function App() {
                 path="/home"
                 element={<Home />}
               />
+
+              <Route
+                path="/transacciones"
+                element={<Transacciones />}
+              />
+              <Route
+                path="/agregar-editar-transaccion"
+                element={<AgregarEditarTransaccion />}
+              />
             </Route>
-            <Route
-              path="/transacciones"
-              element={<Transacciones />}
-            />
-            <Route
-              path="/agregar-editar-transaccion"
-              element={<AgregarEditarTransaccion />}
-            />
           </Route>
         </Routes>
       </BrowserRouter>
