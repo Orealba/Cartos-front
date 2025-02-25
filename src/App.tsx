@@ -1,7 +1,7 @@
 import './App.css';
 
 import 'flowbite/dist/flowbite.min.js';
-import { Bienvenida } from './Pages/Bienvenida';
+import { Bienvenida } from './Pages/Bienvenida/Bienvenida';
 import { Home } from './Pages/Home';
 import { Layout } from './Components/Layout';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
