@@ -64,7 +64,7 @@ select option:hover {
   background-color: #4a5568;
 }
 
-/* Esto fuerza a que el dropdown aparezca debajo */
+
 select:not([multiple]) {
   background-position: right 0.5rem center;
   background-repeat: no-repeat;
@@ -74,7 +74,7 @@ select:not([multiple]) {
   print-color-adjust: exact;
 }
 .c-dEnagJ {
-  color: white;
+  color: white !important;
 }
 .c-bOcPnF-cmFMMs-color-primary {
   background-color: var(--color-myYellow) !important;

@@ -21,7 +21,6 @@ export const AgregarEditarTransaccion = () => {
   const navigate = useNavigate();
   const { session, accountId } = useAuth();
   const api = apiClient(session?.access_token);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [tipoSeleccionado, setTipoSeleccionado] = useState('Egresos');
   const [titulo, setTitulo] = useState('');
   const [monto, setMonto] = useState('');
@@ -141,12 +140,10 @@ export const AgregarEditarTransaccion = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      setIsDeleting(true);
       await api.delete(`/api/transactions/${id}`);
       setIsModalOpen(false);
       navigate('/transacciones', { replace: true });
     } catch (error) {
-      setIsDeleting(false);
       console.error('Error al eliminar:', error);
       alert('Error al eliminar la transacción');
       setIsModalOpen(false);

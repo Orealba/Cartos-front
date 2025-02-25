@@ -50,6 +50,7 @@ export const Bienvenida = () => {
           </div>
           <div className=""></div>
         </div>
+        {/* este es el código que dibuja la curva */}
         <div className="custom-shape-divider-bottom-1740484337 hidden sm:block">
           <svg
             data-name="Layer 1"

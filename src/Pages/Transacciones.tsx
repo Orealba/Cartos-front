@@ -39,8 +39,8 @@ export const Transacciones = () => {
         const response = await api.get('/api/transactions?page=0&size=100');
 
         if (response && response.content) {
-          //Futuro el back debería ordenarme esto no yo
-          // Ordenar transacciones por fecha, del principio al final del mes
+          //Futuro el back debería ordenarme esto no yo creo que por eso tarda
+
           const sortedTransactions = response.content.sort(
             (a: Transaccion, b: Transaccion) =>
               new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -72,8 +72,6 @@ export const Transacciones = () => {
     navigate('/agregar-editar-transaccion');
   };
 
-  const opcionesTransacciones = ['Egresos', 'Ingresos'];
-
   return (
     <div className="w-full flex justify-center">
       <div>
@@ -82,7 +80,6 @@ export const Transacciones = () => {
         </div>
         <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-26 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
-            {/* Encabezados de columnas */}
             <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
               <span className="w-[30%] px-4">Concepto</span>
               <span className="w-[25%] px-4 text-center">Fecha</span>
@@ -90,8 +87,7 @@ export const Transacciones = () => {
               <span className="w-[20%] px-4 text-right">Tipo</span>
             </div>
 
-            {/* Lista de transacciones */}
-            {transaccionesActuales.map((transaccion, index) => (
+            {transaccionesActuales.map((transaccion) => (
               <div
                 key={transaccion.id}
                 onClick={() =>
@@ -134,7 +130,7 @@ export const Transacciones = () => {
               </div>
             ))}
 
-            {/* Controles de paginación */}
+           
             <div className="flex justify-center mt-4 gap-2">
               <button
                 onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}

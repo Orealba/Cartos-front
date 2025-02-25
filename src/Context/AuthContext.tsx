@@ -10,7 +10,7 @@ import { apiClient } from '../services/api';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../SupabaseClient';
 
-type AuthContextType = {
+interface AuthContextType {
   token: string | null;
   accountId: number | null;
   isLoading: boolean;
@@ -18,7 +18,8 @@ type AuthContextType = {
   session: Session | null;
   setSession: (session: Session | null) => void;
   logout: () => Promise<void>;
-};
+  login: () => void;
+}
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
@@ -28,6 +29,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   setSession: () => {},
   logout: async () => {},
+  login: () => {},
 });
 
 type AuthProviderProps = {
@@ -122,7 +124,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       navigate('/login');
     } catch (error) {
-      // Si necesitas manejar el error, puedes hacerlo aquí sin console.log
+ 
     }
   };
 
@@ -136,6 +138,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         session,
         setSession,
         logout,
+        login: () => {},
       }}>
       {!isLoading ? children : <div>Cargando...</div>}
     </AuthContext.Provider>
