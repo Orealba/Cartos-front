@@ -82,13 +82,15 @@ export const Body = () => {
               className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
               <div className="flex items-center justify-between px-6 h-full">
                 <div className="flex items-center gap-2 w-1/3">
-                  <span className="text-xl">💸</span>
-                  <span className="text-white font-medium">{gasto.name}</span>
+                  <span className="text-xl hidden sm:inline">💸</span>
+                  <span className="text-white font-medium text-sm sm:text-base">
+                    {gasto.name}
+                  </span>
                 </div>
-                <span className="text-white w-1/3 text-center">
+                <span className="text-white w-1/3 text-center text-sm sm:text-base">
                   {gasto.date}
                 </span>
-                <span className="text-white font-bold w-1/3 text-right">
+                <span className="text-white font-bold w-1/3 text-right text-sm sm:text-base">
                   {gasto.amount}€
                 </span>
               </div>
