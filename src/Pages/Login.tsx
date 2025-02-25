@@ -5,7 +5,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { apiClient } from '../services/api';
 import { useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
-
+import logo from '../assets/Images/Logo.svg';
 interface LoginProps {
   supabase: SupabaseClient;
   session: Session | null;
@@ -60,13 +60,54 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-['Star_Jedi'] text-yellow-400">
-        log in or Sign up
-      </h1>
+      <div className="flex justify-center">
+        <a
+          href="#"
+          className="flex items-center">
+          <img
+            src={logo}
+            className="h-12  md:h-15 lg:h-18 transition-all duration-300 mb-20"
+            alt="Logo"
+          />
+        </a>
+      </div>
+      <h1 className="text-3xl  text-myYellow">Inicia sesión o Regístrate</h1>
       <Auth
         supabaseClient={supabase}
         appearance={{ theme: ThemeSupa }}
         providers={[]}
+        localization={{
+          variables: {
+            sign_in: {
+              email_label: 'Correo electrónico',
+              password_label: 'Contraseña',
+              email_input_placeholder: 'Tu correo electrónico',
+              password_input_placeholder: 'Tu contraseña',
+              button_label: 'Iniciar sesión',
+              loading_button_label: 'Iniciando sesión ...',
+              social_provider_text: 'Iniciar sesión con {{provider}}',
+              link_text: '¿Ya tienes una cuenta? Inicia sesión',
+            },
+            sign_up: {
+              email_label: 'Correo electrónico',
+              password_label: 'Contraseña',
+              email_input_placeholder: 'Tu correo electrónico',
+              password_input_placeholder: 'Tu contraseña',
+              button_label: 'Registrarse',
+              loading_button_label: 'Registrando ...',
+              social_provider_text: 'Registrarse con {{provider}}',
+              link_text: '¿No tienes una cuenta? Regístrate',
+            },
+            forgotten_password: {
+              email_label: 'Correo electrónico',
+              password_label: 'Contraseña',
+              email_input_placeholder: 'Tu correo electrónico',
+              button_label: 'Enviar instrucciones',
+              loading_button_label: 'Enviando instrucciones ...',
+              link_text: '¿Olvidaste tu contraseña?',
+            },
+          },
+        }}
       />
     </div>
   );

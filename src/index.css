@@ -73,3 +73,17 @@ select:not([multiple]) {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+.c-dEnagJ {
+  color: white;
+}
+.c-bOcPnF-cmFMMs-color-primary {
+  background-color: var(--color-myYellow) !important;
+  border-radius: 1rem;
+  box-shadow: -1px -1px 5px #e5a01d, 1px 1px 5px #efa61f;
+  border: none !important;
+}
+
+.c-bOcPnF-cmFMMs-color-primary:hover {
+  background-color: var(--color-myGreen) !important;
+  border-color: var(--color-myYellow);
+}

@@ -56,18 +56,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
           const api = apiClient(currentSession.access_token);
           const response = await api.get('/api/accounts');
-          console.log('Respuesta de accounts:', response); // Debug
 
           if (response && response.content && response.content.length > 0) {
             const account = response.content[0];
-            console.log('Account encontrada:', account); // Debug
             setAccountId(account.id);
             setIsAuthenticated(true);
-          } else {
-            console.log('No se encontraron cuentas'); // Debug
           }
         } else if (location.pathname !== '/') {
-          console.log('No hay sesión activa'); // Debug
           setToken(null);
           setAccountId(null);
           setSession(null);
@@ -75,7 +70,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           navigate('/login');
         }
       } catch (error) {
-        console.error('Error de autenticación:', error);
         if (location.pathname !== '/') {
           setToken(null);
           setAccountId(null);
@@ -93,8 +87,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession);
-
       if (event === 'SIGNED_IN' && currentSession) {
         setSession(currentSession);
         setToken(currentSession.access_token);
@@ -130,7 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setSession(null);
       navigate('/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      // Si necesitas manejar el error, puedes hacerlo aquí sin console.log
     }
   };
 
