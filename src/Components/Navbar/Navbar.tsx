@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '../../assets/Images/Logo.svg';
 
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
-import { supabase } from '../../SupabaseClient';
-import { Session } from '@supabase/supabase-js';
+
 import { HamburgerButton } from '../Navbar/HamburgerButton';
 import { NavLinks } from '../Navbar/NavLinks';
 import { UserMenu } from '../Navbar/UserMenu';
@@ -13,10 +12,8 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { logout, isAuthenticated, session } = useAuth();
+  const { logout, session } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsDropdownOpen(false);

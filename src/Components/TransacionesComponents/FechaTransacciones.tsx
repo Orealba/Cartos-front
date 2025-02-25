@@ -1,5 +1,5 @@
 import { TransaccionesPadre } from './TransaccionesPadre';
-import { useState } from 'react';
+
 
 interface Props {
   value: string;

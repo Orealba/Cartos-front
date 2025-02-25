@@ -65,7 +65,7 @@
   padding: 0.5rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 250px; /* Tamaño compacto */
+  width: 250px; 
   max-width: 90%;
   text-align: center;
 }
@@ -86,11 +86,11 @@
 }
 
 .close-button {
-  /* Ajusta la posición vertical */
-  margin-right: 15rem; /* Ajusta la posición horizontal */
+
+  margin-right: 15rem; 
   background: none;
   border: none;
-  font-size: 2rem; /* Aumenta el tamaño de la fuente */
+  font-size: 2rem;
   cursor: pointer;
   color: #ffffff;
   transition: color 0.3s;

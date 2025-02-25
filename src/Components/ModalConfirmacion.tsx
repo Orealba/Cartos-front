@@ -16,19 +16,19 @@ export const ModalConfirmacion = ({
   return (
     <div className="fixed inset-0 bg-myGray/50 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-myGreen rounded-xl border-myYellow border-1 p-4 sm:p-6 w-[80%] sm:w-96 relative">
-        {/* Botón X para cerrar */}
+       
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-white hover:text-gray-300">
           ✕
         </button>
 
-        {/* Mensaje */}
+       
         <div className="mt-4 mb-4 sm:mb-6 text-white text-center text-sm sm:text-base">
           {mensaje}
         </div>
 
-        {/* Botones */}
+       
         <div className="flex justify-center gap-3 sm:gap-4">
           <button
             onClick={onClose}

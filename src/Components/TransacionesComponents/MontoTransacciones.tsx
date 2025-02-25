@@ -29,7 +29,7 @@ export const MontoTransacciones = ({
         <input
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleChange}
           className="bg-transparent border-transparent focus:border-myYellow focus:ring-0 text-white w-full outline-none "
         />
         <span className="text-white -ml-6">€</span>
