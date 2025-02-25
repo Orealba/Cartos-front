@@ -23,7 +23,7 @@ export const Header = () => {
     <>
       <div>
         <div className="w-full flex justify-center mt-30">
-          <div className="flex flex-row gap-4 sm:gap-56">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 md:gap-32 lg:gap-56">
             <BotonGeneral
               onClick={handleTotalClick}
               tipo="edit"
