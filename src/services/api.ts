@@ -1,34 +1,47 @@
-import { useAuth } from '../Context/AuthContext';
+const BASE_URL = 'https://backend.cartos-app.com';
 
-export const apiClient = () => {
-  const { token } = useAuth();
-
+export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    };
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      };
 
-    const response = await fetch(`https://backend.cartos-app.com${endpoint}`, {
-      ...options,
-      headers,
-    });
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+      });
 
-    if (!response.ok) {
-      throw new Error('Error en la llamada a la API');
+      if (options.method === 'DELETE') {
+        if (response.ok) {
+          return null;
+        }
+        throw new Error('Error al eliminar');
+      }
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!response.ok) {
+        throw new Error(JSON.stringify(data));
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
     }
-
-    return response.json();
   };
 
   return {
     get: (endpoint: string) => callApi(endpoint),
-    post: (endpoint: string, data: any) =>
-      callApi(endpoint, {
+    post: (endpoint: string, data: any) => {
+      return callApi(endpoint, {
         method: 'POST',
         body: JSON.stringify(data),
-      }),
+      });
+    },
     put: (endpoint: string, data: any) =>
       callApi(endpoint, {
         method: 'PUT',

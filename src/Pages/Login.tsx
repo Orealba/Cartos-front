@@ -1,24 +1,62 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { SupabaseClient, Session } from '@supabase/supabase-js';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { apiClient } from '../services/api';
+import { useEffect } from 'react';
+import { useAuth } from '../Context/AuthContext';
+
 interface LoginProps {
   supabase: SupabaseClient;
   session: Session | null;
 }
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
+  const { setSession } = useAuth();
   const api = apiClient();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session) {
+      setSession(session);
+      const token = session.access_token;
+      const api = apiClient(token);
+
+      const checkAuth = async () => {
+        try {
+          await api.get('/greeting/whoami');
+          navigate('/home');
+        } catch (error) {
+          console.error('Error checking auth:', error);
+        }
+      };
+
+      checkAuth();
+    }
+  }, [session, setSession]);
+
   if (session) {
-    console.log(api.get('/greeting/whoami'));
-    return (
-      <Navigate
-        to="/home"
-        replace
-      />
-    );
+    return null;
   }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      });
+
+      console.log('Respuesta de login:', data);
+      console.log('Token:', data.session?.access_token);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error de login:', error);
+    }
+  };
 
   return (
     <div>

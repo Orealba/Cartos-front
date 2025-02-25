@@ -3,6 +3,10 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './MyCalendar.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import { useEffect, useState } from 'react';
+import { apiClient } from '../../services/api';
+import { useAuth } from '../../Context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 dayjs.locale('es');
 
@@ -11,31 +15,48 @@ interface EventoCalendario {
   title: string;
   start: Date;
   end: Date;
+  name: string;
+  resource: any;
 }
 
 export const MyCalendar = () => {
+  const [eventos, setEventos] = useState<EventoCalendario[]>([]);
   const localizer = dayjsLocalizer(dayjs);
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
-  const eventos: EventoCalendario[] = [
-    {
-      id: 1,
-      title: '35€',
-      start: new Date(),
-      end: new Date(),
-    },
-    {
-      id: 2,
-      title: '50€',
-      start: new Date(new Date().setDate(new Date().getDate() + 1)), // Mañana
-      end: new Date(new Date().setDate(new Date().getDate() + 1)),
-    },
-    {
-      id: 3,
-      title: '75€',
-      start: new Date(2024, 1, 28), // 28 de febrero 2024
-      end: new Date(2024, 1, 28),
-    },
-  ];
+  useEffect(() => {
+    if (!token) return;
+
+    const cargarTransacciones = async () => {
+      try {
+        const api = apiClient(token);
+        const startDate = dayjs().startOf('month').toISOString();
+        const endDate = dayjs().endOf('month').toISOString();
+
+        const response = await api.get(
+          `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
+        );
+
+        if (response) {
+          setEventos(
+            response.map((trans: any) => ({
+              id: trans.transactionId,
+              title: `${trans.amount}€`,
+              start: new Date(trans.date),
+              end: new Date(trans.date),
+              name: trans.name,
+              resource: trans,
+            })),
+          );
+        }
+      } catch (error) {
+        console.error('Error al cargar transacciones:', error);
+      }
+    };
+
+    cargarTransacciones();
+  }, [token]);
 
   const messages = {
     today: 'Hoy',
@@ -78,6 +99,10 @@ export const MyCalendar = () => {
     ),
   };
 
+  const handleSelectEvent = (event: any) => {
+    navigate(`/agregar-editar-transaccion/${event.id}`);
+  };
+
   return (
     <div className="w-full max-w-none">
       <Calendar
@@ -89,15 +114,18 @@ export const MyCalendar = () => {
         components={components}
         className="min-h-[37.5rem] md:min-h-[25rem] sm:min-h-[18.75rem]"
         style={{ width: '100%' }}
-        defaultDate={new Date(2024, 1, 1)}
+        defaultDate={new Date()}
+        onSelectEvent={handleSelectEvent}
         eventPropGetter={() => ({
           style: {
             backgroundColor: 'transparent',
             color: 'var(--my-yellow)',
             border: 'none',
             fontWeight: 'bold',
+            cursor: 'pointer',
           },
         })}
+        tooltipAccessor={(event) => event.name || 'Sin título'}
       />
     </div>
   );

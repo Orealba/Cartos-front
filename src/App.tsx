@@ -35,15 +35,14 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <ScrollToTop />
         <Routes>
           <Route
             path="/"
             element={<Bienvenida />}
           />
-
           <Route
             path="/login"
             element={
@@ -53,8 +52,6 @@ function App() {
               />
             }
           />
-
-          {/* Rutas con Navbar */}
           <Route element={<Layout />}>
             <Route
               element={
@@ -67,19 +64,23 @@ function App() {
                 path="/home"
                 element={<Home />}
               />
+              <Route
+                path="/transacciones"
+                element={<Transacciones />}
+              />
+              <Route
+                path="/agregar-editar-transaccion"
+                element={<AgregarEditarTransaccion />}
+              />
+              <Route
+                path="/agregar-editar-transaccion/:id"
+                element={<AgregarEditarTransaccion />}
+              />
             </Route>
-            <Route
-              path="/transacciones"
-              element={<Transacciones />}
-            />
-            <Route
-              path="/agregar-editar-transaccion"
-              element={<AgregarEditarTransaccion />}
-            />
           </Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -1,7 +1,7 @@
 import { MyCalendar } from './Calendar/MyCalendar';
 import { BotonGeneral } from './Botones/BotonGeneral/BotonGeneral';
-import './Botones/BotonAgregar/BotonAgregar.css';
-import './Botones/BotonesHeader/BotonesHeader.css';
+import './Botones/EstilosBotones/BotonAgregar.css';
+import './Botones/EstilosBotones/BotonesHeader.css';
 import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {

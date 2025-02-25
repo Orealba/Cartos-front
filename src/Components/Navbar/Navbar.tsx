@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '../../assets/Images/Logo.svg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { supabase } from '../../SupabaseClient';
 import { Session } from '@supabase/supabase-js';
@@ -14,25 +13,10 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { logout, isAuthenticated } = useAuth();
-  const [session, setSession] = useState<Session | null>(null);
+  const { logout, isAuthenticated, session } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  //debo sacar lo de supabase de aquí y meterlo en el context
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   useEffect(() => {
     setIsDropdownOpen(false);
@@ -61,6 +45,19 @@ export const Navbar = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes('/agregar-editar-transaccion')) {
+      setActivePage('transacciones');
+    } else if (path.includes('/home')) {
+      setActivePage('home');
+    } else if (path.includes('/transacciones')) {
+      setActivePage('transacciones');
+    } else if (path.includes('/calendario')) {
+      setActivePage('calendario');
+    }
+  }, [location.pathname]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -69,9 +66,8 @@ export const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
