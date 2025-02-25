@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import logo from '../../assets/Images/Logo.svg';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { supabase } from '../../SupabaseClient';
 import { Session } from '@supabase/supabase-js';
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const [activePage, setActivePage] = useState('home');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { logout, isAuthenticated, session } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +44,19 @@ export const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes('/agregar-editar-transaccion')) {
+      setActivePage('transacciones');
+    } else if (path.includes('/home')) {
+      setActivePage('home');
+    } else if (path.includes('/transacciones')) {
+      setActivePage('transacciones');
+    } else if (path.includes('/calendario')) {
+      setActivePage('calendario');
+    }
+  }, [location.pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

@@ -39,10 +39,11 @@ export const Transacciones = () => {
         const response = await api.get('/api/transactions?page=0&size=100');
 
         if (response && response.content) {
+          //Futuro el back debería ordenarme esto no yo
           // Ordenar transacciones por fecha, del principio al final del mes
           const sortedTransactions = response.content.sort(
             (a: Transaccion, b: Transaccion) =>
-              new Date(a.date).getTime() - new Date(b.date).getTime(),
+              new Date(b.date).getTime() - new Date(a.date).getTime(),
           );
           setTransacciones(sortedTransactions);
         }
@@ -126,7 +127,7 @@ export const Transacciones = () => {
                   <span className="w-[25%] px-4 text-white font-bold text-center">
                     {transaccion.amount}€
                   </span>
-                  <span className="w-[20%] px-4 text-white font-bold text-right">
+                  <span className="w-[20%] px-4 text-white font-bold text-right text-sm">
                     {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
                   </span>
                 </div>
