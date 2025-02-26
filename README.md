@@ -1,50 +1,66 @@
-# React + TypeScript + Vite
+# Cartos - Aplicación de Gestión Financiera Personal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
+Cartos es una aplicación web diseñada para ayudarte a gestionar y organizar tus finanzas personales. Te permite realizar un seguimiento detallado de tus gastos e ingresos, visualizándolos en un calendario para una mejor comprensión de tus patrones financieros.
 
-Currently, two official plugins are available:
+## Estructura del Proyecto
+El proyecto está dividido en dos repositorios:
+- Frontend (Este repositorio)
+- Backend: [@alejandroPardo/cartos-back](https://github.com/alejandroPardo/cartos-back)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologías Utilizadas
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- Flowbite
+- CSS Neumorphism para botones
+- Supabase (Autenticación y Base de datos)
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## Características Principales
+- Autenticación de usuarios mediante Supabase
+- Gestión de tokens para seguridad
+- Visualización de transacciones en calendario
+- Interfaz moderna y responsiva
+- Diseño con efectos neumórficos
+- Integración con API mediante Fetch
+-Rutas protegidas
+-Manejo de errores
+-Manejo de formularios
+-Manejo de sesiones
+-Manejo de datos de usuarios
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Estado Actual del Desarrollo
+Esta es una versión inicial del proyecto que incluye funcionalidades básicas. Algunas características están en desarrollo:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Pendiente
+- Creación de categorías para usuarios nuevos
+- Más funcionalidades de gestión financiera
+- Mejoras en la interfaz de usuario
+-Charts para visualizar transacciones
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Cómo Empezar
+Debido a que el sistema de categorías está en desarrollo, actualmente se requiere solicitar credenciales de acceso para poder utilizar la aplicación. Por favor, contacta con los administradores para obtener un usuario y contraseña.
+
+### Requisitos Previos
+- Vite
+- npm o yarn
+- Credenciales de acceso proporcionadas por el administrador
+-TypesScript
+-React
+-Tailwind CSS
+-Flowbite
+-Supabase
+-React Router
+
+
+### Instalación
+1. Clonar el repositorio
+2. Instalar dependencias: `npm install`
+3. Iniciar el proyecto: `npm start`
+
+## Contacto
+Para solicitar credenciales de acceso o reportar problemas, por favor contacta con los administradores del proyecto.

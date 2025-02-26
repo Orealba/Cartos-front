@@ -123,9 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsAuthenticated(false);
       setSession(null);
       navigate('/login');
-    } catch (error) {
- 
-    }
+    } catch (error) {}
   };
 
   return (

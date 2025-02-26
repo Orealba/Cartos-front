@@ -94,7 +94,7 @@ export const Transacciones = () => {
                   navigate(`/agregar-editar-transaccion/${transaccion.id}`)
                 }
                 className="bg-myGray rounded-xl w-full mx-auto h-auto sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                {/* Vista móvil */}
+                
                 <div className="flex flex-col p-4 sm:hidden">
                   <span className="text-white text-base mb-1">
                     {transaccion.name}
@@ -112,7 +112,7 @@ export const Transacciones = () => {
                   </div>
                 </div>
 
-                {/* Vista desktop */}
+                
                 <div className="hidden sm:flex justify-between items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12">
                   <span className="w-[30%] px-4 text-white text-base truncate">
                     {transaccion.name}
@@ -151,7 +151,7 @@ export const Transacciones = () => {
               </button>
             </div>
 
-            {/* Botón de agregar */}
+           
             <div className="w-full flex justify-end pr-4  ml-5 mt-2 md:ml-12 ">
               <BotonGeneral
                 onClick={handleAgregarClick}
