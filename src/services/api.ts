@@ -1,4 +1,4 @@
-const BASE_URL = 'https://backend.cartos-app.com';
+const BASE_URL = 'http://localhost:8080';
 
 export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {

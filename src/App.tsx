@@ -9,6 +9,7 @@ import { AuthProvider } from './Context/AuthContext';
 
 import { Rutas } from './Rutas';
 
+//manejar desde un hook
 function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
