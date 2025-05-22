@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import logo from '../assets/Images/Logo.svg';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+
 interface LoginProps {
   supabase: SupabaseClient;
   session: Session | null;
@@ -14,7 +16,7 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
   const { setSession } = useAuth();
-  const api = apiClient();
+  const [authKey, setAuthKey] = useState(Date.now());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
         try {
           await api.get('/greeting/whoami');
           navigate('/home');
+          setAuthKey(Date.now());
         } catch (error) {
           console.error('Error checking auth:', error);
         }
@@ -34,7 +37,7 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
 
       checkAuth();
     }
-  }, [session, setSession]);
+  }, [session, setSession, navigate]);
 
   if (session) {
     return null;
@@ -74,6 +77,7 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
       </div>
       <h1 className="text-3xl  text-myYellow">Inicia sesión o Regístrate</h1>
       <Auth
+        key={authKey}
         supabaseClient={supabase}
         appearance={{ theme: ThemeSupa }}
         providers={[]}
