@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import logo from '../assets/Images/Logo.svg';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 
 interface LoginProps {
   supabase: SupabaseClient;
@@ -16,7 +15,6 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
   const { setSession } = useAuth();
-  const [authKey, setAuthKey] = useState(Date.now());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +27,6 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
         try {
           await api.get('/greeting/whoami');
           navigate('/home');
-          setAuthKey(Date.now());
         } catch (error) {
           console.error('Error checking auth:', error);
         }
@@ -42,25 +39,6 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
   if (session) {
     return null;
   }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      });
-
-      console.log('Respuesta de login:', data);
-      console.log('Token:', data.session?.access_token);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error de login:', error);
-    }
-  };
 
   return (
     <div>
@@ -76,8 +54,8 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
         </Link>
       </div>
       <h1 className="text-3xl  text-myYellow">Inicia sesión o Regístrate</h1>
+
       <Auth
-        key={authKey}
         supabaseClient={supabase}
         appearance={{ theme: ThemeSupa }}
         providers={[]}

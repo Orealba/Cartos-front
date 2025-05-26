@@ -1,5 +1,4 @@
-const BASE_URL = 'http://localhost:8080';
-
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {
     try {
