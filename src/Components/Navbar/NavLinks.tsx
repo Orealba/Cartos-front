@@ -11,7 +11,7 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
       <Link
         to="/home"
         onClick={() => setActivePage('home')}
-        className={`block text-white relative pb-2 ${
+        className={`block text-white relative pb-1 ${
           activePage === 'home'
             ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
             : ''
