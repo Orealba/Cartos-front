@@ -22,7 +22,13 @@ export const Header = () => {
   return (
     <>
       <div>
-        <div className="w-full flex justify-center mt-30">
+        <div className="w-full flex justify-center mt-34">
+          <h1 className="text-center text-white text-base sm:text-lg md:text-xl max-w-xl px-4">
+            Control diario de gastos: añade tus gastos, fija tus límites y
+            consulta los cobros próximos desde el calendario.
+          </h1>
+        </div>
+        <div className="w-full flex justify-center mt-8">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-20 md:gap-32 lg:gap-56">
             <BotonGeneral
               onClick={handleTotalClick}
