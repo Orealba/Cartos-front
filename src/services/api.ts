@@ -1,5 +1,4 @@
-const BASE_URL = 'https://backend.cartos-app.com';
-
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export const apiClient = (token?: string) => {
   const callApi = async (endpoint: string, options: RequestInit = {}) => {
     try {

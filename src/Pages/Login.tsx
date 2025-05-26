@@ -6,6 +6,8 @@ import { apiClient } from '../services/api';
 import { useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import logo from '../assets/Images/Logo.svg';
+import { Link } from 'react-router-dom';
+
 interface LoginProps {
   supabase: SupabaseClient;
   session: Session | null;
@@ -13,7 +15,6 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
   const { setSession } = useAuth();
-  const api = apiClient();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,45 +34,27 @@ export const Login: React.FC<LoginProps> = ({ supabase, session }) => {
 
       checkAuth();
     }
-  }, [session, setSession]);
+  }, [session, setSession, navigate]);
 
   if (session) {
     return null;
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      });
-
-      console.log('Respuesta de login:', data);
-      console.log('Token:', data.session?.access_token);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error de login:', error);
-    }
-  };
-
   return (
     <div>
       <div className="flex justify-center">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="flex items-center">
           <img
             src={logo}
             className="h-12  md:h-15 lg:h-18 transition-all duration-300 mb-20"
             alt="Logo"
           />
-        </a>
+        </Link>
       </div>
       <h1 className="text-3xl  text-myYellow">Inicia sesión o Regístrate</h1>
+
       <Auth
         supabaseClient={supabase}
         appearance={{ theme: ThemeSupa }}
