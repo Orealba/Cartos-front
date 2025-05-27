@@ -70,7 +70,7 @@ export const Navbar = () => {
   return (
     <div className="fixed top-0 left-0 right-0 w-full z-50 bg-myGray/90 backdrop-blur-sm">
       <div className="max-w-screen-lg mx-auto">
-        <div className="flex justify-center mt-5">
+        <div className="flex justify-center mt-3">
           <Link
             to="/home"
             className="flex items-center">

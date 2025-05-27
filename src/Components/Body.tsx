@@ -73,29 +73,35 @@ export const Body = () => {
           />
         </div>
         <div className="flex flex-col gap-2 mt-4">
-          {gastos.map((gasto) => (
-            <div
-              key={gasto.id}
-              onClick={() =>
-                navigate(`/agregar-editar-transaccion/${gasto.id}`)
-              }
-              className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
-              <div className="flex items-center justify-between px-6 h-full">
-                <div className="flex items-center gap-2 w-1/3">
-                  <span className="text-xl hidden sm:inline">💸</span>
-                  <span className="text-white font-medium text-sm sm:text-base">
-                    {gasto.name}
+          {gastos.length === 0 ? (
+            <p className="text-white text-center text-sm sm:text-base">
+              No tienes próximos cobros pendientes o registrados
+            </p>
+          ) : (
+            gastos.map((gasto) => (
+              <div
+                key={gasto.id}
+                onClick={() =>
+                  navigate(`/agregar-editar-transaccion/${gasto.id}`)
+                }
+                className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
+                <div className="flex items-center justify-between px-6 h-full">
+                  <div className="flex items-center gap-2 w-1/3">
+                    <span className="text-xl hidden sm:inline">💸</span>
+                    <span className="text-white font-medium text-sm sm:text-base">
+                      {gasto.name}
+                    </span>
+                  </div>
+                  <span className="text-white w-1/3 text-center text-sm sm:text-base">
+                    {gasto.date}
+                  </span>
+                  <span className="text-white font-bold w-1/3 text-right text-sm sm:text-base">
+                    {gasto.amount}€
                   </span>
                 </div>
-                <span className="text-white w-1/3 text-center text-sm sm:text-base">
-                  {gasto.date}
-                </span>
-                <span className="text-white font-bold w-1/3 text-right text-sm sm:text-base">
-                  {gasto.amount}€
-                </span>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </>
