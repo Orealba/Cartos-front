@@ -33,15 +33,25 @@ export const Bienvenida = () => {
               alt=""
               className="w-[80%] h-auto sm:w-[8rem] sm:h-[12rem] md:w-[12rem] md:h-[16rem] lg:w-[50rem] lg:h-[36rem]"
             />
-            <div className="flex flex-col items-center sm:block">
-              <h2 className="font-['NexaBold'] font-semibold text-xl sm:text-3xl text-myYellow mt-8 sm:mt-40">
-                {`Ahorra y organiza tu dinero sin complicaciones.
-            Descubre a dónde va cada céntimo
-            y toma el control de tus finanzas.`}
+            <div className="flex flex-col items-center sm:block sm:max-w-4xl mx-auto ">
+              <h2 className="font-['NexaBold'] text-base sm:text-xl text-myYellow mt-8 sm:mt-20 leading-relaxed text-justify">
+                <h1 className="text-center sm:text-2xl pb-5">
+                  Controla tus gastos fácilmente:
+                </h1>
+                <p>
+                  Registra cada gasto, ya sea puntual o recurrente, de forma
+                  rápida y sencilla. Programa pagos futuros para no olvidar
+                  ninguna obligación financiera.
+                </p>
+                <p className="mt-4">
+                  Con el calendario integrado, visualiza tus gastos diarios y
+                  controla si superas los límites que hayas establecido, todo
+                  desde una interfaz clara y organizada.
+                </p>
               </h2>
               <BotonGeneral
                 onClick={handleLoginClick}
-                className="botonAmarillo-neumorphism mt-30"
+                className="botonAmarillo-neumorphism mt-15"
                 tipo="basico"
                 textoFijo="COMENZAR"
                 valorInicial=""
