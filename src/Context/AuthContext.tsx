@@ -96,6 +96,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const api = apiClient(currentSession.access_token);
         const response = await api.get('/api/accounts');
 
+        if (!response.content || response.content.length === 0) {
+          try {
+            await api.post('/api/users/onboarding', {
+              firstName: 'Nombre',
+              lastName: 'Apellido',
+              language: 'es',
+            });
+            console.log('✅ Onboarding completado');
+          } catch (err) {
+            console.error('❌ Error en onboarding:', err);
+          }
+        }
+
         if (response && response.content && response.content.length > 0) {
           const account = response.content[0];
           setAccountId(account.id);
