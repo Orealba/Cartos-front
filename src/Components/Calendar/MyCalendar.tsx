@@ -39,16 +39,32 @@ export const MyCalendar = () => {
         );
 
         if (response) {
-          setEventos(
-            response.map((trans: any) => ({
-              id: trans.transactionId,
-              title: `${trans.amount}€`,
-              start: new Date(trans.date),
-              end: new Date(trans.date),
-              name: trans.name,
-              resource: trans,
-            })),
-          );
+          // Agrupar transacciones por día y sumar montos
+          const transaccionesAgrupadas: Record<string, number> = {};
+
+          response.forEach((trans: any) => {
+            const fecha = dayjs(trans.date).startOf('day').toISOString();
+
+            if (!transaccionesAgrupadas[fecha]) {
+              transaccionesAgrupadas[fecha] = 0;
+            }
+
+            transaccionesAgrupadas[fecha] += trans.amount;
+          });
+
+          // Convertir a eventos para el calendario
+          const eventosAgrupados: EventoCalendario[] = Object.entries(
+            transaccionesAgrupadas,
+          ).map(([fecha, total], index) => ({
+            id: index,
+            title: `${Number.isInteger(total) ? total : total.toFixed(2)}€`,
+            start: new Date(fecha),
+            end: new Date(fecha),
+            name: `Total del día`,
+            resource: { total },
+          }));
+
+          setEventos(eventosAgrupados);
         }
       } catch (error) {
         console.error('Error al cargar transacciones:', error);
