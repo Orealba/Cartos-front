@@ -19,7 +19,11 @@ interface EventoCalendario {
   resource: any;
 }
 
-export const MyCalendar = () => {
+type MyCalendarProps = {
+  limiteDiario: number;
+};
+export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
+  
   const [eventos, setEventos] = useState<EventoCalendario[]>([]);
   const localizer = dayjsLocalizer(dayjs);
   const { token } = useAuth();
@@ -132,16 +136,14 @@ export const MyCalendar = () => {
         style={{ width: '100%' }}
         defaultDate={new Date()}
         onSelectEvent={handleSelectEvent}
-        eventPropGetter={() => ({
-          style: {
-            backgroundColor: 'transparent',
-            color: 'var(--my-yellow)',
-            border: 'none',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          },
-        })}
         tooltipAccessor={(event) => event.name || 'Sin título'}
+        eventPropGetter={(event) => {
+          const esMayorAlLimite = event.resource.total > limiteDiario;
+
+          return {
+            className: esMayorAlLimite ? 'evento-superado' : 'evento-normal',
+          };
+        }}
       />
     </div>
   );
