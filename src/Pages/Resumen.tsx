@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
-import { Transaccion } from '../Pages/Transacciones'; // Ajusta el path según dónde está tu interfaz
+import { Transaccion } from '../Pages/Transacciones';
 import { PieChart } from '../Components/PieChart';
-
+import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral'; // importa tu botón
 export const Resumen = () => {
   const { token, accountId } = useAuth();
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [filtro, setFiltro] = useState<'todos' | 'categoria'>('todos');
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     const fetchTransacciones = async () => {
@@ -18,7 +23,6 @@ export const Resumen = () => {
         const response = await api.get(
           `/api/transactions?accountId=${accountId}&page=0&size=100`,
         );
-        // Usar response.content aquí
         setTransacciones(response.content || []);
       } catch (error) {
         console.error('Error al obtener transacciones:', error);
@@ -32,49 +36,49 @@ export const Resumen = () => {
 
   if (loading) return <div>Cargando resumen...</div>;
 
+  let transaccionesFiltradas = transacciones.filter(
+    (t) => t.type === 'EXPENSE',
+  );
+  if (filtro === 'categoria' && categoriaSeleccionada !== null) {
+    transaccionesFiltradas = transaccionesFiltradas.filter(
+      (t) => t.categoryId === categoriaSeleccionada,
+    );
+  }
+
   return (
     <div className="p-6 text-white">
       <h2 className="text-2xl font-bold mb-4">Resumen de transacciones</h2>
 
-      {transacciones.length === 0 ? (
-        <p>No hay transacciones disponibles.</p>
-      ) : (
-        <>
-          <ul className="space-y-4 mb-6">
-            {transacciones.map((tx) => (
-              <li
-                key={tx.id}
-                className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-700">
-                <p>
-                  <strong>Nombre:</strong> {tx.name}
-                </p>
-                <p>
-                  <strong>Tipo:</strong> {tx.type}
-                </p>
-                <p>
-                  <strong>Monto:</strong> ${tx.amount}
-                </p>
-                <p>
-                  <strong>Fecha:</strong>{' '}
-                  {new Date(tx.date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Categoría:</strong> {tx.categoryName}
-                </p>
-                <p>
-                  <strong>Cuenta:</strong> {tx.accountName}
-                </p>
-                <p>
-                  <strong>Descripción:</strong> {tx.description}
-                </p>
-              </li>
-            ))}
-          </ul>
+      {/* Botones para seleccionar filtro */}
+      <div className="flex gap-4 mb-4">
+        <BotonGeneral
+          textoFijo="Todos"
+          tipo={filtro === 'todos' ? 'green' : 'basico'}
+          onClick={() => setFiltro('todos')}
+        />
+        <BotonGeneral
+          textoFijo="Por Categoría"
+          tipo={filtro === 'categoria' ? 'green' : 'basico'}
+          onClick={() => setFiltro('categoria')}
+        />
+      </div>
 
-          {/* Aquí agregamos el gráfico */}
-          <PieChart transacciones={transacciones} />
-        </>
+      {/* Selector de categoría */}
+      {filtro === 'categoria' && (
+        <select
+          value={categoriaSeleccionada ?? ''}
+          onChange={(e) => setCategoriaSeleccionada(Number(e.target.value))}
+          className="mb-4 p-2 rounded bg-gray-700 text-white">
+          <option value="">Seleccione categoría</option>
+          <option value={1}>Categoría 1</option>
+          <option value={2}>Categoría 2</option>
+          <option value={3}>Categoría 3</option>
+          {/* Aquí pon las categorías reales */}
+        </select>
       )}
+
+      {/* Solo mostramos el gráfico */}
+      <PieChart transacciones={transaccionesFiltradas} />
     </div>
   );
 };
