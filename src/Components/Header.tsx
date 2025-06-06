@@ -46,6 +46,7 @@ export const Header = () => {
               tipo="edit"
               textoFijo="Límite mensual:"
               valorInicial="1000"
+              className=""
             />
             <BotonGeneral
               onClick={handleLimiteClick}
@@ -63,8 +64,22 @@ export const Header = () => {
                 <BotonGeneral
                   onClick={handleAgregarClick}
                   tipo="agregar"
-                  className="botonAgregar-neumorphism"
-                  textoFijo="+"
+                  className="botonAgregar-neumorphism "
+                  textoFijo={
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  }
                 />
               </div>
             </div>
