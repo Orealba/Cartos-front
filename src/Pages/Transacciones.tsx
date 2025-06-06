@@ -94,7 +94,6 @@ export const Transacciones = () => {
                   navigate(`/agregar-editar-transaccion/${transaccion.id}`)
                 }
                 className="bg-myGray rounded-xl w-full mx-auto h-auto sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                
                 <div className="flex flex-col p-4 sm:hidden">
                   <span className="text-white text-base mb-1">
                     {transaccion.name}
@@ -112,7 +111,6 @@ export const Transacciones = () => {
                   </div>
                 </div>
 
-                
                 <div className="hidden sm:flex justify-between items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12">
                   <span className="w-[30%] px-4 text-white text-base truncate">
                     {transaccion.name}
@@ -130,7 +128,6 @@ export const Transacciones = () => {
               </div>
             ))}
 
-           
             <div className="flex justify-center mt-4 gap-2">
               <button
                 onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
@@ -151,13 +148,26 @@ export const Transacciones = () => {
               </button>
             </div>
 
-           
             <div className="w-full flex justify-end pr-4  ml-5 mt-2 md:ml-12 ">
               <BotonGeneral
                 onClick={handleAgregarClick}
                 tipo="agregar"
                 className="botonAgregar-neumorphism"
-                textoFijo="+"
+                textoFijo={
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                }
               />
             </div>
           </div>

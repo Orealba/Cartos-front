@@ -2,19 +2,34 @@
   --my-yellow: #eaa31e;
 }
 
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
 
+.rbc-event.evento-normal .rbc-event-content {
+  color: var(--my-yellow) !important;
 
+  font-size: 0.75rem;
+}
+
+.rbc-event.evento-superado .rbc-event-content {
+  color: rgb(255, 0, 0) !important;
+  font-weight: bold !important;
+  font-size: 0.75rem;
+}
 .rbc-month-view {
   border: 1px solid var(--my-yellow) !important;
 }
-
 
 .rbc-off-range-bg {
   background-color: rgba(0, 0, 0, 0.3) !important;
 }
 
 .rbc-today {
-  background-color: var(--my-yellow) !important;
+  background-color: rgba(234, 163, 30, 0.2) !important; /* amarillo muy suave */
 }
 
 .rbc-button-link,
@@ -31,7 +46,6 @@
   color: white !important;
 }
 
-
 @media (max-width: 480px) {
   .calendar-container {
     height: 25rem;
@@ -41,7 +55,6 @@
     min-height: 18.75rem;
   }
 }
-
 
 .rbc-event {
   background-color: transparent !important;
@@ -57,7 +70,6 @@
 .rbc-event.rbc-selected {
   background-color: transparent !important;
 }
-
 
 .rbc-calendar {
   color: white;
