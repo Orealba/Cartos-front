@@ -9,7 +9,7 @@ import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
 
-interface Transaccion {
+export interface Transaccion {
   id: number;
   type: 'EXPENSE' | 'INCOME';
   name: string;
@@ -21,6 +21,9 @@ interface Transaccion {
   accountId: number;
   createdAt: string;
   autoComplete: boolean;
+  userId: string;
+  categoryName: string;
+  accountName: string;
 }
 
 export const Transacciones = () => {

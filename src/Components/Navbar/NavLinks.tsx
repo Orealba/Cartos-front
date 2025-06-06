@@ -33,8 +33,8 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
       </Link>
     </li>
     <li className="relative">
-      <a
-        href="#"
+      <Link
+        to="/resumen"
         onClick={() => setActivePage('resumen')}
         className={`block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-myYellow dark:text-white md:dark:hover:text-myYellow dark:hover:bg-myYellow dark:hover:text-white md:dark:hover:bg-transparent relative pb-2 ${
           activePage === 'resumen'
@@ -42,7 +42,7 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
             : ''
         }`}>
         RESUMEN
-      </a>
+      </Link>
     </li>
   </>
 );
