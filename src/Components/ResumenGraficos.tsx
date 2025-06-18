@@ -57,10 +57,15 @@ const SummaryCharts: React.FC<Props> = ({ token }) => {
     const fetchData = async () => {
       const api = apiClient(token);
       try {
-        const [expensesData, categoriesData] = await Promise.all([
-          api.get('/api/gastos'),
-          api.get('/api/categorias'),
+        const [expensesRes, categoriesRes] = await Promise.all([
+          api.get('/api/transactions'),
+          api.get('/api/categories'),
         ]);
+        console.log(expensesRes.content);
+        console.log(categoriesRes);
+
+        const expensesData = expensesRes.content;
+        const categoriesData = categoriesRes.content || [];
 
         setExpenses(expensesData);
         setCategories(categoriesData);
@@ -73,7 +78,10 @@ const SummaryCharts: React.FC<Props> = ({ token }) => {
     fetchData();
   }, [token]);
 
-  const processChartData = (expenses: Expense[], categories: Category[]) => {
+  const processChartData = (
+    expenses: Expense[],
+    categories: Category[] = [],
+  ) => {
     const categoryMap = new Map<number, string>(
       categories.map((cat) => [cat.id, cat.name]),
     );
