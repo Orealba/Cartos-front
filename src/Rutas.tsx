@@ -8,6 +8,7 @@ import { AgregarEditarTransaccion } from './Pages/AgregarEditarTransaccion';
 import { ProtectedRoute } from './Components/utils/ProtectedRoute';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from './SupabaseClient';
+import Resumen from './Pages/Resumen';
 
 interface RutasProps {
   session: Session | null;
@@ -53,6 +54,10 @@ export const Rutas = ({ session, isLoading }: RutasProps) => {
           <Route
             path="/agregar-editar-transaccion/:id"
             element={<AgregarEditarTransaccion />}
+          />
+          <Route
+            path="/resumen"
+            element={<Resumen token={session?.access_token ?? ''} />}
           />
         </Route>
       </Route>
