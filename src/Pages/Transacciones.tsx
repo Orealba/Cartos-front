@@ -130,7 +130,6 @@ export const Transacciones = () => {
               </div>
             ))}
 
-           
             <div className="flex justify-center mt-4 gap-2">
               <button
                 onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
