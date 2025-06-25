@@ -3,28 +3,21 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
   Tooltip,
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-
 import { apiClient } from '../services/api';
-
 const COLORS = [
-  '#8884d8',
-  '#82ca9d',
-  '#ffc658',
-  '#ff7f50',
-  '#00c49f',
-  '#a28bfd',
-  '#e0aaff',
+  '#eaa31e',
+  '#FFB300',
+  '#FFA500',
+  '#FF8C00',
+  '#FF7F50',
+  '#FFD580',
+  '#FFE699',
 ];
 
-// Type definitions
 interface Expense {
   id: number;
   amount: number;
@@ -46,12 +39,14 @@ interface Props {
   token: string;
 }
 
-const SummaryCharts: React.FC<Props> = ({ token }) => {
+type Period = '1M' | '3M' | '6M' | '12M';
+
+const ResumenGraficos: React.FC<Props> = ({ token }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [byCategory, setByCategory] = useState<ChartData[]>([]);
-  const [byDay, setByDay] = useState<ChartData[]>([]);
-  const [byMonth, setByMonth] = useState<ChartData[]>([]);
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('1M');
+  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,15 +56,8 @@ const SummaryCharts: React.FC<Props> = ({ token }) => {
           api.get('/api/transactions'),
           api.get('/api/categories'),
         ]);
-        console.log(expensesRes.content);
-        console.log(categoriesRes);
-
-        const expensesData = expensesRes.content;
-        const categoriesData = categoriesRes.content || [];
-
-        setExpenses(expensesData);
-        setCategories(categoriesData);
-        processChartData(expensesData, categoriesData);
+        setExpenses(expensesRes.content);
+        setCategories(categoriesRes.content || []);
       } catch (error) {
         console.error('Failed to load data:', error);
       }
@@ -78,115 +66,120 @@ const SummaryCharts: React.FC<Props> = ({ token }) => {
     fetchData();
   }, [token]);
 
-  const processChartData = (
-    expenses: Expense[],
-    categories: Category[] = [],
-  ) => {
+  useEffect(() => {
+    const now = new Date();
+    const dateLimit = new Date();
+
+    switch (selectedPeriod) {
+      case '1M':
+        dateLimit.setMonth(now.getMonth() - 1);
+        break;
+      case '3M':
+        dateLimit.setMonth(now.getMonth() - 3);
+        break;
+      case '6M':
+        dateLimit.setMonth(now.getMonth() - 6);
+        break;
+      case '12M':
+        dateLimit.setFullYear(now.getFullYear() - 1);
+        break;
+    }
+
+    const filtered = expenses.filter((e) => new Date(e.date) >= dateLimit);
+    setFilteredExpenses(filtered);
+
     const categoryMap = new Map<number, string>(
       categories.map((cat) => [cat.id, cat.name]),
     );
 
-    const categoryTotals: Record<string, number> = {};
-    expenses.forEach((expense) => {
-      const categoryName = categoryMap.get(expense.category_id) || 'Unknown';
-      categoryTotals[categoryName] =
-        (categoryTotals[categoryName] || 0) + expense.amount;
+    const totals: Record<string, number> = {};
+    filtered.forEach((e) => {
+      const name = categoryMap.get(e.category_id) || 'Unknown';
+      totals[name] = (totals[name] || 0) + e.amount;
     });
 
-    const categoryData: ChartData[] = Object.entries(categoryTotals).map(
-      ([name, value]) => ({ name, value }),
-    );
+    const data: ChartData[] = Object.entries(totals).map(([name, value]) => ({
+      name,
+      value,
+    }));
 
-    const dayTotals: Record<string, number> = {};
-    expenses.forEach((expense) => {
-      const date = expense.date;
-      dayTotals[date] = (dayTotals[date] || 0) + expense.amount;
-    });
-
-    const dayData: ChartData[] = Object.entries(dayTotals).map(
-      ([name, value]) => ({ name, value }),
-    );
-
-    const monthTotals: Record<string, number> = {};
-    expenses.forEach((expense) => {
-      const month = expense.date.slice(0, 7); // Get "YYYY-MM"
-      monthTotals[month] = (monthTotals[month] || 0) + expense.amount;
-    });
-
-    const monthData: ChartData[] = Object.entries(monthTotals).map(
-      ([name, value]) => ({ name, value }),
-    );
-
-    setByCategory(categoryData);
-    setByDay(dayData);
-    setByMonth(monthData);
-  };
+    setChartData(data);
+  }, [selectedPeriod, expenses, categories]);
 
   return (
-    <div className="grid gap-10">
-      {/* Chart: Expenses by Category */}
-      <div className="bg-white p-4 rounded-2xl shadow">
-        <h2 className="text-xl font-semibold mb-2">Expenses by Category</h2>
+    <div className="bg-gray-800 bg-opacity-60 rounded-xl p-6 text-white">
+      <h2 className="text-xl font-semibold mb-4">Gastos por Categoría</h2>
+
+      {/* Selector de período */}
+      <div className="mb-4">
+        <select
+          value={selectedPeriod}
+          onChange={(e) => setSelectedPeriod(e.target.value as Period)}
+          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white">
+          <option value="1M">Último mes</option>
+          <option value="3M">Últimos 3 meses</option>
+          <option value="6M">Últimos 6 meses</option>
+          <option value="12M">Último año</option>
+        </select>
+      </div>
+
+      {/* Gráfico */}
+      <div className="mb-6">
         <ResponsiveContainer
           width="100%"
           height={300}>
           <PieChart>
             <Pie
-              data={byCategory}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               outerRadius={100}
               label>
-              {byCategory.map((_, index) => (
+              {chartData.map((_, index) => (
                 <Cell
                   key={index}
                   fill={COLORS[index % COLORS.length]}
                 />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: '#1f2937', // gray-800
+                borderColor: '#4b5563', // gray-600
+                color: '#f9fafb', // gray-50
+              }}
+            />
             <Legend />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Chart: Expenses by Day */}
-      <div className="bg-white p-4 rounded-2xl shadow">
-        <h2 className="text-xl font-semibold mb-2">Expenses by Day</h2>
-        <ResponsiveContainer
-          width="100%"
-          height={300}>
-          <BarChart data={byDay}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar
-              dataKey="value"
-              fill="#8884d8"
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Chart: Expenses by Month */}
-      <div className="bg-white p-4 rounded-2xl shadow">
-        <h2 className="text-xl font-semibold mb-2">Expenses by Month</h2>
-        <ResponsiveContainer
-          width="100%"
-          height={300}>
-          <BarChart data={byMonth}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar
-              dataKey="value"
-              fill="#00c49f"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      {/* Lista de transacciones */}
+      <div>
+        <h3 className="text-lg font-semibold mb-2">Transacciones</h3>
+        <ul className="space-y-2">
+          {filteredExpenses.map((expense) => {
+            const categoryName =
+              categories.find((c) => c.id === expense.category_id)?.name ||
+              'Unknown';
+            return (
+              <li
+                key={expense.id}
+                className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50">
+                <span>{categoryName}</span>
+                <span className="text-sm text-gray-300">
+                  {new Date(expense.date).toLocaleDateString()}
+                </span>
+                <span className="font-medium">
+                  {expense.amount.toFixed(2)}€
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
 };
 
-export default SummaryCharts;
+export default ResumenGraficos;
