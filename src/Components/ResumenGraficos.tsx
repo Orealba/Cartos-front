@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { apiClient } from '../services/api';
+
 const COLORS = [
   '#eaa31e',
   '#FFB300',
@@ -107,15 +108,15 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
   }, [selectedPeriod, expenses, categories]);
 
   return (
-    <div className="bg-gray-800 bg-opacity-60 rounded-xl p-6 text-white">
-      <h2 className="text-xl font-semibold mb-4">Gastos por Categoría</h2>
-
-      {/* Selector de período */}
-      <div className="mb-4">
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Título y selector afuera del contenedor */}
+      <div className="flex items-center justify-between mb-4 text-white">
+        <h2 className="text-xl font-semibold">Gastos por Categoría</h2>
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value as Period)}
-          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white">
+          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white"
+        >
           <option value="1M">Último mes</option>
           <option value="3M">Últimos 3 meses</option>
           <option value="6M">Últimos 6 meses</option>
@@ -123,63 +124,60 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         </select>
       </div>
 
-      {/* Gráfico */}
-      <div className="mb-6">
-        <ResponsiveContainer
-          width="100%"
-          height={300}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={100}
-              label>
-              {chartData.map((_, index) => (
-                <Cell
-                  key={index}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: '#1f2937', // gray-800
-                borderColor: '#4b5563', // gray-600
-                color: '#f9fafb', // gray-50
-              }}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+      {/* Contenedor con gráfico y lista */}
+      <div className="bg-myGray/50 rounded-2xl px-6 py-6 text-white">
+        <div className="mb-6">
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                label
+              >
+                {chartData.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#1f2937', // gray-800
+                  borderColor: '#4b5563', // gray-600
+                  color: '#f9fafb', // gray-50
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
 
-      {/* Lista de transacciones */}
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Transacciones</h3>
-        <ul className="space-y-2">
-          {filteredExpenses.map((expense) => {
-            const categoryName =
-              categories.find((c) => c.id === expense.category_id)?.name ||
-              'Unknown';
-            return (
-              <li
-                key={expense.id}
-                className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50">
-                <span>{categoryName}</span>
-                <span className="text-sm text-gray-300">
-                  {new Date(expense.date).toLocaleDateString()}
-                </span>
-                <span className="font-medium">
-                  {expense.amount.toFixed(2)}€
-                </span>
-              </li>
-            );
-          })}
-        </ul>
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Transacciones</h3>
+          <ul className="space-y-2 max-h-60 overflow-y-auto">
+            {filteredExpenses.map((expense) => {
+              const categoryName =
+                categories.find((c) => c.id === expense.category_id)?.name ||
+                'Unknown';
+              return (
+                <li
+                  key={expense.id}
+                  className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50"
+                >
+                  <span>{categoryName}</span>
+                  <span className="text-sm text-gray-300">
+                    {new Date(expense.date).toLocaleDateString()}
+                  </span>
+                  <span className="font-medium">{expense.amount.toFixed(2)}€</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   );
 };
 
 export default ResumenGraficos;
+
