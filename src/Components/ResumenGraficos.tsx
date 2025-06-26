@@ -54,7 +54,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
       const api = apiClient(token);
       try {
         const [expensesRes, categoriesRes] = await Promise.all([
-          api.get('/api/transactions'),
+          api.get('/api/transactions?page=0&size=100'),
           api.get('/api/categories'),
         ]);
         setExpenses(expensesRes.content);
@@ -115,8 +115,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value as Period)}
-          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white"
-        >
+          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white">
           <option value="1M">Último mes</option>
           <option value="3M">Últimos 3 meses</option>
           <option value="6M">Últimos 6 meses</option>
@@ -127,17 +126,21 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
       {/* Contenedor con gráfico y lista */}
       <div className="bg-myGray/50 rounded-2xl px-6 py-6 text-white">
         <div className="mb-6">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer
+            width="100%"
+            height={300}>
             <PieChart>
               <Pie
                 data={chartData}
                 dataKey="value"
                 nameKey="name"
                 outerRadius={100}
-                label
-              >
+                label>
                 {chartData.map((_, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={index}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip
@@ -162,13 +165,14 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
               return (
                 <li
                   key={expense.id}
-                  className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50"
-                >
+                  className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50">
                   <span>{categoryName}</span>
                   <span className="text-sm text-gray-300">
                     {new Date(expense.date).toLocaleDateString()}
                   </span>
-                  <span className="font-medium">{expense.amount.toFixed(2)}€</span>
+                  <span className="font-medium">
+                    {expense.amount.toFixed(2)}€
+                  </span>
                 </li>
               );
             })}
@@ -180,4 +184,3 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
 };
 
 export default ResumenGraficos;
-
