@@ -23,7 +23,7 @@ interface Expense {
   id: number;
   amount: number;
   date: string;
-  category_id: number;
+  categoryId: number;
 }
 
 interface Category {
@@ -55,8 +55,12 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
       try {
         const [expensesRes, categoriesRes] = await Promise.all([
           api.get('/api/transactions?page=0&size=100'),
-          api.get('/api/categories'),
+          api.get('/api/categories?page=0&size=100'),
         ]);
+
+        console.log('🧾 transacciones recibidas:', expensesRes.content);
+        console.log('📂 categorías recibidas:', categoriesRes.content);
+
         setExpenses(expensesRes.content);
         setCategories(categoriesRes.content || []);
       } catch (error) {
@@ -95,7 +99,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
 
     const totals: Record<string, number> = {};
     filtered.forEach((e) => {
-      const name = categoryMap.get(e.category_id) || 'Unknown';
+      const name = categoryMap.get(e.categoryId) || 'Unknown';
       totals[name] = (totals[name] || 0) + e.amount;
     });
 
@@ -160,7 +164,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           <ul className="space-y-2 max-h-60 overflow-y-auto">
             {filteredExpenses.map((expense) => {
               const categoryName =
-                categories.find((c) => c.id === expense.category_id)?.name ||
+                categories.find((c) => c.id === expense.categoryId)?.name ||
                 'Unknown';
               return (
                 <li
