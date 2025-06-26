@@ -1,3 +1,4 @@
+// src/Components/ResumenGraficos.tsx
 import React, { useEffect, useState } from 'react';
 import {
   PieChart,
@@ -36,11 +37,11 @@ interface ChartData {
   value: number;
 }
 
+type Period = '1M' | '3M' | '6M' | '12M';
+
 interface Props {
   token: string;
 }
-
-type Period = '1M' | '3M' | '6M' | '12M';
 
 const ResumenGraficos: React.FC<Props> = ({ token }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -49,77 +50,64 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
+  // ── Fetch de datos ─────────────────────────────────────
   useEffect(() => {
     const fetchData = async () => {
       const api = apiClient(token);
       try {
-        const [expensesRes, categoriesRes] = await Promise.all([
+        const [transRes, catRes] = await Promise.all([
           api.get('/api/transactions?page=0&size=100'),
           api.get('/api/categories?page=0&size=100'),
         ]);
-
-        console.log('🧾 transacciones recibidas:', expensesRes.content);
-        console.log('📂 categorías recibidas:', categoriesRes.content);
-
-        setExpenses(expensesRes.content);
-        setCategories(categoriesRes.content || []);
-      } catch (error) {
-        console.error('Failed to load data:', error);
+        setExpenses(transRes.content);
+        setCategories(catRes.content || []);
+      } catch (err) {
+        console.error('Error al cargar datos:', err);
       }
     };
-
     fetchData();
   }, [token]);
 
+  // ── Filtrado y preparación del chart ────────────────────
   useEffect(() => {
     const now = new Date();
-    const dateLimit = new Date();
-
+    const cutoff = new Date(now);
     switch (selectedPeriod) {
       case '1M':
-        dateLimit.setMonth(now.getMonth() - 1);
+        cutoff.setMonth(now.getMonth() - 1);
         break;
       case '3M':
-        dateLimit.setMonth(now.getMonth() - 3);
+        cutoff.setMonth(now.getMonth() - 3);
         break;
       case '6M':
-        dateLimit.setMonth(now.getMonth() - 6);
+        cutoff.setMonth(now.getMonth() - 6);
         break;
       case '12M':
-        dateLimit.setFullYear(now.getFullYear() - 1);
+        cutoff.setFullYear(now.getFullYear() - 1);
         break;
     }
-
-    const filtered = expenses.filter((e) => new Date(e.date) >= dateLimit);
+    const filtered = expenses.filter((e) => new Date(e.date) >= cutoff);
     setFilteredExpenses(filtered);
 
-    const categoryMap = new Map<number, string>(
-      categories.map((cat) => [cat.id, cat.name]),
-    );
-
+    const mapCat = new Map(categories.map((c) => [c.id, c.name]));
     const totals: Record<string, number> = {};
     filtered.forEach((e) => {
-      const name = categoryMap.get(e.categoryId) || 'Unknown';
+      const name = mapCat.get(e.categoryId) || 'Sin categoría';
       totals[name] = (totals[name] || 0) + e.amount;
     });
-
-    const data: ChartData[] = Object.entries(totals).map(([name, value]) => ({
-      name,
-      value,
-    }));
-
-    setChartData(data);
+    setChartData(
+      Object.entries(totals).map(([name, value]) => ({ name, value })),
+    );
   }, [selectedPeriod, expenses, categories]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Título y selector afuera del contenedor */}
-      <div className="flex items-center justify-between mb-4 text-white">
-        <h2 className="text-xl font-semibold">Gastos por Categoría</h2>
+    <div>
+      {/* Selector de periodo (igual a tus botones del Header) */}
+      <div className="w-full flex justify-center mt-30">
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value as Period)}
-          className="border border-gray-600 px-3 py-1 rounded bg-gray-700 text-white">
+          className="border border-gray-600 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-myYellow">
           <option value="1M">Último mes</option>
           <option value="3M">Últimos 3 meses</option>
           <option value="6M">Últimos 6 meses</option>
@@ -127,60 +115,82 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         </select>
       </div>
 
-      {/* Contenedor con gráfico y lista */}
-      <div className="bg-myGray/50 rounded-2xl px-6 py-6 text-white">
-        <div className="mb-6">
-          <ResponsiveContainer
-            width="100%"
-            height={300}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={100}
-                label>
-                {chartData.map((_, index) => (
-                  <Cell
-                    key={index}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1f2937', // gray-800
-                  borderColor: '#4b5563', // gray-600
-                  color: '#f9fafb', // gray-50
-                }}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Contenedor principal centrado (idéntico estilo a Header/Body) */}
+      <div className="w-full flex justify-center">
+        <div
+          className="
+          bg-myGray/50 rounded-2xl
+          px-8 sm:px-8 md:px-20 lg:px-30
+          py-4 sm:py-6 md:py-8 lg:py-10
+          mt-2 sm:mt-3 md:mt-4 lg:mt-5
+          w-full max-w-7xl
+          space-y-6
+        ">
+          {/* Título */}
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white text-center">
+            Gastos por Categoría
+          </h2>
 
-        <div>
-          <h3 className="text-lg font-semibold mb-2">Transacciones</h3>
-          <ul className="space-y-2 max-h-60 overflow-y-auto">
-            {filteredExpenses.map((expense) => {
-              const categoryName =
-                categories.find((c) => c.id === expense.categoryId)?.name ||
-                'Unknown';
+          {/* Gráfico */}
+          <div className="w-full h-80">
+            <ResponsiveContainer
+              width="100%"
+              height="100%">
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={100}
+                  label>
+                  {chartData.map((_, i) => (
+                    <Cell
+                      key={i}
+                      fill={COLORS[i % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    borderColor: '#4b5563',
+                    color: '#f9fafb',
+                  }}
+                />
+                <Legend
+                  verticalAlign="bottom"
+                  wrapperStyle={{ marginTop: 10, color: '#fbbf24' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Lista de transacciones */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-white">Transacciones</h3>
+            {filteredExpenses.map((exp) => {
+              const catName =
+                categories.find((c) => c.id === exp.categoryId)?.name ||
+                'Sin categoría';
               return (
-                <li
-                  key={expense.id}
-                  className="flex justify-between items-center px-3 py-2 rounded bg-gray-700 bg-opacity-50">
-                  <span>{categoryName}</span>
-                  <span className="text-sm text-gray-300">
-                    {new Date(expense.date).toLocaleDateString()}
+                <div
+                  key={exp.id}
+                  className="
+                  flex justify-between items-center
+                  bg-gray-700 bg-opacity-50
+                  p-4 rounded-xl
+                ">
+                  <span className="text-white">{catName}</span>
+                  <span className="text-gray-300 text-sm">
+                    {new Date(exp.date).toLocaleDateString('es-ES')}
                   </span>
-                  <span className="font-medium">
-                    {expense.amount.toFixed(2)}€
+                  <span className="text-white font-medium">
+                    {exp.amount.toFixed(2)}€
                   </span>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
         </div>
       </div>
     </div>
