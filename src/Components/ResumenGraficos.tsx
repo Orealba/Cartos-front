@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { apiClient } from '../services/api';
+import { BotonDesplegableResumen } from './Botones/BotonDesplegable/BotonDesplegableResumen';
 
 const COLORS = [
   '#eaa31e',
@@ -104,15 +105,10 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
     <div>
       {/* Selector de periodo (igual a tus botones del Header) */}
       <div className="w-full flex justify-center mt-30">
-        <select
-          value={selectedPeriod}
-          onChange={(e) => setSelectedPeriod(e.target.value as Period)}
-          className="border border-gray-600 bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-myYellow">
-          <option value="1M">Último mes</option>
-          <option value="3M">Últimos 3 meses</option>
-          <option value="6M">Últimos 6 meses</option>
-          <option value="12M">Último año</option>
-        </select>
+        <BotonDesplegableResumen
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
+        />
       </div>
 
       {/* Contenedor principal centrado (idéntico estilo a Header/Body) */}
