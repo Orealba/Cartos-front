@@ -112,7 +112,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
       </div>
 
       {/* Contenedor principal centrado (idéntico estilo a Header/Body) */}
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center ">
         <div
           className="
           bg-myGray/50 rounded-2xl
@@ -123,12 +123,9 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           space-y-6
         ">
           {/* Título */}
-          <h2 className="text-2xl sm:text-3xl font-semibold text-white text-center">
-            Gastos por Categoría
-          </h2>
 
           {/* Gráfico */}
-          <div className="w-full h-80">
+          <div className="w-full h-100">
             <ResponsiveContainer
               width="100%"
               height="100%">
@@ -147,53 +144,46 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                   ))}
                 </Pie>
                 <Tooltip
+                  // Aplica la clase de Tailwind al wrapper (el contenedor exterior)
+                  wrapperClassName="bg-myGray text-[#15464e] rounded-lg p-2"
+                  // Quitamos el fondo/borde inline del contenido para que no choque
                   contentStyle={{
-                    backgroundColor: '#1f2937',
-                    borderColor: '#4b5563',
-                    color: '#f9fafb',
+                    backgroundColor: ' ',
+                    borderColor: 'transparent',
                   }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  wrapperStyle={{ marginTop: 10, color: '#fbbf24' }}
+                  itemStyle={{ color: '#ccc9bd' }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
           {/* Lista de transacciones */}
+          {/* Resumen por categoría (ya sumadas) */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-white">Transacciones</h3>
-            {filteredExpenses.map((exp) => {
-              const catName =
-                categories.find((c) => c.id === exp.categoryId)?.name ||
-                'Sin categoría';
-              return (
-                <div
-                  key={exp.id}
-                  onClick={() =>
-                    navigate(`/agregar-editar-transaccion/${exp.id}`)
-                  }
-                  className="
+            <h3 className="text-xl font-semibold text-white pb-2">
+              Gastos por Categoría
+            </h3>
+            {chartData.map(({ name, value }) => (
+              <div
+                key={name}
+                className="
         mt-1 sm:mt-3 md:mt-2 lg:mt-2
-         hover:bg-myGray/80 transition-colors
+        hover:bg-myGray/80 transition-colors
       ">
-                  {/* Aquí está la “pastilla” */}
-                  <div
-                    className="
+                <div
+                  className="
           bg-myGray rounded-xl w-full mx-auto
           h-auto sm:h-11 md:h-12 lg:h-12
           flex justify-between items-center
           px-4 py-2
         ">
-                    <span className="text-white text-base">{catName}</span>
-                    <span className="text-white text-base font-bold">
-                      {exp.amount.toFixed(2)}€
-                    </span>
-                  </div>
+                  <span className="text-white text-base">{name}</span>
+                  <span className="text-white text-base font-bold">
+                    {value.toFixed(2)}€
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
