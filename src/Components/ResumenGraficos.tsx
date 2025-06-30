@@ -135,7 +135,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                   dataKey="value"
                   nameKey="name"
                   outerRadius={115}
-                  label>
+                  label={({ percent }) => `${(percent * 100).toFixed(0)}%`}>
                   {chartData.map((_, i) => (
                     <Cell
                       key={i}
@@ -144,14 +144,16 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                   ))}
                 </Pie>
                 <Tooltip
-                  // Aplica la clase de Tailwind al wrapper (el contenedor exterior)
                   wrapperClassName="bg-myGray text-[#15464e] rounded-lg p-2"
-                  // Quitamos el fondo/borde inline del contenido para que no choque
                   contentStyle={{
-                    backgroundColor: ' ',
+                    backgroundColor: '',
                     borderColor: 'transparent',
                   }}
                   itemStyle={{ color: '#ccc9bd' }}
+                  formatter={(value: number, name: string) => [
+                    `${value.toFixed(2)}€`,
+                    name,
+                  ]}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -172,7 +174,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           bg-myGray rounded-xl w-full mx-auto
           h-auto sm:h-11 md:h-12 lg:h-12
           flex justify-between items-center
-          px-4 py-2
+          px-4 
         ">
                   <span className="text-white text-base">{name}</span>
                   <span className="text-white text-base font-bold">
