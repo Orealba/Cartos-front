@@ -104,7 +104,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
   return (
     <div>
       {/* Selector de periodo (igual a tus botones del Header) */}
-      <div className="w-full flex justify-center mt-30">
+      <div className="w-full flex justify-center mt-10">
         <BotonDesplegableResumen
           selectedPeriod={selectedPeriod}
           setSelectedPeriod={setSelectedPeriod}
@@ -134,7 +134,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                   data={chartData}
                   dataKey="value"
                   nameKey="name"
-                  outerRadius={100}
+                  outerRadius={115}
                   label>
                   {chartData.map((_, i) => (
                     <Cell
@@ -160,9 +160,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           {/* Lista de transacciones */}
           {/* Resumen por categoría (ya sumadas) */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-white pb-2">
-              Gastos por Categoría
-            </h3>
+           
             {chartData.map(({ name, value }) => (
               <div
                 key={name}
