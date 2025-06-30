@@ -119,12 +119,9 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           py-4 sm:py-6 md:py-8 lg:py-10
           mt-2 sm:mt-3 md:mt-4 
           w-full max-w-xl
-          min-h-[800px]
+          min-h-[900px]
           space-y-3
         ">
-          {/* Título */}
-
-          {/* Gráfico */}
           <div className="w-full h-100">
             <ResponsiveContainer
               width="100%"
@@ -174,7 +171,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           bg-myGray rounded-xl w-full mx-auto
           h-auto sm:h-11 md:h-12 lg:h-12
           flex justify-between items-center
-          px-4 
+          px-8 
         ">
                   <span className="text-white text-base">{name}</span>
                   <span className="text-white text-base font-bold">
