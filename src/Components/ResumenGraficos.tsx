@@ -171,18 +171,26 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
               return (
                 <div
                   key={exp.id}
+                  onClick={() =>
+                    navigate(`/agregar-editar-transaccion/${exp.id}`)
+                  }
                   className="
-                  flex justify-between items-center
-                  bg-gray-700 bg-opacity-50
-                  p-4 rounded-xl
-                ">
-                  <span className="text-white">{catName}</span>
-                  <span className="text-gray-300 text-sm">
-                    {new Date(exp.date).toLocaleDateString('es-ES')}
-                  </span>
-                  <span className="text-white font-medium">
-                    {exp.amount.toFixed(2)}€
-                  </span>
+        mt-1 sm:mt-3 md:mt-2 lg:mt-2
+         hover:bg-myGray/80 transition-colors
+      ">
+                  {/* Aquí está la “pastilla” */}
+                  <div
+                    className="
+          bg-myGray rounded-xl w-full mx-auto
+          h-auto sm:h-11 md:h-12 lg:h-12
+          flex justify-between items-center
+          px-4 py-2
+        ">
+                    <span className="text-white text-base">{catName}</span>
+                    <span className="text-white text-base font-bold">
+                      {exp.amount.toFixed(2)}€
+                    </span>
+                  </div>
                 </div>
               );
             })}
