@@ -111,16 +111,16 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         />
       </div>
 
-      {/* Contenedor principal centrado (idéntico estilo a Header/Body) */}
       <div className="w-full flex justify-center ">
         <div
           className="
           bg-myGray/50 rounded-2xl
-          px-8 sm:px-8 md:px-20 lg:px-30
+          px-8 sm:px-8 md:px-20 lg:px-40  
           py-4 sm:py-6 md:py-8 lg:py-10
-          mt-2 sm:mt-3 md:mt-4 lg:mt-5
-          w-full max-w-7xl
-          space-y-6
+          mt-2 sm:mt-3 md:mt-4 
+          w-full max-w-xl
+          min-h-[800px]
+          space-y-3
         ">
           {/* Título */}
 
@@ -160,7 +160,6 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           {/* Lista de transacciones */}
           {/* Resumen por categoría (ya sumadas) */}
           <div className="space-y-4">
-           
             {chartData.map(({ name, value }) => (
               <div
                 key={name}
