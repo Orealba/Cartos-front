@@ -8,8 +8,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { apiClient } from '../services/api';
-import { BotonDesplegableResumen } from './Botones/BotonDesplegable/BotonDesplegableResumen';
+import { apiClient } from '../../services/api';
+import { BotonDesplegableResumen } from '../Botones/BotonDesplegable/BotonDesplegableResumen';
+import './ResumenGraficos.css';
 
 const COLORS = [
   '#eaa31e',
@@ -116,7 +117,8 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           className="
           bg-myGray/50 rounded-2xl
           px-8 sm:px-8 md:px-20 lg:px-40  
-          py-4 sm:py-6 md:py-8 lg:py-10
+          overflow-visible
+          py-4 sm:py-6 md:py-8 lg:py-3
           mt-2 sm:mt-3 md:mt-4 
           w-full max-w-xl
           min-h-[900px]
@@ -131,7 +133,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                   data={chartData}
                   dataKey="value"
                   nameKey="name"
-                  outerRadius={115}
+                  outerRadius={100}
                   label={({ percent }) => `${(percent * 100).toFixed(0)}%`}>
                   {chartData.map((_, i) => (
                     <Cell

@@ -1,0 +1,4 @@
+.recharts-wrapper,
+.recharts-surface {
+  overflow: visible !important;
+}

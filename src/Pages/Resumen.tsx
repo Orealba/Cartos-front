@@ -1,5 +1,5 @@
 import React from 'react';
-import ResumenGraficos from '../Components/ResumenGraficos';
+import ResumenGraficos from '../Components/ResumenGraficos/ResumenGraficos';
 
 interface Props {
   token: string;
