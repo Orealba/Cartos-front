@@ -175,7 +175,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
             bg-myGray rounded-xl   w-full
             h-auto sm:h-11 md:h-12 lg:h-12
             flex items-center 
-            px-3 space-x-8
+            px-3 space-x-25
             mb-2
           ">
                     {/* Nombre al principio */}

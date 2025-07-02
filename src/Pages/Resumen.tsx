@@ -8,11 +8,11 @@ interface Props {
 const Resumen: React.FC<Props> = ({ token }) => {
   return (
     <div className="mt-30">
-      <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl max-w-xl ">
+      <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
         Resumen de gastos por categoría
       </h1>
       {/* Centramos todo el contenido y damos padding idéntico al resto de páginas */}
-      <div className="max-w-7xl mx-auto pt-0">
+      <div className="pt-0">
         <ResumenGraficos token={token} />
       </div>
     </div>
