@@ -172,10 +172,11 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                 <div key={name}>
                   <div
                     className="
-            bg-myGray rounded-xl w-full
+            bg-myGray rounded-xl   w-full
             h-auto sm:h-11 md:h-12 lg:h-12
-            flex items-center
-            px-6
+            flex items-center 
+            px-3 space-x-8
+            mb-2
           ">
                     {/* Nombre al principio */}
 
