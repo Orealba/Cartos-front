@@ -102,6 +102,8 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
     );
   }, [selectedPeriod, expenses, categories]);
 
+  const totalValue = chartData.reduce((sum, { value }) => sum + value, 0);
+
   return (
     <div>
       {/* Selector de periodo (igual a tus botones del Header) */}
@@ -118,11 +120,11 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           bg-myGray/50 rounded-2xl
           px-8 sm:px-8 md:px-20 lg:px-40  
           overflow-visible
-          py-4 sm:py-6 md:py-8 lg:py-3
+          py-4 sm:py-6 md:py-8 lg:py-0
           mt-2 sm:mt-3 md:mt-4 
-          w-full max-w-xl
+          w-full  
           min-h-[900px]
-          space-y-3
+          
         ">
           <div className="w-full h-100">
             <ResponsiveContainer
@@ -160,28 +162,38 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
 
           {/* Lista de transacciones */}
           {/* Resumen por categoría (ya sumadas) */}
+          <h2 className="text-white mb-3">Total por categorías</h2>
           <div className="space-y-4">
-            {chartData.map(({ name, value }) => (
-              <div
-                key={name}
-                className="
-        mt-1 sm:mt-3 md:mt-2 lg:mt-2
-        hover:bg-myGray/80 transition-colors
-      ">
-                <div
-                  className="
-          bg-myGray rounded-xl w-full mx-auto
-          h-auto sm:h-11 md:h-12 lg:h-12
-          flex justify-between items-center
-          px-8 
-        ">
-                  <span className="text-white text-base">{name}</span>
-                  <span className="text-white text-base font-bold">
-                    {value.toFixed(2)}€
-                  </span>
+            {chartData.map(({ name, value }) => {
+              const percent = totalValue
+                ? ((value / totalValue) * 100).toFixed(0)
+                : '0';
+              return (
+                <div key={name}>
+                  <div
+                    className="
+            bg-myGray rounded-xl w-full
+            h-auto sm:h-11 md:h-12 lg:h-12
+            flex items-center
+            px-6
+          ">
+                    {/* Nombre al principio */}
+
+                    <span className="text-white text-base flex-1">{name}</span>
+
+                    {/* Importe perfectamente centrado */}
+                    <span className="text-white text-base font-bold flex-1 text-center">
+                      {value.toFixed(2)}€
+                    </span>
+
+                    {/* Porcentaje al final */}
+                    <span className="text-white text-base flex-1 text-right">
+                      {percent}%
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
