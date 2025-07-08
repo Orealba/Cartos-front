@@ -118,12 +118,13 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         <div
           className="
           bg-myGray/50 rounded-2xl
-          px-8 sm:px-8 md:px-20 lg:px-20  
+          px-8 sm:px-8 md:px-20 lg:px-10  
           overflow-visible
-          py-4 sm:py-6 md:py-8 lg:py-0
+          py-4 sm:py-6 md:py-8 lg:py-1
           mt-2 sm:mt-3 md:mt-4 
           w-full  
           min-h-[900px]
+          
           
         ">
           <div className="w-full h-100">
@@ -172,23 +173,24 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                 <div key={name}>
                   <div
                     className="
-            bg-myGray rounded-xl   w-full
-            h-auto sm:h-11 md:h-12 lg:h-12
-            flex items-center 
-            px-3 space-x-25
-            mb-2
+             bg-myGray rounded-xl w-full
+          h-auto sm:h-11 md:h-12 lg:h-12
+          
+          grid grid-cols-3 items-center
+          px-20
+          mb-1
           ">
                     {/* Nombre al principio */}
 
-                    <span className="text-white text-base flex-1">{name}</span>
+                    <span className="text-white  flex-1 text-left">{name}</span>
 
                     {/* Importe perfectamente centrado */}
-                    <span className="text-white text-base font-bold flex-1 text-center">
-                      {value.toFixed(2)}€
+                    <span className="text-white font-bold  text-right">
+                      {value}€
                     </span>
 
                     {/* Porcentaje al final */}
-                    <span className="text-white text-base flex-1 text-right">
+                    <span className="text-white  flex-1 text-right">
                       {percent}%
                     </span>
                   </div>
