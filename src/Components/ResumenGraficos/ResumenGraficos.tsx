@@ -118,7 +118,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         <div
           className="
           bg-myGray/50 rounded-2xl
-          px-8 sm:px-8 md:px-20 lg:px-40  
+          px-8 sm:px-8 md:px-20 lg:px-20  
           overflow-visible
           py-4 sm:py-6 md:py-8 lg:py-0
           mt-2 sm:mt-3 md:mt-4 
