@@ -84,7 +84,7 @@ export const Body = () => {
                 onClick={() =>
                   navigate(`/agregar-editar-transaccion/${gasto.id}`)
                 }
-                className="bg-myGray rounded-4xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
+                className="bg-myGray rounded-xl w-[95%] sm:w-[90%] md:w-[85%] lg:w-[100%] mx-auto h-10 sm:h-11 md:h-12 lg:h-12 cursor-pointer hover:bg-myGray/80 transition-colors">
                 <div className="flex items-center justify-between px-6 h-full">
                   <div className="flex items-center gap-2 w-1/3">
                     <span className="text-xl hidden sm:inline">💸</span>
