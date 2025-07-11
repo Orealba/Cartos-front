@@ -52,6 +52,9 @@ export const Navbar = () => {
       setActivePage('transacciones');
     } else if (path.includes('/calendario')) {
       setActivePage('calendario');
+    } else if (path.includes('/resumen')) {
+      // ← nuevo caso
+      setActivePage('resumen');
     }
   }, [location.pathname]);
 

@@ -79,6 +79,9 @@ export const AgregarEditarTransaccion = () => {
       monto?: string;
     } = {};
 
+    const raw = monto.replace(',', '.');
+    const amountNum = parseFloat(raw);
+
     if (!categoriaId) {
       nuevosErrores.categoria = 'Debes seleccionar una categoría';
     }
@@ -87,7 +90,7 @@ export const AgregarEditarTransaccion = () => {
       nuevosErrores.titulo = 'El título es obligatorio';
     }
 
-    if (!monto || parseFloat(monto) <= 0) {
+    if (!monto || isNaN(amountNum) || amountNum <= 0) {
       nuevosErrores.monto = 'El monto debe ser mayor a 0';
     }
 
@@ -104,7 +107,8 @@ export const AgregarEditarTransaccion = () => {
       console.error('No hay accountId disponible');
       return;
     }
-
+    const raw = monto.replace(',', '.');
+    const amountNum = parseFloat(raw);
     try {
       const transaccion = {
         type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
@@ -112,7 +116,7 @@ export const AgregarEditarTransaccion = () => {
         categoryId: parseInt(categoriaId),
         accountId: accountId,
         description: nota || '',
-        amount: parseFloat(monto),
+        amount: amountNum,
         date: `${fecha}T00:00:00.000Z`,
         status: 'COMPLETED',
         createdAt: new Date().toISOString(),
