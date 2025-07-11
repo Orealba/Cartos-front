@@ -102,11 +102,19 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
     );
   }, [selectedPeriod, expenses, categories]);
 
+  // Total acumulado y etiqueta dinámica según periodo
   const totalValue = chartData.reduce((sum, { value }) => sum + value, 0);
+  const periodLabels: Record<Period, string> = {
+    '1M': 'del mes',
+    '3M': 'del trimestre',
+    '6M': 'de los seis meses',
+    '12M': 'del año',
+  };
+  const totalLabel = periodLabels[selectedPeriod];
 
   return (
     <div>
-      {/* Selector de periodo (igual a tus botones del Header) */}
+      {/* Selector de periodo */}
       <div className="w-full flex justify-center mt-10">
         <BotonDesplegableResumen
           selectedPeriod={selectedPeriod}
@@ -117,16 +125,14 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
       <div className="w-full flex justify-center ">
         <div
           className="
-          bg-myGray/50 rounded-2xl
-          px-8 sm:px-8 md:px-20 lg:px-10  
-          overflow-visible
-          py-4 sm:py-6 md:py-8 lg:py-1
-          mt-2 sm:mt-3 md:mt-4 
-          w-full  
-          min-h-[900px]
-          
-          
-        ">
+            bg-myGray/50 rounded-2xl
+            px-8 sm:px-8 md:px-20 lg:px-10  
+            overflow-visible
+            py-4 sm:py-6 md:py-8 lg:py-1
+            mt-2 sm:mt-3 md:mt-4 
+            w-full  
+            min-h-[900px]
+          ">
           <div className="w-full h-100">
             <ResponsiveContainer
               width="100%"
@@ -157,46 +163,53 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                     name,
                   ]}
                 />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Lista de transacciones */}
-          {/* Resumen por categoría (ya sumadas) */}
+          {/* Lista de totales por categoría */}
           <h2 className="text-white mb-3">Total por categorías</h2>
           <div className="space-y-4">
-            {chartData.map(({ name, value }) => {
-              const percent = totalValue
-                ? ((value / totalValue) * 100).toFixed(0)
-                : '0';
-              return (
-                <div key={name}>
-                  <div
-                    className="
-             bg-myGray rounded-xl w-full
-          h-auto sm:h-11 md:h-12 lg:h-12
-          
-          grid grid-cols-3 items-center
-          px-20
-          mb-1
-          ">
-                    {/* Nombre al principio */}
-
-                    <span className="text-white  flex-1 text-left">{name}</span>
-
-                    {/* Importe perfectamente centrado */}
-                    <span className="text-white font-bold  text-right">
-                      {value}€
-                    </span>
-
-                    {/* Porcentaje al final */}
-                    <span className="text-white  flex-1 text-right">
-                      {percent}%
-                    </span>
-                  </div>
+            {chartData.map(({ name, value }) => (
+              <div key={name}>
+                <div
+                  className="
+                    bg-myGray rounded-xl w-full
+                    h-auto sm:h-11 md:h-12 lg:h-12
+                    grid grid-cols-3 items-center
+                    px-20
+                    mb-1
+                  ">
+                  <span className="text-white flex-1 text-left">{name}</span>
+                  <span className="text-white font-bold text-right">
+                    {value.toFixed(2)}€
+                  </span>
+                  {/* dejamos el % si quieres */}
+                  <span className="text-white flex-1 text-right">
+                    {totalValue
+                      ? `${((value / totalValue) * 100).toFixed(0)}%`
+                      : '0%'}
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            ))}
+
+            {/* Fila de Total del periodo */}
+            <div key="total">
+              <div
+                className="
+                  flex justify-between items-center pb-5
+                ">
+                <span className="text-myYellow text-xl flex-1 text-left ">
+                  Total {totalLabel} :
+                </span>
+                <span className="text-white font-bold  ">
+                  {totalValue.toFixed(2)}€
+                </span>
+             
+              </div>
+            </div>
           </div>
         </div>
       </div>
