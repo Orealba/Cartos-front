@@ -107,10 +107,13 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
   const periodLabels: Record<Period, string> = {
     '1M': 'del mes',
     '3M': 'del trimestre',
-    '6M': 'de los seis meses',
+    '6M': 'del semestre',
     '12M': 'del año',
   };
   const totalLabel = periodLabels[selectedPeriod];
+
+  // Lista ordenada de mayor a menor % (valor)
+  const listData = [...chartData].sort((a, b) => b.value - a.value);
 
   return (
     <div>
@@ -171,43 +174,41 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           {/* Lista de totales por categoría */}
           <h2 className="text-white mb-3">Total por categorías</h2>
           <div className="space-y-4">
-            {chartData.map(({ name, value }) => (
-              <div key={name}>
-                <div
-                  className="
-                    bg-myGray rounded-xl w-full
-                    h-auto sm:h-11 md:h-12 lg:h-12
-                    grid grid-cols-3 items-center
-                    px-20
-                    mb-1
-                  ">
-                  <span className="text-white flex-1 text-left">{name}</span>
-                  <span className="text-white font-bold text-right">
-                    {value.toFixed(2)}€
-                  </span>
-                  {/* dejamos el % si quieres */}
-                  <span className="text-white flex-1 text-right">
-                    {totalValue
-                      ? `${((value / totalValue) * 100).toFixed(0)}%`
-                      : '0%'}
-                  </span>
+            {listData.map(({ name, value }) => {
+              const percent = totalValue
+                ? ((value / totalValue) * 100).toFixed(0)
+                : '0';
+              return (
+                <div key={name}>
+                  <div
+                    className="
+                      bg-myGray rounded-xl w-full
+                      h-auto sm:h-11 md:h-12 lg:h-12
+                      grid grid-cols-3 items-center
+                      px-20
+                      mb-1
+                    ">
+                    <span className="text-white flex-1 text-left">{name}</span>
+                    <span className="text-white font-bold text-right">
+                      {value.toFixed(2)}€
+                    </span>
+                    <span className="text-white flex-1 text-right">
+                      {percent}%
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Fila de Total del periodo */}
             <div key="total">
-              <div
-                className="
-                  flex justify-between items-center pb-5
-                ">
-                <span className="text-myYellow text-xl flex-1 text-left ">
-                  Total {totalLabel} :
+              <div className="flex justify-between items-center pb-5">
+                <span className="text-myYellow text-xl">
+                  Total {totalLabel}:
                 </span>
-                <span className="text-white font-bold  ">
+                <span className="text-white font-bold text-xl">
                   {totalValue.toFixed(2)}€
                 </span>
-             
               </div>
             </div>
           </div>

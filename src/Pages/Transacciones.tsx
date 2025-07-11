@@ -103,7 +103,7 @@ export const Transacciones = () => {
                       {new Date(transaccion.date).toLocaleDateString('es-ES')}
                     </span>
                     <span className="text-white font-bold">
-                      {transaccion.amount}€
+                      {transaccion.amount.toFixed(2)}€
                     </span>
                     <span className="text-white font-bold">
                       {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
@@ -119,7 +119,7 @@ export const Transacciones = () => {
                     {new Date(transaccion.date).toLocaleDateString('es-ES')}
                   </span>
                   <span className="w-[25%] px-4 text-white font-bold text-center">
-                    {transaccion.amount}€
+                    {transaccion.amount.toFixed(2)}€
                   </span>
                   <span className="w-[20%] px-4 text-white font-bold text-right text-sm">
                     {transaccion.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
