@@ -184,15 +184,17 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                     className="
                       bg-myGray rounded-xl w-full
                       h-auto sm:h-11 md:h-12 lg:h-12
-                      grid grid-cols-3 items-center
-                      px-20
+                      grid grid-cols-1  sm:grid-cols-3 items-center
+                      px-4 sm:px-20
                       mb-1
                     ">
-                    <span className="text-white flex-1 text-left">{name}</span>
-                    <span className="text-white font-bold text-right">
+                    <span className="text-white  text-center sm:text-left">
+                      {name}
+                    </span>
+                    <span className="text-white  text-center sm:text-right">
                       {value.toFixed(2)}€
                     </span>
-                    <span className="text-white flex-1 text-right">
+                    <span className="text-white text-center sm:text-right">
                       {percent}%
                     </span>
                   </div>
