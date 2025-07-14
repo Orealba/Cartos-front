@@ -78,7 +78,7 @@ export const Transacciones = () => {
         <div className="mt-30">
           <BotonDesplegableTransacciones />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-26 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-20 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
             <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
               <span className="w-[30%] px-4">Concepto</span>

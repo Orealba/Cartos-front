@@ -57,7 +57,7 @@ export const Header = () => {
           </div>
         </div>
         <div>
-          <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-20 lg:px-30 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+          <div className="bg-myGray/50 rounded-2xl px-8 sm:px-8 md:px-18 lg:px-35 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
             <MyCalendar limiteDiario={limiteDiario} />
             <div className="w-full flex justify-end pr-2 ml-5 md:ml-15">
               <div className="transform scale-75 sm:scale-85 md:scale-90 lg:scale-100 origin-right">
