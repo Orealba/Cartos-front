@@ -2,3 +2,40 @@
 .recharts-surface {
   overflow: visible !important;
 }
+
+/* Responsive adjustments: móvil pequeño (<640px) */
+@media (max-width: 639px) {
+  /* Escala al 90% y separa desde la parte superior */
+  .resumen-chart-wrapper {
+    transform: scale(0.9);
+    transform-origin: top center;
+    margin-top: 2rem;
+  }
+  /* Forzar que la leyenda baje debajo del chart */
+  .resumen-chart-wrapper .recharts-legend-wrapper {
+    
+    
+    top: 15rem !important;
+    
+  }
+  /* Asegurar separación si es ul de legend */
+  .resumen-chart-wrapper .recharts-default-legend {
+    margin-top: 2.5rem !important;
+  }
+}
+
+/* Ajustes extra para pantallas muy pequeñas (iPhone SE, <375px) */
+@media (max-width: 375px) {
+  /* Escala aún más para evitar solapamientos */
+  .resumen-chart-wrapper {
+    transform: scale(0.8);
+    transform-origin: top center;
+    margin-top: 3rem;
+  }
+  /* Leyenda más abajo */
+  .resumen-chart-wrapper .recharts-legend-wrapper {
+  }
+  .resumen-chart-wrapper .recharts-default-legend {
+    margin-top: 0rem !important;
+  }
+}
