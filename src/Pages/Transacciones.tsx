@@ -25,6 +25,9 @@ interface Transaccion {
 
 export const Transacciones = () => {
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
+  const [tipoFiltro, setTipoFiltro] = useState<'EXPENSE' | 'INCOME' | null>(
+    null,
+  );
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
 
@@ -56,12 +59,17 @@ export const Transacciones = () => {
   }, [session]);
 
   const transaccionesPorPagina = 10;
-  const totalPaginas = Math.ceil(transacciones.length / transaccionesPorPagina);
+  const transaccionesFiltradas = tipoFiltro
+    ? transacciones.filter((t) => t.type === tipoFiltro)
+    : transacciones;
+  const totalPaginas = Math.ceil(
+    transaccionesFiltradas.length / transaccionesPorPagina,
+  );
   const [paginaActual, setPaginaActual] = useState(1);
 
   const indexOfLastItem = paginaActual * transaccionesPorPagina;
   const indexOfFirstItem = indexOfLastItem - transaccionesPorPagina;
-  const transaccionesActuales = transacciones.slice(
+  const transaccionesActuales = transaccionesFiltradas.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
@@ -76,7 +84,12 @@ export const Transacciones = () => {
     <div className="w-full flex justify-center">
       <div>
         <div className="mt-30">
-          <BotonDesplegableTransacciones />
+          <BotonDesplegableTransacciones
+            onSelect={(opcion: 'Egresos' | 'Ingresos') => {
+              setTipoFiltro(opcion === 'Egresos' ? 'EXPENSE' : 'INCOME');
+              setPaginaActual(1);
+            }}
+          />
         </div>
         <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-20 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
@@ -132,7 +145,7 @@ export const Transacciones = () => {
               <button
                 onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
                 disabled={paginaActual === 1}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
+                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer">
                 Anterior
               </button>
               <span className="flex items-center text-white">
@@ -143,7 +156,7 @@ export const Transacciones = () => {
                   setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
                 }
                 disabled={paginaActual === totalPaginas}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
+                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer">
                 Siguiente
               </button>
             </div>
