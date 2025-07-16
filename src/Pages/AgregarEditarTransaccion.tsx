@@ -171,7 +171,7 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Guardar"
           />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-1  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-0  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
             <TipoTransacciones onTipoChange={handleTipoChange} />
             <CategoriaTransacciones
