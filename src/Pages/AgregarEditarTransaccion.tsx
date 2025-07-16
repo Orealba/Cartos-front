@@ -2,11 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
-
+import { TransaccionesPadre } from '../Components/TransacionesComponents/TransaccionesPadre';
+import {
+  RecurrenteTransacciones,
+  RecurrenceRule,
+} from '../Components/TransacionesComponents/RecurrenteTransacciones';
 import { TituloTransacciones } from '../Components/TransacionesComponents/TituloTransacciones';
 import { MontoTransacciones } from '../Components/TransacionesComponents/MontoTransacciones';
 import { FechaTransacciones } from '../Components/TransacionesComponents/FechaTransacciones';
-
 import { TipoTransacciones } from '../Components/TransacionesComponents/TipoTransacciones';
 import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTransacciones';
 import { CategoriaTransacciones } from '../Components/TransacionesComponents/CategoriaTransacciones';
@@ -27,6 +30,9 @@ export const AgregarEditarTransaccion = () => {
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
   const [nota, setNota] = useState('');
   const [categoriaId, setCategoriaId] = useState('');
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState<{
     categoria?: string;
@@ -121,6 +127,7 @@ export const AgregarEditarTransaccion = () => {
         status: 'COMPLETED',
         createdAt: new Date().toISOString(),
         autoComplete: true,
+        recurrence: recurrenceRule,
       };
 
       console.log('Enviando transacción:', transaccion);
@@ -173,56 +180,73 @@ export const AgregarEditarTransaccion = () => {
         </div>
         <div className="bg-myGray/50 rounded-2xl px-0  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
-            <TipoTransacciones onTipoChange={handleTipoChange} />
-            <CategoriaTransacciones
-              tipoSeleccionado={tipoSeleccionado}
-              setCategoriaId={setCategoriaId}
-              initialCategoryId={categoriaId}
-            />
+            <TransaccionesPadre label="Tipo">
+              <TipoTransacciones onTipoChange={handleTipoChange} />
+            </TransaccionesPadre>
             {errors.categoria && (
               <span className="text-red-500 text-sm ml-2 sm:ml-8">
                 {errors.categoria}
               </span>
             )}
-            <TituloTransacciones
-              value={titulo}
-              onChange={handleTituloChange}
-            />
+
+            <TransaccionesPadre label="Categoría">
+              <CategoriaTransacciones
+                tipoSeleccionado={tipoSeleccionado}
+                setCategoriaId={setCategoriaId}
+                initialCategoryId={categoriaId}
+              />
+            </TransaccionesPadre>
+            {errors.categoria && (
+              <span className="text-red-500 text-sm ml-2 sm:ml-8">
+                {errors.categoria}
+              </span>
+            )}
+
+            <TransaccionesPadre label="Título">
+              <TituloTransacciones
+                value={titulo}
+                onChange={handleTituloChange}
+              />
+            </TransaccionesPadre>
             {errors.titulo && (
               <span className="text-red-500 text-sm ml-2 sm:ml-8">
                 {errors.titulo}
               </span>
             )}
-            <MontoTransacciones
-              value={monto}
-              onChange={handleMontoChange}
-            />
+
+            <TransaccionesPadre label="Monto">
+              <MontoTransacciones
+                value={monto}
+                onChange={handleMontoChange}
+              />
+            </TransaccionesPadre>
             {errors.monto && (
               <span className="text-red-500 text-sm ml-2 sm:ml-8">
                 {errors.monto}
               </span>
             )}
-            <FechaTransacciones
-              value={fecha}
-              onChange={setFecha}
-            />
-            <NotaTransacciones
-              value={nota}
-              onChange={setNota}
-            />
+
+            <TransaccionesPadre label="Fecha">
+              <FechaTransacciones
+                value={fecha}
+                onChange={setFecha}
+              />
+            </TransaccionesPadre>
+
+            <TransaccionesPadre label="Nota">
+              <NotaTransacciones
+                value={nota}
+                onChange={setNota}
+              />
+            </TransaccionesPadre>
+
+            <TransaccionesPadre label="Recurrente">
+              <RecurrenteTransacciones
+                initialRule={recurrenceRule}
+                onChange={setRecurrenceRule}
+              />
+            </TransaccionesPadre>
           </div>
-          {id && (
-            <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-8">
-              <div className="mt-1.5 xs:mt-2 sm:mt-3 md:mt-4 lg:mt-4">
-                <BotonGeneral
-                  onClick={handleDelete}
-                  tipo="danger"
-                  className="botonBorraTrans-neumorphism"
-                  textoFijo="Borrar"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
