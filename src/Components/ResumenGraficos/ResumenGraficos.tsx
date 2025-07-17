@@ -49,7 +49,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<Period>('1M');
-  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [_, setFilteredExpenses] = useState<Expense[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
   // ── Fetch de datos ─────────────────────────────────────

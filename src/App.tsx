@@ -1,6 +1,6 @@
 import './App.css';
 import 'flowbite/dist/flowbite.min.js';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, useLocation } from 'react-router-dom';
 import { supabase } from './SupabaseClient';
 import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
