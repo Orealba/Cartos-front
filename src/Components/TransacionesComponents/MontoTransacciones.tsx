@@ -24,7 +24,7 @@ export const MontoTransacciones = ({
   };
 
   return (
-    <TransaccionesPadre label="Monto">
+    <TransaccionesPadre label="Monto:">
       <div className="flex items-center">
         <input
           type="text"

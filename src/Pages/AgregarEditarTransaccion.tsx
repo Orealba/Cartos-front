@@ -178,75 +178,66 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Guardar"
           />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-0  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
-          <div>
-            <TransaccionesPadre label="Tipo">
-              <TipoTransacciones onTipoChange={handleTipoChange} />
-            </TransaccionesPadre>
-            {errors.categoria && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.categoria}
-              </span>
-            )}
+        <div className="bg-myGray/50 rounded-2xl px-3 py-6 md:px-24 md:py-10 mt-5">
+          {/* Tipo */}
+          <TipoTransacciones onTipoChange={handleTipoChange} />
+          {errors.categoria && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.categoria}
+            </span>
+          )}
 
-            <TransaccionesPadre label="Categoría">
-              <CategoriaTransacciones
-                tipoSeleccionado={tipoSeleccionado}
-                setCategoriaId={setCategoriaId}
-                initialCategoryId={categoriaId}
-              />
-            </TransaccionesPadre>
-            {errors.categoria && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.categoria}
-              </span>
-            )}
+          {/* Categoría */}
+          <CategoriaTransacciones
+            tipoSeleccionado={tipoSeleccionado}
+            setCategoriaId={setCategoriaId}
+            initialCategoryId={categoriaId}
+          />
+          {errors.categoria && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.categoria}
+            </span>
+          )}
 
-            <TransaccionesPadre label="Título">
-              <TituloTransacciones
-                value={titulo}
-                onChange={handleTituloChange}
-              />
-            </TransaccionesPadre>
-            {errors.titulo && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.titulo}
-              </span>
-            )}
+          {/* Título */}
+          <TituloTransacciones
+            value={titulo}
+            onChange={handleTituloChange}
+          />
+          {errors.titulo && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.titulo}
+            </span>
+          )}
 
-            <TransaccionesPadre label="Monto">
-              <MontoTransacciones
-                value={monto}
-                onChange={handleMontoChange}
-              />
-            </TransaccionesPadre>
-            {errors.monto && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.monto}
-              </span>
-            )}
+          {/* Monto */}
+          <MontoTransacciones
+            value={monto}
+            onChange={handleMontoChange}
+          />
+          {errors.monto && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.monto}
+            </span>
+          )}
 
-            <TransaccionesPadre label="Fecha">
-              <FechaTransacciones
-                value={fecha}
-                onChange={setFecha}
-              />
-            </TransaccionesPadre>
+          {/* Fecha */}
+          <FechaTransacciones
+            value={fecha}
+            onChange={setFecha}
+          />
 
-            <TransaccionesPadre label="Nota">
-              <NotaTransacciones
-                value={nota}
-                onChange={setNota}
-              />
-            </TransaccionesPadre>
+          {/* Nota */}
+          <NotaTransacciones
+            value={nota}
+            onChange={setNota}
+          />
 
-            <TransaccionesPadre label="Recurrente">
-              <RecurrenteTransacciones
-                initialRule={recurrenceRule}
-                onChange={setRecurrenceRule}
-              />
-            </TransaccionesPadre>
-          </div>
+          {/* Recurrente */}
+          <RecurrenteTransacciones
+            initialRule={recurrenceRule}
+            onChange={setRecurrenceRule}
+          />
         </div>
       </div>
 
