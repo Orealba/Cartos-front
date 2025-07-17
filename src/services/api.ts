@@ -50,5 +50,27 @@ export const apiClient = (token?: string) => {
       callApi(endpoint, {
         method: 'DELETE',
       }),
+    // —————— Recurrent transactions ——————
+    // GET one recurring by its ID
+    getRecurring: (id: string) => callApi(`/api/recurring-transactions/${id}`),
+    // GET all recurrings for the user
+    listRecurring: () => callApi(`/api/recurring-transactions`),
+    // POST a new recurring
+    createRecurring: (data: any) =>
+      callApi(`/api/recurring-transactions`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    // PUT (update) an existing recurring
+    updateRecurring: (id: string, data: any) =>
+      callApi(`/api/recurring-transactions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+    // DELETE a recurring
+    deleteRecurring: (id: string) =>
+      callApi(`/api/recurring-transactions/${id}`, {
+        method: 'DELETE',
+      }),
   };
 };

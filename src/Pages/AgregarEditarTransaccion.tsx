@@ -33,6 +33,7 @@ export const AgregarEditarTransaccion = () => {
   const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(
     null,
   );
+  const [recurringId, setRecurringId] = useState<string | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState<{
     categoria?: string;
@@ -43,18 +44,24 @@ export const AgregarEditarTransaccion = () => {
   useEffect(() => {
     const cargarTransaccion = async () => {
       if (id) {
+        const tx = await api.get(`/api/transactions/${id}`);
+        setTitulo(tx.name);
+        setMonto(tx.amount.toString());
+        setFecha(tx.date.split('T')[0]);
+        setNota(tx.description || '');
+        setCategoriaId(tx.categoryId.toString());
+
+        // 2.2) Traer la regla recurrente si existe
         try {
-          const transaccion = await api.get(`/api/transactions/${id}`);
-          setTipoSeleccionado(
-            transaccion.type === 'EXPENSE' ? 'Egresos' : 'Ingresos',
-          );
-          setTitulo(transaccion.name);
-          setMonto(transaccion.amount.toString());
-          setFecha(transaccion.date.split('T')[0]);
-          setNota(transaccion.description || '');
-          setCategoriaId(transaccion.categoryId.toString());
-        } catch (error) {
-          console.error('Error al cargar:', error);
+          const rule = await api.getRecurring(id);
+          setRecurrenceRule({
+            interval: rule.frequencyNumber,
+            unit: rule.frequencyUnit as RecurrenceRule['unit'],
+          });
+          setRecurringId(rule.id);
+        } catch {
+          setRecurrenceRule(null);
+          setRecurringId(undefined);
         }
       }
     };
@@ -105,43 +112,52 @@ export const AgregarEditarTransaccion = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validarFormulario()) {
-      return;
-    }
+    if (!validarFormulario()) return;
 
-    if (!accountId) {
-      console.error('No hay accountId disponible');
-      return;
-    }
+    // 1) Transacción “plana”
     const raw = monto.replace(',', '.');
     const amountNum = parseFloat(raw);
-    try {
-      const transaccion = {
-        type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
-        name: titulo,
-        categoryId: parseInt(categoriaId),
-        accountId: accountId,
-        description: nota || '',
-        amount: amountNum,
-        date: `${fecha}T00:00:00.000Z`,
-        status: 'COMPLETED',
-        createdAt: new Date().toISOString(),
-        autoComplete: true,
-        recurrence: recurrenceRule,
-      };
-
-      console.log('Enviando transacción:', transaccion);
-
-      if (id) {
-        await api.put(`/api/transactions/${id}`, transaccion);
-      } else {
-        await api.post('/api/transactions', transaccion);
-      }
-
-      navigate('/transacciones');
-    } catch (error) {
-      console.error('Error:', error);
+    const txPayload = {
+      type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
+      name: titulo,
+      categoryId: Number(categoriaId),
+      accountId: accountId!,
+      description: nota,
+      amount: amountNum,
+      date: `${fecha}T00:00:00.000Z`,
+      status: 'COMPLETED',
+      createdAt: new Date().toISOString(),
+      autoComplete: true,
+    };
+    let txResp;
+    if (id) {
+      txResp = await api.put(`/api/transactions/${id}`, txPayload);
+    } else {
+      txResp = await api.post(`/api/transactions`, txPayload);
     }
+
+    // 2) Regla recurrente (CR/UP/DEL)
+    if (recurrenceRule) {
+      const freqBody = {
+        transactionId: txResp.id,
+        startDate: txResp.date,
+        frequencyNumber: recurrenceRule.interval,
+        frequencyUnit: recurrenceRule.unit.replace(/LY$/, ''), // 'DAILY' → 'DAY', etc.
+      };
+      if (recurringId) {
+        await api.updateRecurring(recurringId, freqBody);
+      } else {
+        const newRule = await api.createRecurring(freqBody);
+        setRecurringId(newRule.id);
+      }
+    } else if (recurringId) {
+      // si quitaste recurrencia, bórrala
+      await api.deleteRecurring(recurringId);
+      setRecurringId(undefined);
+    }
+
+    // 3) Volver al listado
+    navigate('/transacciones');
   };
 
   const handleDelete = () => {
