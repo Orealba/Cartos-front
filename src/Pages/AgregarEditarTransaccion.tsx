@@ -179,7 +179,6 @@ export const AgregarEditarTransaccion = () => {
           />
         </div>
         <div className="bg-myGray/50 rounded-2xl px-3 py-6 md:px-24 md:py-10 mt-5">
-          {/* Tipo */}
           <TipoTransacciones onTipoChange={handleTipoChange} />
           {errors.categoria && (
             <span className="text-red-500 text-sm ml-6 block">
@@ -187,7 +186,6 @@ export const AgregarEditarTransaccion = () => {
             </span>
           )}
 
-          {/* Categoría */}
           <CategoriaTransacciones
             tipoSeleccionado={tipoSeleccionado}
             setCategoriaId={setCategoriaId}
@@ -199,7 +197,6 @@ export const AgregarEditarTransaccion = () => {
             </span>
           )}
 
-          {/* Título */}
           <TituloTransacciones
             value={titulo}
             onChange={handleTituloChange}
@@ -210,7 +207,6 @@ export const AgregarEditarTransaccion = () => {
             </span>
           )}
 
-          {/* Monto */}
           <MontoTransacciones
             value={monto}
             onChange={handleMontoChange}
@@ -221,19 +217,16 @@ export const AgregarEditarTransaccion = () => {
             </span>
           )}
 
-          {/* Fecha */}
           <FechaTransacciones
             value={fecha}
             onChange={setFecha}
           />
 
-          {/* Nota */}
           <NotaTransacciones
             value={nota}
             onChange={setNota}
           />
 
-          {/* Recurrente */}
           <RecurrenteTransacciones
             initialRule={recurrenceRule}
             onChange={setRecurrenceRule}
