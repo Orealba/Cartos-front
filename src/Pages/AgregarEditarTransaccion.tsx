@@ -117,11 +117,12 @@ export const AgregarEditarTransaccion = () => {
     // 1) Transacción “plana”
     const raw = monto.replace(',', '.');
     const amountNum = parseFloat(raw);
+
     const txPayload = {
       type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
       name: titulo,
       categoryId: Number(categoriaId),
-      accountId: accountId!,
+      accountId: Number(accountId!),
       description: nota,
       amount: amountNum,
       date: `${fecha}T00:00:00.000Z`,
@@ -129,6 +130,8 @@ export const AgregarEditarTransaccion = () => {
       createdAt: new Date().toISOString(),
       autoComplete: true,
     };
+    console.log('¡¡¡¡Enviando txPayload:', txPayload);
+
     let txResp;
     if (id) {
       txResp = await api.put(`/api/transactions/${id}`, txPayload);
@@ -138,16 +141,33 @@ export const AgregarEditarTransaccion = () => {
 
     // 2) Regla recurrente (CR/UP/DEL)
     if (recurrenceRule) {
-      const freqBody = {
+      const unitMap: Record<string, string> = {
+        DAILY: 'DAY',
+        WEEKLY: 'WEEK',
+        MONTHLY: 'MONTH',
+        YEARLY: 'YEAR',
+      };
+      const frequencyUnit = unitMap[recurrenceRule.unit];
+
+      const recurPayload = {
+        ...txPayload,
         transactionId: txResp.id,
         startDate: txResp.date,
         frequencyNumber: recurrenceRule.interval,
-        frequencyUnit: recurrenceRule.unit.replace(/LY$/, ''), // 'DAILY' → 'DAY', etc.
+        frequencyUnit,
       };
+      console.log('Enviando recurPayload:', recurPayload);
+
       if (recurringId) {
-        await api.updateRecurring(recurringId, freqBody);
+        await api.put(
+          `/api/recurring-transactions/${recurringId}`,
+          recurPayload,
+        );
       } else {
-        const newRule = await api.createRecurring(freqBody);
+        const newRule = await api.post(
+          `/api/recurring-transactions`,
+          recurPayload,
+        );
         setRecurringId(newRule.id);
       }
     } else if (recurringId) {
