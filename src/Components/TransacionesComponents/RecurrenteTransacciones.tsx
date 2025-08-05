@@ -18,16 +18,19 @@ export const RecurrenteTransacciones: React.FC<
     'DIARIO' | 'SEMANAL' | 'MENSUAL' | 'ANUAL' | 'CUSTOM'
   >(() => {
     if (!initialRule) return 'DIARIO';
-    switch (initialRule.unit) {
-      case 'DAILY':
-        return 'DIARIO';
-      case 'WEEKLY':
-        return 'SEMANAL';
-      case 'MONTHLY':
-        return 'MENSUAL';
-      case 'YEARLY':
-        return 'ANUAL';
+    if (initialRule.interval === 1) {
+      switch (initialRule.unit) {
+        case 'DAILY':
+          return 'DIARIO';
+        case 'WEEKLY':
+          return 'SEMANAL';
+        case 'MONTHLY':
+          return 'MENSUAL';
+        case 'YEARLY':
+          return 'ANUAL';
+      }
     }
+    return 'CUSTOM';
   });
   const [customInterval, setCustomInterval] = useState<number>(
     initialRule?.interval ?? 1,
@@ -36,7 +39,37 @@ export const RecurrenteTransacciones: React.FC<
     'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY'
   >(initialRule?.unit ?? 'DAILY');
 
-  // Propagar cambios
+  // Sincronizar estados internos con initialRule
+  useEffect(() => {
+    if (initialRule) {
+      setIsRecurrente(true);
+      setCustomInterval(initialRule.interval);
+      setCustomUnit(initialRule.unit);
+
+      if (initialRule.interval === 1) {
+        switch (initialRule.unit) {
+          case 'DAILY':
+            setFrecuencia('DIARIO');
+            break;
+          case 'WEEKLY':
+            setFrecuencia('SEMANAL');
+            break;
+          case 'MONTHLY':
+            setFrecuencia('MENSUAL');
+            break;
+          case 'YEARLY':
+            setFrecuencia('ANUAL');
+            break;
+        }
+      } else {
+        setFrecuencia('CUSTOM');
+      }
+    } else {
+      setIsRecurrente(false);
+    }
+  }, [initialRule]);
+
+  // Propagar cambios hacia el padre
   useEffect(() => {
     if (!isRecurrente) {
       onChange(null);
@@ -55,7 +88,7 @@ export const RecurrenteTransacciones: React.FC<
     }
   }, [isRecurrente, frecuencia, customInterval, customUnit, onChange]);
 
-  // Hook genérico de dropdown
+  // Dropdown helper
   const useDropdown = <T,>(
     initial: T,
   ): [T, boolean, React.RefObject<HTMLDivElement | null>, (v?: T) => void] => {
@@ -81,6 +114,15 @@ export const RecurrenteTransacciones: React.FC<
     return [value, open, ref, toggle];
   };
 
+  // Labels
+  const unitLabels = ['Día(s)', 'Semana(s)', 'Mes(es)', 'Año(s)'] as const;
+  const labelToUnit = {
+    'Día(s)': 'DAILY',
+    'Semana(s)': 'WEEKLY',
+    'Mes(es)': 'MONTHLY',
+    'Año(s)': 'YEARLY',
+  } as const;
+
   // Dropdowns
   const [selRecurrente, openRecurrente, refRecurrente, toggleRecurrente] =
     useDropdown<'Sí' | 'No'>(isRecurrente ? 'Sí' : 'No');
@@ -96,24 +138,37 @@ export const RecurrenteTransacciones: React.FC<
         ? 'Cada año'
         : 'Personalizar...',
     );
-  // Custom-unit dropdown
-  const unitLabels = ['Día(s)', 'Semana(s)', 'Mes(es)', 'Año(s)'] as const;
-  const labelToUnit = {
-    'Día(s)': 'DAILY',
-    'Semana(s)': 'WEEKLY',
-    'Mes(es)': 'MONTHLY',
-    'Año(s)': 'YEARLY',
-  } as const;
   const [selCustomUnit, openCustomUnit, refCustomUnit, toggleCustomUnit] =
     useDropdown<string>(
       unitLabels.find((l) => labelToUnit[l] === customUnit) || unitLabels[0],
     );
+
+  // Sincronizar visualmente los dropdowns
+  useEffect(() => {
+    toggleRecurrente(isRecurrente ? 'Sí' : 'No');
+  }, [isRecurrente]);
+
+  useEffect(() => {
+    if (frecuencia === 'DIARIO') toggleFrecuencia('Cada día');
+    else if (frecuencia === 'SEMANAL') toggleFrecuencia('Cada semana');
+    else if (frecuencia === 'MENSUAL') toggleFrecuencia('Cada mes');
+    else if (frecuencia === 'ANUAL') toggleFrecuencia('Cada año');
+    else toggleFrecuencia('Personalizar...');
+  }, [frecuencia]);
+
+  useEffect(() => {
+    const label = Object.keys(labelToUnit).find(
+      (k) => labelToUnit[k as keyof typeof labelToUnit] === customUnit,
+    );
+    if (label) toggleCustomUnit(label);
+  }, [customUnit]);
 
   // Handlers
   const handleSelectRecurrente = (v: 'Sí' | 'No') => {
     setIsRecurrente(v === 'Sí');
     toggleRecurrente(v);
   };
+
   const handleSelectFrecuencia = (v: string) => {
     toggleFrecuencia(v);
     if (v === 'Cada día') setFrecuencia('DIARIO');
@@ -122,6 +177,7 @@ export const RecurrenteTransacciones: React.FC<
     else if (v === 'Cada año') setFrecuencia('ANUAL');
     else setFrecuencia('CUSTOM');
   };
+
   const handleSelectCustomUnit = (v: string) => {
     toggleCustomUnit(v);
     setCustomUnit(labelToUnit[v as keyof typeof labelToUnit]);

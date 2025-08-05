@@ -53,13 +53,29 @@ export const AgregarEditarTransaccion = () => {
 
         // 2.2) Traer la regla recurrente si existe
         try {
-          const rule = await api.getRecurring(id);
-          setRecurrenceRule({
-            interval: rule.frequencyNumber,
-            unit: rule.frequencyUnit as RecurrenceRule['unit'],
+          const allRules = await api.get(`/api/recurring-transactions`);
+          console.log('📦 allRules:', allRules);
+          (allRules?.content || []).forEach((r: any) => {
+            console.log('🔍 comparando:', r.transactionId, 'vs', id);
           });
-          setRecurringId(rule.id);
-        } catch {
+          const rule = (allRules?.content || []).find(
+            (r: any) => String(r.transactionId) === String(id),
+          );
+
+          if (rule) {
+            console.log('✅ Regla recurrente encontrada:', rule);
+            setRecurrenceRule({
+              interval: rule.frequencyNumber,
+              unit: rule.frequencyUnit as RecurrenceRule['unit'],
+            });
+            setRecurringId(rule.id);
+          } else {
+            console.log('ℹ️ No hay regla recurrente para esta transacción');
+            setRecurrenceRule(null);
+            setRecurringId(undefined);
+          }
+        } catch (error) {
+          console.log('❌ Fallo al buscar reglas recurrentes:', error);
           setRecurrenceRule(null);
           setRecurringId(undefined);
         }
