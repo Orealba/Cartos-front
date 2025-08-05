@@ -82,8 +82,11 @@ export const Transacciones = () => {
 
   return (
     <div className="w-full flex justify-center">
-      <div>
-        <div className="mt-30">
+      <div >
+        <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
+          TRANSACCIONES
+        </h1>
+        <div className="mt-10">
           <BotonDesplegableTransacciones
             onSelect={(opcion: 'Egresos' | 'Ingresos') => {
               setTipoFiltro(opcion === 'Egresos' ? 'EXPENSE' : 'INCOME');

@@ -69,13 +69,13 @@ export const Body = () => {
             onClick={handleProxGastosClick}
             tipo="basico"
             className="botonProxGastos-neumorphism"
-            textoFijo="Próximos Gastos"
+            textoFijo="Próximos Pagos"
           />
         </div>
         <div className="flex flex-col gap-2 mt-4">
           {gastos.length === 0 ? (
             <p className="text-white text-center text-sm sm:text-base">
-              No tienes próximos cobros pendientes o registrados
+              No tienes próximos pagos pendientes o registrados
             </p>
           ) : (
             gastos.map((gasto) => (

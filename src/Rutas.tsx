@@ -9,6 +9,7 @@ import { ProtectedRoute } from './Components/utils/ProtectedRoute';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from './SupabaseClient';
 import Resumen from './Pages/Resumen';
+import { ProximosPagos } from './Pages/ProximosPagos';
 
 interface RutasProps {
   session: Session | null;
@@ -58,6 +59,10 @@ export const Rutas = ({ session, isLoading }: RutasProps) => {
           <Route
             path="/resumen"
             element={<Resumen token={session?.access_token ?? ''} />}
+          />
+          <Route
+            path="/proximos-pagos"
+            element={<ProximosPagos />}
           />
         </Route>
       </Route>
