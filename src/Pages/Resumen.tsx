@@ -7,7 +7,7 @@ interface Props {
 
 const Resumen: React.FC<Props> = ({ token }) => {
   return (
-    <div className="mt-30">
+    <div className="mt-35">
       <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
         RESUMEN DE GASTOS
       </h1>

@@ -33,7 +33,7 @@ export const Header = () => {
   return (
     <>
       <div>
-        <div className="w-full flex justify-center mt-30">
+        <div className="w-full flex justify-center mt-35">
           <h1 className="text-center text-white text-base sm:text-lg md:text-xl max-w-xl ">
             Control diario de finanzas: añade tus gastos, fija tus límites y
             consulta tus próximos cobros.

@@ -1,111 +1,119 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+
 import '../Components/Botones/BotonDesplegable/BotonDesplegableTransacciones.css';
 import '../Components/Botones/EstilosBotones/BotonAgregar.css';
+
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
 
-interface RecurringTransaction {
-  id: number;
+interface Gasto {
+  id: string;
   name: string;
+  date: string;
   amount: number;
   type: 'EXPENSE' | 'INCOME';
-  transactionId: number;
-  frequencyUnit: string;
-  frequencyNumber: number;
-  nextDate: string;
 }
 
 export const ProximosPagos = () => {
-  const [reglas, setReglas] = useState<RecurringTransaction[]>([]);
+  const [gastos, setGastos] = useState<Gasto[]>([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchReglas = async () => {
-      if (!session?.access_token) {
-        console.log('No hay sesión activa');
-        return;
-      }
+    const cargarGastos = async () => {
+      if (!session?.access_token) return;
 
       try {
-        const response = await api.listRecurring();
+        const startDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        const endDate = dayjs()
+          .add(1, 'year')
+          .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
-        if (response && response.content) {
-          const ordenadas = response.content.sort(
-            (a: RecurringTransaction, b: RecurringTransaction) =>
-              new Date(a.nextDate).getTime() - new Date(b.nextDate).getTime(),
-          );
-          console.log('📦 Respuesta reglas recurrentes:', response.content);
-          setReglas(ordenadas);
-        }
+        const response = await api.get(
+          `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=true&includeCompleted=true`,
+        );
+
+        const soloGastos = response
+          .filter((trans: any) => trans.type === 'EXPENSE')
+          .sort(
+            (a: any, b: any) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime(),
+          )
+          .map((gasto: any) => ({
+            id: gasto.transactionId,
+            name: gasto.name,
+            date: gasto.date,
+            amount: gasto.amount,
+            type: gasto.type,
+          }));
+
+        setGastos(soloGastos);
       } catch (error) {
-        console.error('Error al obtener reglas recurrentes:', error);
+        console.error('Error al cargar próximos pagos:', error);
       }
     };
 
-    fetchReglas();
+    cargarGastos();
   }, [session]);
 
-  const reglasPorPagina = 10;
-  const [paginaActual, setPaginaActual] = useState(1);
-  const totalPaginas = Math.ceil(reglas.length / reglasPorPagina);
+  const gastosPorPagina = 10;
+  const totalPaginas = Math.ceil(gastos.length / gastosPorPagina);
 
-  const reglasActuales = reglas.slice(
-    (paginaActual - 1) * reglasPorPagina,
-    paginaActual * reglasPorPagina,
-  );
+  const indexOfLastItem = paginaActual * gastosPorPagina;
+  const indexOfFirstItem = indexOfLastItem - gastosPorPagina;
+  const gastosActuales = gastos.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleAgregarClick = () => {
     navigate('/agregar-editar-transaccion');
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center mt-35">
       <div>
         <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
           PRÓXIMOS PAGOS
         </h1>
-        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-20 py-4 sm:py-6 md:py-8 lg:py-10 mt-5">
+
+        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-6 md:px-8 lg:px-30 py-4 sm:py-6 md:py-8 lg:py-10 mt-5">
           <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
             <span className="w-[30%] px-4">Concepto</span>
-            <span className="w-[25%] px-4 text-center">Próxima fecha</span>
+            <span className="w-[25%] px-4 text-center">Fecha</span>
             <span className="w-[25%] px-4 text-center">Monto</span>
           </div>
 
-          {reglasActuales.map((r) => (
+          {gastosActuales.map((g) => (
             <div
-              key={r.id}
-              onClick={() =>
-                navigate(`/agregar-editar-transaccion/${r.transactionId}`)
-              }
-              className="bg-myGray rounded-xl w-full mx-auto h-auto sm:h-11 md:h-12 lg:h-12 mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
+              key={g.id}
+              onClick={() => navigate(`/agregar-editar-transaccion/${g.id}`)}
+              className="bg-myGray rounded-xl w-full mx-auto h-auto sm:h-11 md:h-12 lg:h-12  mt-2 sm:mt-3 md:mt-2 lg:mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
               <div className="flex flex-col p-4 sm:hidden">
-                <span className="text-white text-base mb-1">{r.name}</span>
+                <span className="text-white text-base mb-1">{g.name}</span>
                 <div className="flex justify-between items-center">
                   <span className="text-white text-xs">
-                    {new Date(r.nextDate).toLocaleDateString('es-ES')}
+                    {new Date(g.date).toLocaleDateString('es-ES')}
                   </span>
                   <span className="text-white font-bold">
-                    {r.amount.toFixed(2)}€
+                    {g.amount.toFixed(2)}€
                   </span>
-                  <span className="text-white font-bold">
-                    {r.type === 'EXPENSE' ? 'Egreso' : 'Ingreso'}
-                  </span>
+                  <span className="text-white font-bold">Egreso</span>
                 </div>
               </div>
 
               <div className="hidden sm:flex justify-between items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12">
-                <span className="w-[30%] px-4 text-white text-base truncate">
-                  {r.name}
+                <span className="w-[40%] px-4 text-white text-base truncate">
+                  {g.name}
                 </span>
                 <span className="w-[25%] px-4 text-white text-xs text-center">
-                  {new Date(r.nextDate).toLocaleDateString('es-ES')}
+                  {new Date(g.date).toLocaleDateString('es-ES')}
                 </span>
                 <span className="w-[25%] px-4 text-white font-bold text-center">
-                  {r.amount.toFixed(2)}€
+                  {g.amount.toFixed(2)}€
                 </span>
               </div>
             </div>
