@@ -8,6 +8,7 @@ import '../Components/Botones/EstilosBotones/BotonAgregar.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
+import { BotonDesplegableProximos } from '../Components/Botones/BotonDesplegable/BotonDesplegableProximos';
 
 interface Gasto {
   id: string;
@@ -17,9 +18,12 @@ interface Gasto {
   type: 'EXPENSE' | 'INCOME';
 }
 
+type FuturePeriod = '1M' | '3M' | '6M' | '12M';
+
 export const ProximosPagos = () => {
   const [gastos, setGastos] = useState<Gasto[]>([]);
   const [paginaActual, setPaginaActual] = useState(1);
+  const [selectedPeriod, setSelectedPeriod] = useState<FuturePeriod>('1M');
 
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
@@ -31,9 +35,18 @@ export const ProximosPagos = () => {
 
       try {
         const startDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-        const endDate = dayjs()
-          .add(1, 'year')
-          .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        const endDate = (() => {
+          switch (selectedPeriod) {
+            case '1M':
+              return dayjs().add(1, 'month');
+            case '3M':
+              return dayjs().add(3, 'month');
+            case '6M':
+              return dayjs().add(6, 'month');
+            case '12M':
+              return dayjs().add(1, 'year');
+          }
+        })().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
         const response = await api.get(
           `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=true&includeCompleted=true`,
@@ -54,16 +67,17 @@ export const ProximosPagos = () => {
           }));
 
         setGastos(soloGastos);
+        setPaginaActual(1); // reinicia paginación al cambiar periodo
       } catch (error) {
         console.error('Error al cargar próximos pagos:', error);
       }
     };
 
     cargarGastos();
-  }, [session]);
+  }, [session, selectedPeriod]);
 
   const gastosPorPagina = 10;
-  const totalPaginas = Math.ceil(gastos.length / gastosPorPagina);
+  const totalPaginas = Math.max(1, Math.ceil(gastos.length / gastosPorPagina));
 
   const indexOfLastItem = paginaActual * gastosPorPagina;
   const indexOfFirstItem = indexOfLastItem - gastosPorPagina;
@@ -79,6 +93,14 @@ export const ProximosPagos = () => {
         <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
           PRÓXIMOS PAGOS
         </h1>
+
+        {/* Botón desplegable centrado */}
+        <div className="w-full flex justify-center mt-5">
+          <BotonDesplegableProximos
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
+          />
+        </div>
 
         <div className="bg-myGray/50 rounded-2xl px-4 sm:px-6 md:px-8 lg:px-30 py-4 sm:py-6 md:py-8 lg:py-10 mt-5">
           <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
