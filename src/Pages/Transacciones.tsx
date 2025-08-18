@@ -30,6 +30,28 @@ export const Transacciones = () => {
   );
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
+  const [flash, setFlash] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem('flash');
+    if (raw) {
+      try {
+        setFlash(JSON.parse(raw));
+      } catch {}
+      sessionStorage.removeItem('flash');
+    }
+  }, []);
+
+  // ⬇️⬇️⬇️ NUEVO: autocerrar banner a los 3s
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(null), 3000);
+    return () => clearTimeout(t);
+  }, [flash]);
+  // ⬆️⬆️⬆️ FIN NUEVO
 
   useEffect(() => {
     const fetchTransacciones = async () => {
@@ -82,7 +104,19 @@ export const Transacciones = () => {
 
   return (
     <div className="w-full flex justify-center mt-35">
-      <div >
+      <div>
+        {flash && (
+          <div
+            role="status"
+            className={`mb-3 rounded-2xl px-4 py-3 text-sm ${
+              flash.type === 'success'
+                ? 'bg-myYellow text-white '
+                : 'bg-red-100 text-red-800  '
+            }`}>
+            {flash.text}
+          </div>
+        )}
+        {/* ⬆️⬆️⬆️ FIN NUEVO */}
         <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
           TRANSACCIONES
         </h1>

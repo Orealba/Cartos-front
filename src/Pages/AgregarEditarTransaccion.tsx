@@ -18,6 +18,7 @@ import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { ModalConfirmacion } from '../Components/ModalConfirmacion';
+import type { NavigateOptions } from 'react-router-dom';
 
 export const AgregarEditarTransaccion = () => {
   const { id } = useParams();
@@ -193,7 +194,12 @@ export const AgregarEditarTransaccion = () => {
     }
 
     // 3) Volver al listado
-    navigate('/transacciones');
+    const accion = id ? 'editada' : 'agregada';
+    sessionStorage.setItem(
+      'flash',
+      JSON.stringify({ type: 'success', text: `Transacción ${accion}.` }),
+    );
+    navigate('/transacciones', { replace: true });
   };
 
   const handleDelete = () => {
@@ -205,7 +211,13 @@ export const AgregarEditarTransaccion = () => {
     try {
       await api.delete(`/api/transactions/${id}`);
       setIsModalOpen(false);
-      navigate('/transacciones', { replace: true });
+
+      sessionStorage.setItem(
+        'flash',
+        JSON.stringify({ type: 'success', text: 'Transacción eliminada.' }),
+      ); // <-- NUEVO
+      navigate('/transacciones', { replace: true }); // <-- CAMBIO (mantenemos replace)
+      // ⬆️⬆️⬆️ FIN CAMBIO
     } catch (error) {
       console.error('Error al eliminar:', error);
       alert('Error al eliminar la transacción');
