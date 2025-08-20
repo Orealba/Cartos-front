@@ -23,60 +23,59 @@ type MyCalendarProps = {
   limiteDiario: number;
 };
 export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
-  
   const [eventos, setEventos] = useState<EventoCalendario[]>([]);
   const localizer = dayjsLocalizer(dayjs);
   const { token } = useAuth();
   const navigate = useNavigate();
+  const [visibleDate, setVisibleDate] = useState<Date>(new Date());
 
   useEffect(() => {
     if (!token) return;
 
     const cargarTransacciones = async () => {
-      try {
-        const api = apiClient(token);
-        const startDate = dayjs().startOf('month').toISOString();
-        const endDate = dayjs().endOf('month').toISOString();
+      const api = apiClient(token);
+      const startDate = dayjs(visibleDate).startOf('month').toISOString();
+      const endDate = dayjs(visibleDate).endOf('month').toISOString();
 
-        const response = await api.get(
-          `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
-        );
+      const response = await api.get(
+        `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
+      );
 
-        if (response) {
-          // Agrupar transacciones por día y sumar montos
-          const transaccionesAgrupadas: Record<string, number> = {};
+      if (response) {
+        // Agrupar transacciones por día y sumar montos
+        const transaccionesAgrupadas: Record<string, number> = {};
 
-          response.forEach((trans: any) => {
-            const fecha = dayjs(trans.date).startOf('day').toISOString();
+        response.forEach((trans: any) => {
+          const key = dayjs(trans.date).format('YYYY-MM-DD');
+          transaccionesAgrupadas[key] =
+            (transaccionesAgrupadas[key] ?? 0) + trans.amount;
+        });
 
-            if (!transaccionesAgrupadas[fecha]) {
-              transaccionesAgrupadas[fecha] = 0;
-            }
+        // Convertir a eventos para el calendario
+        const eventosAgrupados: EventoCalendario[] = Object.entries(
+          transaccionesAgrupadas,
+        ).map(([key, total], index) => {
+          const fecha = dayjs(key, 'YYYY-MM-DD').toDate();
+          const totalNum = Number(total);
 
-            transaccionesAgrupadas[fecha] += trans.amount;
-          });
-
-          // Convertir a eventos para el calendario
-          const eventosAgrupados: EventoCalendario[] = Object.entries(
-            transaccionesAgrupadas,
-          ).map(([fecha, total], index) => ({
+          return {
             id: index,
-            title: `${Number.isInteger(total) ? total : total.toFixed(2)}€`,
-            start: new Date(fecha),
-            end: new Date(fecha),
-            name: `Total del día`,
-            resource: { total },
-          }));
+            title: `${
+              Number.isInteger(totalNum) ? totalNum : totalNum.toFixed(2)
+            }€`,
+            start: fecha,
+            end: fecha,
+            name: 'Total del día',
+            resource: { total: totalNum },
+          };
+        });
 
-          setEventos(eventosAgrupados);
-        }
-      } catch (error) {
-        console.error('Error al cargar transacciones:', error);
-      }
-    };
+        setEventos(eventosAgrupados);
+      } // ← cierra el if(response)
+    }; // ← cierra cargarTransacciones
 
     cargarTransacciones();
-  }, [token]);
+  }, [token, visibleDate]);
 
   const messages = {
     today: 'Hoy',
@@ -134,12 +133,12 @@ export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
         components={components}
         className="min-h-[37.5rem] md:min-h-[25rem] sm:min-h-[18.75rem]"
         style={{ width: '100%' }}
-        defaultDate={new Date()}
+        date={visibleDate} // ← NUEVO: fecha controlada
+        onNavigate={(newDate) => setVisibleDate(newDate)} // ← NUEVO: actualiza mes visible
         onSelectEvent={handleSelectEvent}
         tooltipAccessor={(event) => event.name || 'Sin título'}
         eventPropGetter={(event) => {
           const esMayorAlLimite = event.resource.total > limiteDiario;
-
           return {
             className: esMayorAlLimite ? 'evento-superado' : 'evento-normal',
           };
