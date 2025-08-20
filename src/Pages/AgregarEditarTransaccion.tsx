@@ -215,9 +215,8 @@ export const AgregarEditarTransaccion = () => {
       sessionStorage.setItem(
         'flash',
         JSON.stringify({ type: 'success', text: 'Transacción eliminada.' }),
-      ); // <-- NUEVO
-      navigate('/transacciones', { replace: true }); // <-- CAMBIO (mantenemos replace)
-      // ⬆️⬆️⬆️ FIN CAMBIO
+      );
+      navigate('/transacciones', { replace: true });
     } catch (error) {
       console.error('Error al eliminar:', error);
       alert('Error al eliminar la transacción');
@@ -295,6 +294,20 @@ export const AgregarEditarTransaccion = () => {
             initialRule={recurrenceRule}
             onChange={setRecurrenceRule}
           />
+
+          {/* === Botón BORRAR (solo en modo edición) === */}
+          {id && (
+            <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-8">
+              <div className="mt-1.5 xs:mt-2 sm:mt-3 md:mt-4 lg:mt-4">
+                <BotonGeneral
+                  onClick={handleDelete}
+                  tipo="danger"
+                  className="botonBorraTrans-neumorphism"
+                  textoFijo="Borrar"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
