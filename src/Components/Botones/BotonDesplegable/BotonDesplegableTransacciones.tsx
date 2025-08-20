@@ -3,7 +3,7 @@ import { initFlowbite } from 'flowbite';
 import './BotonDesplegableTransacciones.css';
 
 interface BotonDesplegableTransaccionesProps {
-  onSelect: (opcion: 'Egresos' | 'Ingresos') => void;
+  onSelect: (opcion: 'Egresos' | 'Ingresos' | 'Todas') => void;
 }
 
 export const BotonDesplegableTransacciones: React.FC<
@@ -67,6 +67,17 @@ export const BotonDesplegableTransacciones: React.FC<
                   }}
                   className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                   Ingresos
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSelect('Todas');
+                  }}
+                  className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  Todas
                 </a>
               </li>
             </ul>

@@ -122,8 +122,13 @@ export const Transacciones = () => {
         </h1>
         <div className="mt-10">
           <BotonDesplegableTransacciones
-            onSelect={(opcion: 'Egresos' | 'Ingresos') => {
-              setTipoFiltro(opcion === 'Egresos' ? 'EXPENSE' : 'INCOME');
+            onSelect={(opcion: 'Egresos' | 'Ingresos' | 'Todas') => {
+              if (opcion === 'Todas') {
+                setTipoFiltro(null);
+              } else {
+                setTipoFiltro(opcion === 'Egresos' ? 'EXPENSE' : 'INCOME');
+              }
+
               setPaginaActual(1);
             }}
           />
