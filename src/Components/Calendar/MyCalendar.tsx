@@ -3,7 +3,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './MyCalendar.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiClient } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -28,53 +28,52 @@ export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [visibleDate, setVisibleDate] = useState<Date>(new Date());
+  const lastKey = useRef<string>('');
 
   useEffect(() => {
     if (!token) return;
 
-    const cargarTransacciones = async () => {
-      const api = apiClient(token);
-      const startDate = dayjs(visibleDate).startOf('month').toISOString();
-      const endDate = dayjs(visibleDate).endOf('month').toISOString();
+    const startDate = dayjs(visibleDate).startOf('month').toISOString();
+    const endDate = dayjs(visibleDate).endOf('month').toISOString();
+    const key = `${startDate}|${endDate}|completedOnly`;
 
-      const response = await api.get(
+    if (lastKey.current === key) return; // ✅ evita segundo pase de StrictMode
+    lastKey.current = key;
+
+    const api = apiClient(token);
+
+    api
+      .get(
         `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
-      );
+      )
+      .then((response: any[]) => {
+        if (!response) return;
 
-      if (response) {
-        // Agrupar transacciones por día y sumar montos
         const transaccionesAgrupadas: Record<string, number> = {};
-
         response.forEach((trans: any) => {
-          const key = dayjs(trans.date).format('YYYY-MM-DD');
-          transaccionesAgrupadas[key] =
-            (transaccionesAgrupadas[key] ?? 0) + trans.amount;
+          const k = dayjs(trans.date).format('YYYY-MM-DD');
+          transaccionesAgrupadas[k] =
+            (transaccionesAgrupadas[k] ?? 0) + trans.amount;
         });
 
-        // Convertir a eventos para el calendario
-        const eventosAgrupados: EventoCalendario[] = Object.entries(
-          transaccionesAgrupadas,
-        ).map(([key, total], index) => {
-          const fecha = dayjs(key, 'YYYY-MM-DD').toDate();
-          const totalNum = Number(total);
-
-          return {
-            id: index,
-            title: `${
-              Number.isInteger(totalNum) ? totalNum : totalNum.toFixed(2)
-            }€`,
-            start: fecha,
-            end: fecha,
-            name: 'Total del día',
-            resource: { total: totalNum },
-          };
-        });
+        const eventosAgrupados = Object.entries(transaccionesAgrupadas).map(
+          ([k, total], idx) => {
+            const fecha = dayjs(k, 'YYYY-MM-DD').toDate();
+            const n = Number(total);
+            return {
+              id: idx,
+              title: `${Number.isInteger(n) ? n : n.toFixed(2)}€`,
+              start: fecha,
+              end: fecha, // ← igual que tenías
+              name: 'Total del día',
+              resource: { total: n },
+            };
+          },
+        );
 
         setEventos(eventosAgrupados);
-      } // ← cierra el if(response)
-    }; // ← cierra cargarTransacciones
-
-    cargarTransacciones();
+      })
+      .catch(console.error);
   }, [token, visibleDate]);
 
   const messages = {

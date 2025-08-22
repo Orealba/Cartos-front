@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 
@@ -28,6 +28,7 @@ export const ProximosPagos = () => {
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
   const navigate = useNavigate();
+  const lastKey = useRef<string>(''); // ← agrega esto
 
   useEffect(() => {
     const cargarGastos = async () => {
@@ -35,41 +36,42 @@ export const ProximosPagos = () => {
 
       try {
         const startDate = dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-        const endDate = (() => {
-          switch (selectedPeriod) {
-            case '1M':
-              return dayjs().add(1, 'month');
-            case '3M':
-              return dayjs().add(3, 'month');
-            case '6M':
-              return dayjs().add(6, 'month');
-            case '12M':
-              return dayjs().add(1, 'year');
-          }
-        })().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        const endDate = (
+          selectedPeriod === '1M'
+            ? dayjs().add(1, 'month')
+            : selectedPeriod === '3M'
+            ? dayjs().add(3, 'month')
+            : selectedPeriod === '6M'
+            ? dayjs().add(6, 'month')
+            : dayjs().add(1, 'year')
+        ).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+        const key = `${startDate}|${endDate}|pending+completed`;
+        if (lastKey.current === key) return; // ✅ evita duplicados por StrictMode
+        lastKey.current = key;
 
         const response = await api.get(
           `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=true&includeCompleted=true`,
         );
 
         const soloGastos = response
-          .filter((trans: any) => trans.type === 'EXPENSE')
+          .filter((t: any) => t.type === 'EXPENSE')
           .sort(
             (a: any, b: any) =>
               new Date(a.date).getTime() - new Date(b.date).getTime(),
           )
-          .map((gasto: any) => ({
-            id: gasto.transactionId,
-            name: gasto.name,
-            date: gasto.date,
-            amount: gasto.amount,
-            type: gasto.type,
+          .map((g: any) => ({
+            id: g.transactionId,
+            name: g.name,
+            date: g.date,
+            amount: g.amount,
+            type: g.type,
           }));
 
         setGastos(soloGastos);
-        setPaginaActual(1); // reinicia paginación al cambiar periodo
-      } catch (error) {
-        console.error('Error al cargar próximos pagos:', error);
+        setPaginaActual(1);
+      } catch (e) {
+        console.error('Error al cargar próximos pagos:', e);
       }
     };
 
