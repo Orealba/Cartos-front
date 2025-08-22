@@ -118,7 +118,8 @@ export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
   };
 
   const handleSelectEvent = (event: any) => {
-    navigate(`/agregar-editar-transaccion/${event.id}`);
+    const fecha = dayjs(event.start).format('YYYY-MM-DD');
+    navigate(`/gastos-del-dia/${fecha}`);
   };
 
   return (
