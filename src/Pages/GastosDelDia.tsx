@@ -52,7 +52,6 @@ export default function GastosDelDia() {
         `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=true&includeCompleted=true`,
       )
       .then((res: any[] = []) => {
-        // Solo gastos del día (si quieres incluir ingresos, quita el filter)
         const data = res
           .filter((t) => t.type === 'EXPENSE')
           .sort(
@@ -76,7 +75,7 @@ export default function GastosDelDia() {
     : 'Fecha inválida';
 
   const handleAgregarClick = () => {
-    navigate('/agregar-editar-transaccion'); // si luego quieres prellenar la fecha, lo vemos
+    navigate('/agregar-editar-transaccion');
   };
 
   return (
@@ -89,12 +88,11 @@ export default function GastosDelDia() {
           {tituloFecha}
         </h1>
 
-        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-20 py-4 sm:py-6 md:py-8 lg:py-10 mt-4">
+        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-40 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           {/* Cabecera (desktop) */}
-          <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
-            <span className="w-[40%] px-4">Concepto</span>
-            <span className="w-[25%] px-4 text-center">Hora</span>
-            <span className="w-[25%] px-4 text-center">Monto</span>
+          <div className="hidden sm:flex items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm gap-4">
+            <span className="flex-1 px-4">Concepto</span>
+            <span className="shrink-0 w-28 px-4 text-right">Monto</span>
           </div>
 
           {/* Lista */}
@@ -108,8 +106,8 @@ export default function GastosDelDia() {
                 key={g.id}
                 onClick={() => navigate(`/agregar-editar-transaccion/${g.id}`)}
                 className="bg-myGray rounded-xl w-full mx-auto h-auto sm:h-11 md:h-12 lg:h-12 mt-2 cursor-pointer hover:bg-myGray/80 transition-colors">
-                {/* Mobile */}
-                <div className="flex flex-col p-4 sm:hidden">
+                {/* Fila Mobile: solo visible en móvil */}
+                <div className="flex sm:hidden flex-col p-4">
                   <span className="text-white text-base mb-1">{g.name}</span>
                   <div className="flex justify-between items-center">
                     <span className="text-white text-xs">
@@ -124,18 +122,12 @@ export default function GastosDelDia() {
                   </div>
                 </div>
 
-                {/* Desktop */}
-                <div className="hidden sm:flex justify-between items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12">
-                  <span className="w-[40%] px-4 text-white text-base truncate">
+                {/* Fila Desktop: visible desde sm+ */}
+                <div className="hidden sm:flex items-center h-full mx-4 sm:mx-6 md:mx-8 lg:mx-12 gap-4">
+                  <span className="flex-1 px-4 text-white text-base">
                     {g.name}
                   </span>
-                  <span className="w-[25%] px-4 text-white text-xs text-center">
-                    {new Date(g.date).toLocaleTimeString('es-ES', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </span>
-                  <span className="w-[25%] px-4 text-white font-bold text-center">
+                  <span className="shrink-0 w-28 px-4 text-white font-bold text-right">
                     {g.amount.toFixed(2)}€
                   </span>
                 </div>
