@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
-import { TransaccionesPadre } from '../Components/TransacionesComponents/TransaccionesPadre';
 import {
   RecurrenteTransacciones,
   RecurrenceRule,
@@ -18,7 +17,6 @@ import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { ModalConfirmacion } from '../Components/ModalConfirmacion';
-import type { NavigateOptions } from 'react-router-dom';
 
 export const AgregarEditarTransaccion = () => {
   const { id } = useParams();
