@@ -3,7 +3,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './MyCalendar.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiClient } from '../../services/api';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -23,60 +23,58 @@ type MyCalendarProps = {
   limiteDiario: number;
 };
 export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
-  
   const [eventos, setEventos] = useState<EventoCalendario[]>([]);
   const localizer = dayjsLocalizer(dayjs);
   const { token } = useAuth();
   const navigate = useNavigate();
+  const [visibleDate, setVisibleDate] = useState<Date>(new Date());
+  const lastKey = useRef<string>('');
 
   useEffect(() => {
     if (!token) return;
 
-    const cargarTransacciones = async () => {
-      try {
-        const api = apiClient(token);
-        const startDate = dayjs().startOf('month').toISOString();
-        const endDate = dayjs().endOf('month').toISOString();
+    const startDate = dayjs(visibleDate).startOf('month').toISOString();
+    const endDate = dayjs(visibleDate).endOf('month').toISOString();
+    const key = `${startDate}|${endDate}|completedOnly`;
 
-        const response = await api.get(
-          `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
+    if (lastKey.current === key) return; // ✅ evita segundo pase de StrictMode
+    lastKey.current = key;
+
+    const api = apiClient(token);
+
+    api
+      .get(
+        `/api/calendar/transactions?startDate=${startDate}&endDate=${endDate}&includePending=false&includeCompleted=true`,
+      )
+      .then((response: any[]) => {
+        if (!response) return;
+
+        const transaccionesAgrupadas: Record<string, number> = {};
+        response.forEach((trans: any) => {
+          const k = dayjs(trans.date).format('YYYY-MM-DD');
+          transaccionesAgrupadas[k] =
+            (transaccionesAgrupadas[k] ?? 0) + trans.amount;
+        });
+
+        const eventosAgrupados = Object.entries(transaccionesAgrupadas).map(
+          ([k, total], idx) => {
+            const fecha = dayjs(k, 'YYYY-MM-DD').toDate();
+            const n = Number(total);
+            return {
+              id: idx,
+              title: `${Number.isInteger(n) ? n : n.toFixed(2)}€`,
+              start: fecha,
+              end: fecha, // ← igual que tenías
+              name: 'Total del día',
+              resource: { total: n },
+            };
+          },
         );
 
-        if (response) {
-          // Agrupar transacciones por día y sumar montos
-          const transaccionesAgrupadas: Record<string, number> = {};
-
-          response.forEach((trans: any) => {
-            const fecha = dayjs(trans.date).startOf('day').toISOString();
-
-            if (!transaccionesAgrupadas[fecha]) {
-              transaccionesAgrupadas[fecha] = 0;
-            }
-
-            transaccionesAgrupadas[fecha] += trans.amount;
-          });
-
-          // Convertir a eventos para el calendario
-          const eventosAgrupados: EventoCalendario[] = Object.entries(
-            transaccionesAgrupadas,
-          ).map(([fecha, total], index) => ({
-            id: index,
-            title: `${Number.isInteger(total) ? total : total.toFixed(2)}€`,
-            start: new Date(fecha),
-            end: new Date(fecha),
-            name: `Total del día`,
-            resource: { total },
-          }));
-
-          setEventos(eventosAgrupados);
-        }
-      } catch (error) {
-        console.error('Error al cargar transacciones:', error);
-      }
-    };
-
-    cargarTransacciones();
-  }, [token]);
+        setEventos(eventosAgrupados);
+      })
+      .catch(console.error);
+  }, [token, visibleDate]);
 
   const messages = {
     today: 'Hoy',
@@ -120,7 +118,8 @@ export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
   };
 
   const handleSelectEvent = (event: any) => {
-    navigate(`/agregar-editar-transaccion/${event.id}`);
+    const fecha = dayjs(event.start).format('YYYY-MM-DD');
+    navigate(`/gastos-del-dia/${fecha}`);
   };
 
   return (
@@ -134,12 +133,12 @@ export const MyCalendar = ({ limiteDiario }: MyCalendarProps) => {
         components={components}
         className="min-h-[37.5rem] md:min-h-[25rem] sm:min-h-[18.75rem]"
         style={{ width: '100%' }}
-        defaultDate={new Date()}
+        date={visibleDate} // ← NUEVO: fecha controlada
+        onNavigate={(newDate) => setVisibleDate(newDate)} // ← NUEVO: actualiza mes visible
         onSelectEvent={handleSelectEvent}
         tooltipAccessor={(event) => event.name || 'Sin título'}
         eventPropGetter={(event) => {
           const esMayorAlLimite = event.resource.total > limiteDiario;
-
           return {
             className: esMayorAlLimite ? 'evento-superado' : 'evento-normal',
           };

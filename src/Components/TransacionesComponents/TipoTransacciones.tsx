@@ -23,7 +23,7 @@ export const TipoTransacciones = ({ onTipoChange }: TipoTransaccionesProps) => {
   }, []);
 
   return (
-    <div className="bg-myGray rounded-xl w-[98%] mx-auto h-12 flex items-center px-8">
+    <div className="bg-myGray rounded-xl w-[98%] mx-auto h-12 flex items-center px-6">
       <div className="flex items-center gap-4 w-full">
         <span className="text-white whitespace-nowrap">Tipo:</span>
         <div

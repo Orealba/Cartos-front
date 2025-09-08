@@ -129,14 +129,14 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
         <div
           className="
             bg-myGray/50 rounded-2xl
-            px-8 sm:px-8 md:px-20 lg:px-10  
+            px-8 sm:px-8 md:px-9 lg:px-7  
             overflow-visible
             py-4 sm:py-6 md:py-8 lg:py-1
             mt-2 sm:mt-3 md:mt-4 
             w-full  
             min-h-[900px]
           ">
-          <div className="w-full h-100">
+          <div className="w-full h-100 resumen-chart-wrapper">
             <ResponsiveContainer
               width="100%"
               height="100%">
@@ -172,7 +172,7 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
           </div>
 
           {/* Lista de totales por categoría */}
-          <h2 className="text-white mb-3">Total por categorías</h2>
+          <h2 className="text-white mb-3 mt-3">Total por categorías</h2>
           <div className="space-y-4">
             {listData.map(({ name, value }) => {
               const percent = totalValue
@@ -184,15 +184,17 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
                     className="
                       bg-myGray rounded-xl w-full
                       h-auto sm:h-11 md:h-12 lg:h-12
-                      grid grid-cols-3 items-center
-                      px-20
+                      grid grid-cols-1  sm:grid-cols-3 items-center
+                      px-4 sm:px-20
                       mb-1
                     ">
-                    <span className="text-white flex-1 text-left">{name}</span>
-                    <span className="text-white font-bold text-right">
+                    <span className="text-white  text-center sm:text-left">
+                      {name}
+                    </span>
+                    <span className="text-white  text-center sm:text-right">
                       {value.toFixed(2)}€
                     </span>
-                    <span className="text-white flex-1 text-right">
+                    <span className="text-white text-center sm:text-right">
                       {percent}%
                     </span>
                   </div>
@@ -202,11 +204,11 @@ const ResumenGraficos: React.FC<Props> = ({ token }) => {
 
             {/* Fila de Total del periodo */}
             <div key="total">
-              <div className="flex justify-between items-center pb-5">
-                <span className="text-myYellow text-xl">
+              <div className="flex justify-between items-center pb-5 sm:text-sm">
+                <span className="text-myYellow text-xl ">
                   Total {totalLabel}:
                 </span>
-                <span className="text-white font-bold text-xl">
+                <span className="text-white  text-xl ">
                   {totalValue.toFixed(2)}€
                 </span>
               </div>

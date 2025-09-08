@@ -25,8 +25,33 @@ interface Transaccion {
 
 export const Transacciones = () => {
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
+  const [tipoFiltro, setTipoFiltro] = useState<'EXPENSE' | 'INCOME' | null>(
+    null,
+  );
   const { session } = useAuth();
   const api = apiClient(session?.access_token);
+  const [flash, setFlash] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem('flash');
+    if (raw) {
+      try {
+        setFlash(JSON.parse(raw));
+      } catch {}
+      sessionStorage.removeItem('flash');
+    }
+  }, []);
+
+  // ⬇️⬇️⬇️ NUEVO: autocerrar banner a los 3s
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(null), 3000);
+    return () => clearTimeout(t);
+  }, [flash]);
+  // ⬆️⬆️⬆️ FIN NUEVO
 
   useEffect(() => {
     const fetchTransacciones = async () => {
@@ -56,12 +81,17 @@ export const Transacciones = () => {
   }, [session]);
 
   const transaccionesPorPagina = 10;
-  const totalPaginas = Math.ceil(transacciones.length / transaccionesPorPagina);
+  const transaccionesFiltradas = tipoFiltro
+    ? transacciones.filter((t) => t.type === tipoFiltro)
+    : transacciones;
+  const totalPaginas = Math.ceil(
+    transaccionesFiltradas.length / transaccionesPorPagina,
+  );
   const [paginaActual, setPaginaActual] = useState(1);
 
   const indexOfLastItem = paginaActual * transaccionesPorPagina;
   const indexOfFirstItem = indexOfLastItem - transaccionesPorPagina;
-  const transaccionesActuales = transacciones.slice(
+  const transaccionesActuales = transaccionesFiltradas.slice(
     indexOfFirstItem,
     indexOfLastItem,
   );
@@ -73,12 +103,37 @@ export const Transacciones = () => {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center m">
       <div>
-        <div className="mt-30">
-          <BotonDesplegableTransacciones />
+        {flash && (
+          <div
+            role="status"
+            className={`mb-3 rounded-2xl px-4 py-3 text-sm ${
+              flash.type === 'success'
+                ? 'bg-myYellow text-white '
+                : 'bg-red-100 text-red-800  '
+            }`}>
+            {flash.text}
+          </div>
+        )}
+        {/* ⬆️⬆️⬆️ FIN NUEVO */}
+        <h1 className="mx-auto text-center text-white sm:text-lg md:text-xl ">
+          TRANSACCIONES
+        </h1>
+        <div className="mt-10">
+          <BotonDesplegableTransacciones
+            onSelect={(opcion: 'Egresos' | 'Ingresos' | 'Todas') => {
+              if (opcion === 'Todas') {
+                setTipoFiltro(null);
+              } else {
+                setTipoFiltro(opcion === 'Egresos' ? 'EXPENSE' : 'INCOME');
+              }
+
+              setPaginaActual(1);
+            }}
+          />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-26 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
+        <div className="bg-myGray/50 rounded-2xl px-4 sm:px-8 md:px-20 lg:px-20 py-4 sm:py-6 md:py-8 lg:py-10 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
           <div>
             <div className="hidden sm:flex justify-between items-center h-10 mx-4 sm:mx-6 md:mx-8 lg:mx-12 text-white/50 text-sm">
               <span className="w-[30%] px-4">Concepto</span>
@@ -132,7 +187,7 @@ export const Transacciones = () => {
               <button
                 onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
                 disabled={paginaActual === 1}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
+                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer">
                 Anterior
               </button>
               <span className="flex items-center text-white">
@@ -143,7 +198,7 @@ export const Transacciones = () => {
                   setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))
                 }
                 disabled={paginaActual === totalPaginas}
-                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50">
+                className="px-4 py-2 bg-myGreen text-white rounded-lg disabled:opacity-50 cursor-pointer">
                 Siguiente
               </button>
             </div>

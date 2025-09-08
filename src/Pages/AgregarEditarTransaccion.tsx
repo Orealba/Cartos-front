@@ -2,11 +2,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { apiClient } from '../services/api';
-
+import { TransaccionesPadre } from '../Components/TransacionesComponents/TransaccionesPadre';
+import {
+  RecurrenteTransacciones,
+  RecurrenceRule,
+} from '../Components/TransacionesComponents/RecurrenteTransacciones';
 import { TituloTransacciones } from '../Components/TransacionesComponents/TituloTransacciones';
 import { MontoTransacciones } from '../Components/TransacionesComponents/MontoTransacciones';
 import { FechaTransacciones } from '../Components/TransacionesComponents/FechaTransacciones';
-
 import { TipoTransacciones } from '../Components/TransacionesComponents/TipoTransacciones';
 import { NotaTransacciones } from '../Components/TransacionesComponents/NotaTransacciones';
 import { CategoriaTransacciones } from '../Components/TransacionesComponents/CategoriaTransacciones';
@@ -15,6 +18,7 @@ import '../Components/Botones/EstilosBotones/BotonGuardarTrans.css';
 import '../Components/Botones/EstilosBotones/BotonBorraTrans.css';
 import { BotonGeneral } from '../Components/Botones/BotonGeneral/BotonGeneral';
 import { ModalConfirmacion } from '../Components/ModalConfirmacion';
+import type { NavigateOptions } from 'react-router-dom';
 
 export const AgregarEditarTransaccion = () => {
   const { id } = useParams();
@@ -27,6 +31,10 @@ export const AgregarEditarTransaccion = () => {
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
   const [nota, setNota] = useState('');
   const [categoriaId, setCategoriaId] = useState('');
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | null>(
+    null,
+  );
+  const [recurringId, setRecurringId] = useState<string | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState<{
     categoria?: string;
@@ -37,18 +45,40 @@ export const AgregarEditarTransaccion = () => {
   useEffect(() => {
     const cargarTransaccion = async () => {
       if (id) {
+        const tx = await api.get(`/api/transactions/${id}`);
+        setTitulo(tx.name);
+        setMonto(tx.amount.toString());
+        setFecha(tx.date.split('T')[0]);
+        setNota(tx.description || '');
+        setCategoriaId(tx.categoryId.toString());
+
+        // 2.2) Traer la regla recurrente si existe
         try {
-          const transaccion = await api.get(`/api/transactions/${id}`);
-          setTipoSeleccionado(
-            transaccion.type === 'EXPENSE' ? 'Egresos' : 'Ingresos',
+          const allRules = await api.get(`/api/recurring-transactions`);
+          console.log('📦 allRules:', allRules);
+          (allRules?.content || []).forEach((r: any) => {
+            console.log('🔍 comparando:', r.transactionId, 'vs', id);
+          });
+          const rule = (allRules?.content || []).find(
+            (r: any) => String(r.transactionId) === String(id),
           );
-          setTitulo(transaccion.name);
-          setMonto(transaccion.amount.toString());
-          setFecha(transaccion.date.split('T')[0]);
-          setNota(transaccion.description || '');
-          setCategoriaId(transaccion.categoryId.toString());
+
+          if (rule) {
+            console.log('✅ Regla recurrente encontrada:', rule);
+            setRecurrenceRule({
+              interval: rule.frequencyNumber,
+              unit: rule.frequencyUnit as RecurrenceRule['unit'],
+            });
+            setRecurringId(rule.id);
+          } else {
+            console.log('ℹ️ No hay regla recurrente para esta transacción');
+            setRecurrenceRule(null);
+            setRecurringId(undefined);
+          }
         } catch (error) {
-          console.error('Error al cargar:', error);
+          console.log('❌ Fallo al buscar reglas recurrentes:', error);
+          setRecurrenceRule(null);
+          setRecurringId(undefined);
         }
       }
     };
@@ -99,42 +129,77 @@ export const AgregarEditarTransaccion = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validarFormulario()) {
-      return;
-    }
+    if (!validarFormulario()) return;
 
-    if (!accountId) {
-      console.error('No hay accountId disponible');
-      return;
-    }
+    // 1) Transacción “plana”
     const raw = monto.replace(',', '.');
     const amountNum = parseFloat(raw);
-    try {
-      const transaccion = {
-        type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
-        name: titulo,
-        categoryId: parseInt(categoriaId),
-        accountId: accountId,
-        description: nota || '',
-        amount: amountNum,
-        date: `${fecha}T00:00:00.000Z`,
-        status: 'COMPLETED',
-        createdAt: new Date().toISOString(),
-        autoComplete: true,
-      };
 
-      console.log('Enviando transacción:', transaccion);
+    const txPayload = {
+      type: tipoSeleccionado === 'Egresos' ? 'EXPENSE' : 'INCOME',
+      name: titulo,
+      categoryId: Number(categoriaId),
+      accountId: Number(accountId!),
+      description: nota,
+      amount: amountNum,
+      date: `${fecha}T00:00:00.000Z`,
+      status: 'COMPLETED',
+      createdAt: new Date().toISOString(),
+      autoComplete: true,
+    };
+    console.log('¡¡¡¡Enviando txPayload:', txPayload);
 
-      if (id) {
-        await api.put(`/api/transactions/${id}`, transaccion);
-      } else {
-        await api.post('/api/transactions', transaccion);
-      }
-
-      navigate('/transacciones');
-    } catch (error) {
-      console.error('Error:', error);
+    let txResp;
+    if (id) {
+      txResp = await api.put(`/api/transactions/${id}`, txPayload);
+    } else {
+      txResp = await api.post(`/api/transactions`, txPayload);
     }
+
+    // 2) Regla recurrente (CR/UP/DEL)
+    if (recurrenceRule) {
+      const unitMap: Record<string, string> = {
+        DAILY: 'DAY',
+        WEEKLY: 'WEEK',
+        MONTHLY: 'MONTH',
+        YEARLY: 'YEAR',
+      };
+      const frequencyUnit = unitMap[recurrenceRule.unit];
+
+      const recurPayload = {
+        ...txPayload,
+        transactionId: txResp.id,
+        startDate: txResp.date,
+        frequencyNumber: recurrenceRule.interval,
+        frequencyUnit,
+      };
+      console.log('Enviando recurPayload:', recurPayload);
+
+      if (recurringId) {
+        await api.put(
+          `/api/recurring-transactions/${recurringId}`,
+          recurPayload,
+        );
+      } else {
+        const newRule = await api.post(
+          `/api/recurring-transactions`,
+          recurPayload,
+        );
+        setRecurringId(newRule.id);
+      }
+    } else if (recurringId) {
+      // si quitaste recurrencia, bórrala
+      await api.deleteRecurring(recurringId);
+      setRecurringId(undefined);
+    }
+
+    // 3) Volver al listado
+    const accion = id ? 'editada' : 'agregada';
+    sessionStorage.setItem(
+      'flash',
+      JSON.stringify({ type: 'success', text: `Transacción ${accion}.` }),
+    );
+    navigate('/transacciones', { replace: true });
   };
 
   const handleDelete = () => {
@@ -146,6 +211,11 @@ export const AgregarEditarTransaccion = () => {
     try {
       await api.delete(`/api/transactions/${id}`);
       setIsModalOpen(false);
+
+      sessionStorage.setItem(
+        'flash',
+        JSON.stringify({ type: 'success', text: 'Transacción eliminada.' }),
+      );
       navigate('/transacciones', { replace: true });
     } catch (error) {
       console.error('Error al eliminar:', error);
@@ -171,46 +241,61 @@ export const AgregarEditarTransaccion = () => {
             textoFijo="Guardar"
           />
         </div>
-        <div className="bg-myGray/50 rounded-2xl px-1  mx-0 sm:mx-0 sm:px-3 md:px-24 lg:px-35 py-3 sm:py-6 md:py-10 lg:py-16 mt-2 sm:mt-3 md:mt-4 lg:mt-5">
-          <div>
-            <TipoTransacciones onTipoChange={handleTipoChange} />
-            <CategoriaTransacciones
-              tipoSeleccionado={tipoSeleccionado}
-              setCategoriaId={setCategoriaId}
-              initialCategoryId={categoriaId}
-            />
-            {errors.categoria && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.categoria}
-              </span>
-            )}
-            <TituloTransacciones
-              value={titulo}
-              onChange={handleTituloChange}
-            />
-            {errors.titulo && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.titulo}
-              </span>
-            )}
-            <MontoTransacciones
-              value={monto}
-              onChange={handleMontoChange}
-            />
-            {errors.monto && (
-              <span className="text-red-500 text-sm ml-2 sm:ml-8">
-                {errors.monto}
-              </span>
-            )}
-            <FechaTransacciones
-              value={fecha}
-              onChange={setFecha}
-            />
-            <NotaTransacciones
-              value={nota}
-              onChange={setNota}
-            />
-          </div>
+        <div className="bg-myGray/50 rounded-2xl px-3 py-6 md:px-24 md:py-10 mt-5">
+          <TipoTransacciones onTipoChange={handleTipoChange} />
+          {errors.categoria && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.categoria}
+            </span>
+          )}
+
+          <CategoriaTransacciones
+            tipoSeleccionado={tipoSeleccionado}
+            setCategoriaId={setCategoriaId}
+            initialCategoryId={categoriaId}
+          />
+          {errors.categoria && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.categoria}
+            </span>
+          )}
+
+          <TituloTransacciones
+            value={titulo}
+            onChange={handleTituloChange}
+          />
+          {errors.titulo && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.titulo}
+            </span>
+          )}
+
+          <MontoTransacciones
+            value={monto}
+            onChange={handleMontoChange}
+          />
+          {errors.monto && (
+            <span className="text-red-500 text-sm ml-6 block">
+              {errors.monto}
+            </span>
+          )}
+
+          <FechaTransacciones
+            value={fecha}
+            onChange={setFecha}
+          />
+
+          <NotaTransacciones
+            value={nota}
+            onChange={setNota}
+          />
+
+          <RecurrenteTransacciones
+            initialRule={recurrenceRule}
+            onChange={setRecurrenceRule}
+          />
+
+          {/* === Botón BORRAR (solo en modo edición) === */}
           {id && (
             <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-8">
               <div className="mt-1.5 xs:mt-2 sm:mt-3 md:mt-4 lg:mt-4">

@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   ReactNode,
 } from 'react';
@@ -32,9 +33,7 @@ const AuthContext = createContext<AuthContextType>({
   login: () => {},
 });
 
-type AuthProviderProps = {
-  children: ReactNode;
-};
+type AuthProviderProps = { children: ReactNode };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
@@ -45,88 +44,88 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // --- 1) Inicialización y suscripción (una sola vez) ---
+  const didInit = useRef(false);
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const {
-          data: { session: currentSession },
-        } = await supabase.auth.getSession();
+    if (didInit.current) return;
+    didInit.current = true;
 
-        if (currentSession?.access_token) {
-          setSession(currentSession);
-          setToken(currentSession.access_token);
-
-          const api = apiClient(currentSession.access_token);
-          const response = await api.get('/api/accounts');
-
-          if (response && response.content && response.content.length > 0) {
-            const account = response.content[0];
-            setAccountId(account.id);
-            setIsAuthenticated(true);
-          }
-        } else if (location.pathname !== '/') {
-          setToken(null);
-          setAccountId(null);
-          setSession(null);
-          setIsAuthenticated(false);
-          navigate('/login');
-        }
-      } catch (error) {
-        if (location.pathname !== '/') {
-          setToken(null);
-          setAccountId(null);
-          setSession(null);
-          setIsAuthenticated(false);
-          navigate('/login');
-        }
-      } finally {
-        setIsLoading(false);
+    const applySession = (sess: Session | null) => {
+      if (sess?.access_token) {
+        setSession(sess);
+        setToken(sess.access_token);
+        setIsAuthenticated(true);
+      } else {
+        setSession(null);
+        setToken(null);
+        setIsAuthenticated(false);
+        if (location.pathname !== '/') navigate('/login');
       }
+      setIsLoading(false);
     };
 
-    initAuth();
+    // sesión actual
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: current } }) => applySession(current))
+      .catch(() => applySession(null));
 
+    // cambios posteriores de sesión
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      if (event === 'SIGNED_IN' && currentSession) {
-        setSession(currentSession);
-        setToken(currentSession.access_token);
+    } = supabase.auth.onAuthStateChange((_event, current) =>
+      applySession(current),
+    );
 
-        const api = apiClient(currentSession.access_token);
+    return () => subscription.unsubscribe();
+    // deps vacías: no atarlo a location/navigate para que no se repita
+  }, []); // ✅ no `location.pathname` aquí
+
+  // --- 2) Carga de cuentas (una vez por token) ---
+  const fetchedForToken = useRef<string | null>(null);
+  useEffect(() => {
+    if (!token) return;
+    if (fetchedForToken.current === token) return; // ✅ evita repetición
+    fetchedForToken.current = token;
+
+    const api = apiClient(token);
+    let cancelled = false;
+
+    (async () => {
+      try {
         const response = await api.get('/api/accounts');
 
-        if (!response.content || response.content.length === 0) {
+        if (!response?.content || response.content.length === 0) {
+          // Onboarding solo si no hay cuentas
           try {
             await api.post('/api/users/onboarding', {
               firstName: 'Nombre',
               lastName: 'Apellido',
               language: 'es',
             });
-            console.log('✅ Onboarding completado');
-          } catch (err) {
-            console.error('❌ Error en onboarding:', err);
+            // volver a intentar cargar cuentas
+            const again = await api.get('/api/accounts');
+            if (!cancelled && again?.content?.length) {
+              setAccountId(again.content[0].id);
+            }
+          } catch (e) {
+            console.error('❌ Error en onboarding:', e);
           }
+          return;
         }
 
-        if (response && response.content && response.content.length > 0) {
-          const account = response.content[0];
-          setAccountId(account.id);
-          setIsAuthenticated(true);
+        if (!cancelled) {
+          setAccountId(response.content[0].id);
         }
-      } else if (event === 'SIGNED_OUT') {
-        setToken(null);
-        setAccountId(null);
-        setSession(null);
-        setIsAuthenticated(false);
-        navigate('/login');
+      } catch (e) {
+        if (!cancelled) console.error(e);
       }
-    });
+    })();
 
     return () => {
-      subscription.unsubscribe();
+      cancelled = true;
     };
-  }, [navigate, location.pathname]);
+  }, [token]);
 
   const logout = async () => {
     try {
@@ -136,7 +135,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsAuthenticated(false);
       setSession(null);
       navigate('/login');
-    } catch (error) {}
+    } catch {}
   };
 
   return (
@@ -158,8 +157,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

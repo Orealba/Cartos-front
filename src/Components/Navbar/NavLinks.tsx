@@ -20,6 +20,7 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
         HOME
       </Link>
     </li>
+
     <li className="relative">
       <Link
         to="/transacciones"
@@ -32,9 +33,10 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
         TRANSACCIONES
       </Link>
     </li>
+
     <li className="relative">
       <Link
-        to="/resumen" // ← aquí
+        to="/resumen"
         onClick={() => setActivePage('resumen')}
         className={`block py-2 px-3 md:p-0 rounded-sm relative pb-2 ${
           activePage === 'resumen'
@@ -42,6 +44,19 @@ export const NavLinks = ({ activePage, setActivePage }: NavLinksProps) => (
             : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-myYellow dark:text-white'
         }`}>
         RESUMEN
+      </Link>
+    </li>
+
+    <li className="relative">
+      <Link
+        to="/proximos-pagos"
+        onClick={() => setActivePage('proximos-pagos')}
+        className={`block py-2 px-3 md:p-0 rounded-sm relative pb-2 ${
+          activePage === 'proximos-pagos'
+            ? 'after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:bg-white'
+            : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-myYellow dark:text-white'
+        }`}>
+        PRÓXIMOS PAGOS
       </Link>
     </li>
   </>
