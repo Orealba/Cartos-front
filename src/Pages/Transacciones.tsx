@@ -103,7 +103,7 @@ export const Transacciones = () => {
   };
 
   return (
-    <div className="w-full flex justify-center m">
+    <div className="w-full flex justify-center mt-35">
       <div>
         {flash && (
           <div
